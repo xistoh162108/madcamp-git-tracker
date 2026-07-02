@@ -53,6 +53,17 @@ export function DailyLineChart({
   )
 }
 
+function daysForWeek(week: WeekConfig): string[] {
+  const days: string[] = []
+  const cursor = new Date(week.startAt)
+  const endKey = dateKey(new Date(week.endAt))
+  while (dateKey(cursor) <= endKey) {
+    days.push(dateKey(cursor))
+    cursor.setDate(cursor.getDate() + 1)
+  }
+  return days
+}
+
 export function SprintBoard({
   heatmap,
   weeks,
@@ -65,23 +76,23 @@ export function SprintBoard({
   const counts = new Map(heatmap.map((day) => [day.date, day.count]))
   const max = Math.max(1, ...heatmap.map((day) => day.count))
   const today = dateKey(new Date())
-  const weekdays = ["월", "화", "수", "목", "금", "토", "일"]
+  const activeWeeks = weeks.slice(0, 4)
+  const weekDayLists = activeWeeks.map((week) => daysForWeek(week))
+  const columnCount = Math.max(1, ...weekDayLists.map((days) => days.length))
+  const longestWeekDays = weekDayLists.find((days) => days.length === columnCount) ?? []
+  const headerLabels = longestWeekDays.map((day) => weekdayLabel(day))
   return (
     <div className="space-y-2.5">
       <div className="grid grid-cols-[44px_1fr] items-center gap-2">
         <span />
-        <div className="grid grid-cols-7 gap-1.5 text-center text-[10px] font-medium text-muted-foreground">
-          {weekdays.map((day) => (
-            <span key={day}>{day}</span>
+        <div className="grid gap-1.5 text-center text-[10px] font-medium text-muted-foreground" style={{ gridTemplateColumns: `repeat(${columnCount}, minmax(0, 1fr))` }}>
+          {headerLabels.map((label, index) => (
+            <span key={index}>{label}</span>
           ))}
         </div>
       </div>
-      {weeks.slice(0, 4).map((week) => {
-        const start = new Date(week.startAt)
-        const days = Array.from({ length: 7 }, (_, index) => {
-          const date = new Date(start)
-          date.setDate(start.getDate() + index)
-          const key = dateKey(date)
+      {activeWeeks.map((week, weekIndex) => {
+        const days = weekDayLists[weekIndex]!.map((key) => {
           const disabled = currentWeek ? week.week > currentWeek : false
           const count = disabled ? 0 : (counts.get(key) ?? 0)
           return { key, label: dayLabel(key), count, level: intensity(count, max), disabled, today: key === today }
@@ -89,7 +100,7 @@ export function SprintBoard({
         return (
           <div key={week.week} className="grid grid-cols-[44px_1fr] items-center gap-2">
             <span className="text-xs font-medium text-muted-foreground">{week.label}</span>
-            <div className="grid grid-cols-7 gap-1.5">
+            <div className="grid gap-1.5" style={{ gridTemplateColumns: `repeat(${columnCount}, minmax(0, 1fr))` }}>
               {days.map((day, index) => (
                 <motion.span
                   key={day.key}

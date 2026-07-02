@@ -251,11 +251,9 @@ export default async function ParticipantDetailPage({ params }: { params: Promis
             <p className="mt-0.5 text-xs text-muted-foreground">KST 기준 · 원본 커밋 메시지</p>
             <ul className="mt-3 max-h-[520px] space-y-2 overflow-y-auto pr-1">
               {participantFeed.slice(0, 50).map((item) => {
-                const stats = [
-                  item.additions !== undefined ? `+${item.additions}` : null,
-                  item.deletions !== undefined ? `-${item.deletions}` : null,
-                  item.changedFiles !== undefined ? `${item.changedFiles} files` : null,
-                ].filter(Boolean)
+                const hasStats =
+                  item.additions !== undefined || item.deletions !== undefined || item.changedFiles !== undefined
+                const branch = item.branches?.[0]
                 return (
                   <li key={item.id} className="rounded-lg border border-border/60 bg-background/40 p-2.5">
                     <div className="flex min-w-0 items-center gap-2 text-[11px] text-muted-foreground">
@@ -267,6 +265,15 @@ export default async function ParticipantDetailPage({ params }: { params: Promis
                       >
                         {shortRepo(item.repoName)}
                       </Link>
+                      {branch ? (
+                        <>
+                          <span className="text-border">·</span>
+                          <span className="truncate font-mono">
+                            🌿 {branch}
+                            {(item.branches?.length ?? 0) > 1 ? ` +${item.branches!.length - 1}` : ""}
+                          </span>
+                        </>
+                      ) : null}
                     </div>
                     {item.commitUrl ? (
                       <a
@@ -282,8 +289,20 @@ export default async function ParticipantDetailPage({ params }: { params: Promis
                         {item.summary}
                       </p>
                     )}
-                    <p className="mt-1 text-[11px] text-muted-foreground">
-                      {stats.length ? stats.join(" · ") : "변경 정보 없음"}
+                    <p className="mt-1 flex flex-wrap items-center gap-1.5 text-[11px] text-muted-foreground">
+                      {hasStats ? (
+                        <>
+                          {item.additions !== undefined ? (
+                            <span className="text-positive">+{item.additions}</span>
+                          ) : null}
+                          {item.deletions !== undefined ? (
+                            <span className="text-destructive">-{item.deletions}</span>
+                          ) : null}
+                          {item.changedFiles !== undefined ? <span>{item.changedFiles} files</span> : null}
+                        </>
+                      ) : (
+                        "변경 정보 없음"
+                      )}
                     </p>
                   </li>
                 )

@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react"
 import Link from "next/link"
 import { AnimatePresence, motion } from "framer-motion"
-import { ArrowUpRight, ChevronRight, Crown, Medal } from "lucide-react"
+import { ArrowUpRight, ChevronRight, Crown, Flame, Medal } from "lucide-react"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { RankMedal } from "@/components/rank-medal"
@@ -264,7 +264,7 @@ export function LeaderboardSection({
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-      className="rounded-2xl border border-border/70 bg-card/40 p-3 sm:p-4"
+      className="min-w-0 overflow-x-hidden rounded-2xl border border-border/70 bg-card/40 p-3 sm:p-4"
     >
       {/* Tabs + filters */}
       <div className="flex flex-col gap-3">
@@ -406,7 +406,7 @@ function RankingRule({ children }: { children: React.ReactNode }) {
 
 function RowShell({ children, href, index = 0 }: { children: React.ReactNode; href?: string; index?: number }) {
   const base =
-    "group relative flex items-center gap-3 overflow-hidden rounded-lg border border-border/50 bg-card/60 px-3 py-2.5 transition-colors hover:border-primary/40 hover:bg-card"
+    "group relative flex items-center gap-2 overflow-hidden rounded-lg border border-border/50 bg-card/60 px-2.5 py-2.5 transition-colors hover:border-primary/40 hover:bg-card sm:gap-3 sm:px-3"
   const motionProps = {
     initial: { opacity: 0, y: 8, scale: 0.99 },
     animate: { opacity: 1, y: 0, scale: 1 },
@@ -504,27 +504,60 @@ function IndividualRows({ data }: { data: PersonalRow[] }) {
         const gapToLeader = Math.max(0, leaderCommits - i.commits)
         const leaderRatio = Math.round((i.commits / Math.max(1, leaderCommits)) * 100)
         const tied = (commitCounts.get(i.commits) ?? 0) > 1
+        const gapToPrevRank = index > 0 ? ranked[index - 1]!.commits - i.commits : 0
+        const isHotRace = !tied && rank > 1 && gapToPrevRank > 0 && gapToPrevRank <= 2
         return (
           <RowShell key={i.username} href={`/participant/${i.username}`} index={index}>
-            <RankMedal rank={rank} />
+            <RankMedal
+              rank={rank}
+              className={isHotRace ? "animate-pulse ring-2 ring-orange-400/70 shadow-[0_0_10px_rgba(251,146,60,0.5)]" : undefined}
+            />
             <InitialsAvatar name={i.name} githubUsername={i.username} size="sm" />
             <div className="min-w-0 flex-1">
-              <div className="flex items-center gap-2">
+              <div className="flex min-w-0 items-center gap-2">
                 {tied ? (
                   <span className="shrink-0 rounded border border-gold/25 bg-gold/10 px-1.5 py-0.5 text-[10px] font-semibold text-gold">
-                    공동 {rank}위
+                    <span className="sm:hidden">공동</span>
+                    <span className="hidden sm:inline">공동 {rank}위</span>
                   </span>
                 ) : null}
-                <span className="truncate text-sm font-semibold">{i.name}</span>
-                <span className="truncate font-mono text-xs text-muted-foreground">@{i.username}</span>
+                {isHotRace ? (
+                  <motion.span
+                    animate={{ opacity: [1, 0.55, 1] }}
+                    transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
+                    className="hidden shrink-0 items-center gap-0.5 rounded border border-orange-400/40 bg-orange-400/10 px-1.5 py-0.5 text-[10px] font-bold text-orange-400 sm:flex"
+                  >
+                    <Flame className="h-3 w-3" />
+                    접전
+                  </motion.span>
+                ) : null}
+                <span className="min-w-0 shrink truncate text-sm font-semibold">{i.name}</span>
+                <span className="hidden min-w-0 shrink truncate font-mono text-xs text-muted-foreground sm:inline">
+                  @{i.username}
+                </span>
                 <RankTierBadge rank={rank} rising={i.prevRank > i.rank} />
               </div>
-              <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
+              <p className="min-w-0 truncate text-[11px] text-muted-foreground sm:hidden">
+                {[
+                  i.class,
+                  i.team ?? (i.class ? null : "GitHub 활동"),
+                  isHotRace
+                    ? `🔥 앞순위와 ${gapToPrevRank}커밋 차이`
+                    : gapToLeader === 0
+                      ? "선두 그룹"
+                      : commitGapLabel(gapToLeader),
+                ]
+                  .filter(Boolean)
+                  .join(" · ")}
+              </p>
+              <div className="hidden items-center gap-2 text-[11px] text-muted-foreground sm:flex">
                 {i.class ? <span>{i.class}</span> : null}
                 {i.class && i.team ? <span className="text-border">·</span> : null}
                 {i.team ? <span className="font-mono">{i.team}</span> : <span>GitHub 활동</span>}
                 <span className="text-border">·</span>
-                {gapToLeader === 0 ? (
+                {isHotRace ? (
+                  <span className="font-semibold text-orange-400">🔥 앞순위와 {gapToPrevRank}커밋 차이</span>
+                ) : gapToLeader === 0 ? (
                   <span className="text-gold">선두 그룹</span>
                 ) : (
                   <span>{commitGapLabel(gapToLeader)}</span>
@@ -544,16 +577,16 @@ function IndividualRows({ data }: { data: PersonalRow[] }) {
               />
               <MomentumBar value={i.commits} max={maxCommits} tone={rank === 1 ? "gold" : "primary"} />
             </div>
-            <div className="hidden w-24 text-right sm:block">
+            <div className="hidden w-24 shrink-0 text-right sm:block">
               <p className="text-xs font-medium text-foreground">활동 {i.activeDays}일</p>
               <p className="text-[11px] text-muted-foreground">{i.lastActivity}</p>
             </div>
-            <div className="w-16 text-right">
+            <div className="w-12 shrink-0 text-right sm:w-16">
               <p className="text-base font-bold tabular">{i.commits}</p>
               <p className="text-[10px] text-muted-foreground">commits</p>
             </div>
-            <RankChange rank={i.rank} prevRank={i.prevRank} isNew={i.isNew} className="w-8 justify-end" />
-            <ChevronRight className="h-4 w-4 text-muted-foreground/50 transition-colors group-hover:text-primary" />
+            <RankChange rank={i.rank} prevRank={i.prevRank} isNew={i.isNew} className="w-8 shrink-0 justify-end" />
+            <ChevronRight className="hidden h-4 w-4 shrink-0 text-muted-foreground/50 transition-colors group-hover:text-primary sm:block" />
           </RowShell>
         )
       })}
@@ -589,13 +622,14 @@ function TeamRows({ data, metric }: { data: TeamRow[]; metric: TeamMetric }) {
           <RowShell key={t.repo} href={`/team/${fmtRepoShort(t.repo)}`} index={index}>
             <RankMedal rank={rank} />
             <div className="min-w-0 flex-1">
-              <div className="flex items-center gap-2">
+              <div className="flex min-w-0 items-center gap-2">
                 {tied ? (
                   <span className="shrink-0 rounded border border-gold/25 bg-gold/10 px-1.5 py-0.5 text-[10px] font-semibold text-gold">
-                    공동 {rank}위
+                    <span className="sm:hidden">공동</span>
+                    <span className="hidden sm:inline">공동 {rank}위</span>
                   </span>
                 ) : null}
-                <span className="truncate font-mono text-sm font-semibold">{fmtRepoShort(t.repo)}</span>
+                <span className="min-w-0 truncate font-mono text-sm font-semibold">{fmtRepoShort(t.repo)}</span>
                 <RankTierBadge rank={rank} totalCount={ranked.length} />
                 <span className="shrink-0 rounded border border-border/70 bg-muted/40 px-1.5 py-0.5 text-[10px] text-muted-foreground">
                   {t.class}
@@ -623,12 +657,12 @@ function TeamRows({ data, metric }: { data: TeamRow[]; metric: TeamMetric }) {
               <LeaderRatioLabel ratio={ratio} status={status} />
               <MomentumBar value={value} max={maxValue} tone={rank === 1 ? "gold" : "primary"} />
             </div>
-            <div className="w-24 text-right">
+            <div className="w-16 shrink-0 text-right sm:w-24">
               <p className="text-lg font-bold tabular">{mainValue}</p>
               <p className="text-[10px] text-muted-foreground">{mainLabel}</p>
             </div>
-            <RankChange rank={t.rank} prevRank={t.prevRank} isNew={t.isNew} className="w-8 justify-end" />
-            <ChevronRight className="h-4 w-4 text-muted-foreground/50 transition-colors group-hover:text-primary" />
+            <RankChange rank={t.rank} prevRank={t.prevRank} isNew={t.isNew} className="w-8 shrink-0 justify-end" />
+            <ChevronRight className="hidden h-4 w-4 shrink-0 text-muted-foreground/50 transition-colors group-hover:text-primary sm:block" />
           </RowShell>
         )
       })}
@@ -666,7 +700,8 @@ function ClassRows({ data, metric }: { data: ClassRow[]; metric: ClassMetric }) 
               <div className="flex items-center gap-2">
                 {tied ? (
                   <span className="shrink-0 rounded border border-gold/25 bg-gold/10 px-1.5 py-0.5 text-[10px] font-semibold text-gold">
-                    공동 {rank}위
+                    <span className="sm:hidden">공동</span>
+                    <span className="hidden sm:inline">공동 {rank}위</span>
                   </span>
                 ) : null}
                 <span className="text-sm font-semibold">{c.className}</span>
@@ -683,11 +718,11 @@ function ClassRows({ data, metric }: { data: ClassRow[]; metric: ClassMetric }) 
               <LeaderRatioLabel ratio={ratio} status={status} />
               <MomentumBar value={value} max={maxValue} tone={rank === 1 ? "gold" : "primary"} />
             </div>
-            <div className="w-28 text-right">
+            <div className="w-16 shrink-0 text-right sm:w-28">
               <p className="text-lg font-bold tabular">{mainValue}</p>
               <p className="text-[10px] text-muted-foreground">{mainLabel}</p>
             </div>
-            <RankChange rank={c.rank} prevRank={c.prevRank} isNew={c.isNew} className="w-8 justify-end" />
+            <RankChange rank={c.rank} prevRank={c.prevRank} isNew={c.isNew} className="w-8 shrink-0 justify-end" />
           </RowShell>
         )
       })}

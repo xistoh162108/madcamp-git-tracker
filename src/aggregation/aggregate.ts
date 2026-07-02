@@ -27,6 +27,7 @@ export interface AggregatedSnapshot {
     attributionStatus?: CommitRecord["attributionStatus"]
     detectedBots?: string[]
     commitUrl?: string
+    branches?: string[]
     additions?: number
     deletions?: number
     changedFiles?: number
@@ -59,6 +60,19 @@ function rank(
         isNew: previousRankOf !== undefined && prevRank === undefined,
       }
     })
+}
+
+function formatKstCompact(date: Date): string {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Seoul",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23",
+  }).formatToParts(date)
+  const get = (type: string) => parts.find((p) => p.type === type)?.value ?? "00"
+  return `${get("month")}.${get("day")} ${get("hour")}:${get("minute")}`
 }
 
 function previousRankLookup(
@@ -135,13 +149,17 @@ function longestConsecutiveCount(sortedBuckets: string[], unit: "day" | "hour"):
   return longest
 }
 
-export function activityStatsForCommits(commits: CommitRecord[]) {
+export function activityStatsForCommits(commits: CommitRecord[], now = new Date()) {
   const dayBuckets = [...new Set(commits.map((commit) => dayOf(commit.committedAt)))].sort()
   const hourBuckets = [...new Set(commits.map((commit) => hourBucketOf(commit.committedAt)))].sort()
+  const nowIso = now.toISOString()
+  // A streak is only "current" if the last bucket is today/this hour; otherwise it has already broken.
+  const dayStreakIsLive = dayBuckets.at(-1) === dayOf(nowIso)
+  const hourStreakIsLive = hourBuckets.at(-1) === hourBucketOf(nowIso)
   return {
-    currentDayStreak: consecutiveCount(dayBuckets, "day"),
+    currentDayStreak: dayStreakIsLive ? consecutiveCount(dayBuckets, "day") : 0,
     longestDayStreak: longestConsecutiveCount(dayBuckets, "day"),
-    currentHourStreak: consecutiveCount(hourBuckets, "hour"),
+    currentHourStreak: hourStreakIsLive ? consecutiveCount(hourBuckets, "hour") : 0,
     longestHourStreak: longestConsecutiveCount(hourBuckets, "hour"),
     activeHours: hourBuckets.length,
   }
@@ -262,11 +280,7 @@ export function aggregateSnapshot(params: {
 
   return {
     generatedAt: new Date().toISOString(),
-    generatedAtKst: new Intl.DateTimeFormat("ko-KR", {
-      timeZone: "Asia/Seoul",
-      dateStyle: "medium",
-      timeStyle: "short",
-    }).format(new Date()),
+    generatedAtKst: formatKstCompact(new Date()),
     season: params.season,
     currentWeek: params.currentWeek,
     summary: {
@@ -293,6 +307,7 @@ export function aggregateSnapshot(params: {
           attributionStatus: commit.attributionStatus,
           detectedBots: commit.detectedBots,
           commitUrl: commit.commitUrl,
+          branches: commit.sourceBranches,
           additions: commit.additions,
           deletions: commit.deletions,
           changedFiles: commit.changedFiles,

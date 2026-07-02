@@ -19,7 +19,7 @@ export function RankMedal({ rank, className }: RankMedalProps) {
   return (
     <span
       className={cn(
-        "inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border text-sm font-bold tabular",
+        "inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border text-xs font-bold tabular sm:h-8 sm:w-8 sm:text-sm",
         medal,
         rank === 1 && "rank-pulse medal-glow",
         rank > 1 && rank <= 3 && "medal-glow",

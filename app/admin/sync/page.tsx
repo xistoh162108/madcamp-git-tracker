@@ -82,7 +82,7 @@ export default function SyncPage() {
         <div>
           <h1 className="text-xl font-bold tracking-tight text-foreground">동기화 상태</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            GitHub 활동 데이터는 GitHub Actions에서 10분마다 자동 수집됩니다.
+            GitHub 활동 데이터는 서버 cron이 5분마다 자동 수집합니다.
           </p>
         </div>
       </div>
@@ -158,7 +158,7 @@ export default function SyncPage() {
             />
           </div>
           <p className="mt-3 text-[11px] leading-relaxed text-muted-foreground">
-            동기화는 10분 간격으로 고정 실행됩니다. 한도 사용량이 높아지면 수집 범위나 토큰 권한을 점검하세요.
+            동기화는 5분 간격으로 고정 실행됩니다. 한도 사용량이 높아지면 수집 범위나 토큰 권한을 점검하세요.
           </p>
         </section>
 

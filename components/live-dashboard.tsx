@@ -158,6 +158,7 @@ export function LiveDashboard({ initialSnapshot, displayName, weeks, currentWeek
   const [selectedWeekKey, setSelectedWeekKey] = useState(currentWeek ? `w${currentWeek}` : "all")
   const [events, setEvents] = useState<LiveEvent[]>([])
   const snapshotRef = useRef(initialSnapshot)
+  const loadingRef = useRef(false)
   const selectedWeekNumber = selectedWeekKey.startsWith("w") ? Number(selectedWeekKey.slice(1)) : null
   const activeWeek = weeks.find((week) => week.week === (selectedWeekNumber ?? currentWeek))
   const selectedWeekStatus =
@@ -185,18 +186,26 @@ export function LiveDashboard({ initialSnapshot, displayName, weeks, currentWeek
 
   const loadSnapshot = useCallback(
     async (key: string, notify = false) => {
-      const endpoint =
-        key === "all"
-          ? `/api/snapshots/latest?ts=${Date.now()}`
-          : `/api/snapshots/week/${key.slice(1)}?ts=${Date.now()}`
-      const response = await fetch(endpoint, { cache: "no-store" })
-      if (!response.ok) return
-      const next = (await response.json()) as AggregatedSnapshot
+      // Guard against overlapping fetches (e.g. the 1-min interval firing while a
+      // visibilitychange-triggered refresh is still in flight) racing on snapshotRef.
+      if (loadingRef.current) return
+      loadingRef.current = true
       const previous = snapshotRef.current
-      if (next.generatedAt === previous.generatedAt) return
-      snapshotRef.current = next
-      setSnapshot(next)
-      if (notify) pushEvents(detectLiveEvents(previous, next))
+      try {
+        const endpoint =
+          key === "all"
+            ? `/api/snapshots/latest?ts=${Date.now()}`
+            : `/api/snapshots/week/${key.slice(1)}?ts=${Date.now()}`
+        const response = await fetch(endpoint, { cache: "no-store" })
+        if (!response.ok) return
+        const next = (await response.json()) as AggregatedSnapshot
+        if (next.generatedAt === previous.generatedAt) return
+        snapshotRef.current = next
+        setSnapshot(next)
+        if (notify) pushEvents(detectLiveEvents(previous, next))
+      } finally {
+        loadingRef.current = false
+      }
     },
     [pushEvents],
   )
@@ -269,7 +278,7 @@ export function LiveDashboard({ initialSnapshot, displayName, weeks, currentWeek
                 </span>
                 <span className="inline-flex items-center gap-1 rounded-full border border-primary/25 bg-primary/10 px-2.5 py-1 text-[11px] font-medium text-primary">
                   <Flame className="h-3.5 w-3.5" />
-                  10분마다 업데이트
+                  1분마다 업데이트
                 </span>
               </div>
             </div>
@@ -279,23 +288,37 @@ export function LiveDashboard({ initialSnapshot, displayName, weeks, currentWeek
                 <span className="mx-1.5 text-border">·</span>
                 {fmtRange(activeWeek?.startAt, activeWeek?.endAt)}
               </p>
-              <div className="mt-2 grid grid-cols-2 gap-2 text-left sm:grid-cols-4 sm:text-right">
+
+              <div className="mt-3 flex items-center gap-2.5 sm:justify-end">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-gold/30 bg-gold/10">
+                  <Trophy className="h-4.5 w-4.5 text-gold" />
+                </span>
+                <div className="min-w-0 text-left">
+                  <p className="text-[10px] text-muted-foreground">현재 1위</p>
+                  <p className="truncate">
+                    <span className="text-lg font-bold text-foreground">{leader ? leader.label : "-"}</span>
+                    {leader ? (
+                      <span className="ml-1.5 font-mono text-sm font-semibold text-gold tabular">
+                        {leader.commits} commits
+                      </span>
+                    ) : null}
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-3 grid grid-cols-3 gap-2 text-left sm:text-right">
                 <div>
-                  <p className="text-[10px] text-muted-foreground">마감까지</p>
+                  <p className="text-[10px] text-muted-foreground">⏳ 남은 시간</p>
                   <p className="font-semibold text-foreground tabular">{timeLeft}</p>
                 </div>
                 <div>
-                  <p className="text-[10px] text-muted-foreground">현재 1위</p>
-                  <p className="truncate font-semibold text-gold">
-                    {leader ? `${leader.label} · ${leader.commits} commits` : "-"}
+                  <p className="text-[10px] text-muted-foreground">2위와 격차</p>
+                  <p className="font-semibold text-positive tabular">
+                    {leader && runnerUp ? (leaderGap === 0 ? "공동 1위" : `+${leaderGap} commits`) : "-"}
                   </p>
                 </div>
                 <div>
-                  <p className="text-[10px] text-muted-foreground">2위와 격차</p>
-                  <p className="font-semibold text-foreground tabular">{leader ? `${leaderGap} commits` : "-"}</p>
-                </div>
-                <div>
-                  <p className="text-[10px] text-muted-foreground">이번 주 반영</p>
+                  <p className="text-[10px] text-muted-foreground">이번 주 집계</p>
                   <p className="font-semibold text-primary tabular">{snapshot.summary.totalCommits} commits</p>
                 </div>
               </div>
@@ -306,7 +329,7 @@ export function LiveDashboard({ initialSnapshot, displayName, weeks, currentWeek
 
         <MetricCards snapshot={snapshot} />
 
-        <div className="mt-5 grid gap-4 lg:grid-cols-[minmax(0,1fr)_400px]">
+        <div className="mt-5 grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_400px]">
           <LeaderboardSection
             snapshot={snapshot}
             weeks={weeks}

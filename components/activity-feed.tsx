@@ -14,6 +14,7 @@ interface CommitFeedItem {
   href?: string
   attributionStatus?: AggregatedSnapshot["activityFeed"][number]["attributionStatus"]
   detectedBots?: string[]
+  branches?: string[]
   additions?: number
   deletions?: number
   changedFiles?: number
@@ -31,6 +32,7 @@ interface FeedGroup {
   changedFiles?: number
   attributionStatus?: CommitFeedItem["attributionStatus"]
   detectedBots: string[]
+  branches: string[]
 }
 
 function formatTime(iso: string) {
@@ -52,6 +54,7 @@ function feedItems(snapshot?: AggregatedSnapshot): CommitFeedItem[] {
       href: item.commitUrl,
       attributionStatus: item.attributionStatus,
       detectedBots: item.detectedBots,
+      branches: item.branches,
       additions: item.additions,
       deletions: item.deletions,
       changedFiles: item.changedFiles,
@@ -81,6 +84,7 @@ function groupFeed(items: CommitFeedItem[]): FeedGroup[] {
       latest.deletions = sumOptional(latest.deletions, item.deletions)
       latest.changedFiles = sumOptional(latest.changedFiles, item.changedFiles)
       latest.detectedBots = [...new Set([...latest.detectedBots, ...(item.detectedBots ?? [])])]
+      latest.branches = [...new Set([...latest.branches, ...(item.branches ?? [])])]
       latest.attributionStatus = latest.attributionStatus ?? item.attributionStatus
       continue
     }
@@ -96,6 +100,7 @@ function groupFeed(items: CommitFeedItem[]): FeedGroup[] {
       changedFiles: item.changedFiles,
       attributionStatus: item.attributionStatus,
       detectedBots: item.detectedBots ?? [],
+      branches: item.branches ?? [],
     })
   }
   return groups.slice(0, 12)
@@ -121,10 +126,13 @@ function kindForGroup(group: FeedGroup) {
 
 function StatsLine({ group }: { group: FeedGroup }) {
   const hasStats = group.additions !== undefined || group.deletions !== undefined || group.changedFiles !== undefined
+  const branch = group.branches[0]
+  const branchLabel = branch ? `🌿 ${branch}${group.branches.length > 1 ? ` +${group.branches.length - 1}` : ""}` : null
   if (!hasStats) {
     return (
-      <span className="text-[10px] text-muted-foreground">
-        {group.items.length === 1 ? "1 commit" : `${group.items.length} commits grouped`}
+      <span className="flex flex-wrap gap-1.5 text-[10px] text-muted-foreground">
+        <span>{group.items.length === 1 ? "1 commit" : `${group.items.length} commits grouped`}</span>
+        {branchLabel ? <span className="truncate font-mono">{branchLabel}</span> : null}
       </span>
     )
   }
@@ -136,6 +144,7 @@ function StatsLine({ group }: { group: FeedGroup }) {
       {group.changedFiles !== undefined ? (
         <span className="text-muted-foreground">{group.changedFiles} files changed</span>
       ) : null}
+      {branchLabel ? <span className="truncate font-mono text-muted-foreground">{branchLabel}</span> : null}
     </span>
   )
 }

@@ -12,19 +12,29 @@ interface Metric {
   value?: number
   text?: string
   subtext?: string
+  members?: string
   suffix?: string
   icon: React.ElementType
   accent?: string
 }
 
 export function MetricCards({ snapshot }: { snapshot?: AggregatedSnapshot }) {
-  const topTeam = snapshot?.rankings.teams[0]?.label.replace(/^.*?(w\d+-c\d+-\d+)$/, "$1") ?? summary.topTeam
-  const topTeamMeta = snapshot?.rankings.teams[0]?.meta
+  const topTeamEntry = snapshot?.rankings.teams[0]
+  const topTeam = topTeamEntry?.label.replace(/^.*?(w\d+-c\d+-\d+)$/, "$1") ?? summary.topTeam
+  const topTeamMeta = topTeamEntry?.meta
+  const topTeamMembers =
+    topTeamEntry && snapshot
+      ? [...new Set(snapshot.activityFeed.filter((item) => item.repoName === topTeamEntry.label).map((item) => item.label))]
+          .slice(0, 4)
+          .join(", ")
+      : undefined
   const topClass = snapshot?.rankings.classes[0]?.label ?? summary.topClass
   const totalCommits = snapshot?.summary.totalCommits ?? summary.totalCommits
   const weekCommits = totalCommits
   const activeRepos = snapshot?.summary.activeRepos ?? summary.activeRepos
   const activeParticipants = snapshot?.summary.activeParticipants ?? summary.participants
+  const totalRepos = snapshot?.sync?.reposScanned
+  const totalParticipants = snapshot?.summary.participants
   const allCommits = totalCommits
   const averagePerPerson =
     snapshot && snapshot.summary.activeParticipants > 0
@@ -41,18 +51,25 @@ export function MetricCards({ snapshot }: { snapshot?: AggregatedSnapshot }) {
     {
       label: "활성 repo",
       value: activeRepos,
-      suffix: "개",
+      suffix: totalRepos ? `/${totalRepos}개` : "개",
       icon: FolderGit2,
       accent: "text-foreground",
     },
     {
       label: "활동 참가자",
       value: activeParticipants,
-      suffix: "명",
+      suffix: totalParticipants ? `/${totalParticipants}명` : "명",
       icon: Users,
       accent: "text-foreground",
     },
-    { label: "가장 활발한 팀", text: topTeam, subtext: topTeamMeta, icon: Trophy, accent: "text-gold" },
+    {
+      label: "가장 활발한 팀",
+      text: topTeam,
+      subtext: topTeamMeta,
+      members: topTeamMembers,
+      icon: Trophy,
+      accent: "text-gold",
+    },
   ]
 
   return (
@@ -79,18 +96,21 @@ export function MetricCards({ snapshot }: { snapshot?: AggregatedSnapshot }) {
               <m.icon className={cn("h-4 w-4", m.accent)} />
             </motion.span>
           </div>
-          <div className="mt-2 flex items-baseline gap-1.5 text-2xl font-bold tracking-tight tabular">
+          <div className="mt-2 flex min-w-0 flex-col text-2xl font-bold tracking-tight tabular sm:flex-row sm:items-baseline sm:gap-1.5">
             {m.value !== undefined ? (
               <CountUp value={m.value} suffix={m.suffix} />
             ) : (
               <>
-                <span className="truncate font-mono text-xl">{m.text}</span>
+                <span className="min-w-0 truncate font-mono text-xl">{m.text}</span>
                 {m.subtext ? (
-                  <span className="truncate text-xs font-medium text-muted-foreground">{m.subtext}</span>
+                  <span className="min-w-0 truncate text-xs font-medium text-muted-foreground">{m.subtext}</span>
                 ) : null}
               </>
             )}
           </div>
+          {m.members ? (
+            <p className="mt-1 truncate text-[10px] font-normal text-muted-foreground">{m.members}</p>
+          ) : null}
         </motion.div>
       ))}
       <motion.div

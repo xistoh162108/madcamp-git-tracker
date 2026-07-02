@@ -60,8 +60,8 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ rep
     ? (() => {
         const days: { date: string; commits: number }[] = []
         const cursor = new Date(weekConfig.startAt)
-        const end = new Date(weekConfig.endAt)
-        while (cursor <= end) {
+        const endKey = dateKey(new Date(weekConfig.endAt))
+        while (dateKey(cursor) <= endKey) {
           const key = dateKey(cursor)
           days.push({ date: key.slice(5).replace("-", "."), commits: teamDayCounts.get(key) ?? 0 })
           cursor.setDate(cursor.getDate() + 1)

@@ -29,7 +29,7 @@ export function AdminSyncControls({ currentWeek }: { currentWeek: number | null 
         <div>
           <h2 className="text-sm font-semibold text-foreground">관리자 동기화 제어</h2>
           <p className="mt-0.5 text-xs text-muted-foreground">
-            자동 동기화는 10분마다 실행되고, 이 버튼들은 관리자 세션에서만 사용할 수 있습니다.
+            자동 동기화는 5분마다 실행되고, 이 버튼들은 관리자 세션에서만 사용할 수 있습니다.
           </p>
         </div>
       </div>

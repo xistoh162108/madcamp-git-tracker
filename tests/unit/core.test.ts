@@ -672,10 +672,18 @@ describe("aggregation", () => {
       longestHourStreak: 0,
       activeHours: 0,
     })
-    expect(activityStatsForCommits(streakCommits)).toEqual({
+    expect(activityStatsForCommits(streakCommits, new Date("2026-07-12T01:45:00+09:00"))).toEqual({
       currentDayStreak: 3,
       longestDayStreak: 3,
       currentHourStreak: 1,
+      longestHourStreak: 3,
+      activeHours: 4,
+    })
+    // once the person stops committing, the "current" streak breaks even though longest is unchanged
+    expect(activityStatsForCommits(streakCommits, new Date("2026-07-14T09:00:00+09:00"))).toEqual({
+      currentDayStreak: 0,
+      longestDayStreak: 3,
+      currentHourStreak: 0,
       longestHourStreak: 3,
       activeHours: 4,
     })
