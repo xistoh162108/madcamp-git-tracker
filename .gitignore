@@ -26,6 +26,9 @@ yarn-error.log*
 .cache/
 Proceed with design.zip
 
+# current token lacks `workflow` scope to push these; add manually via GitHub UI or a scoped token
+.github/workflows/*.yml
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
