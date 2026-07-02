@@ -1,0 +1,30 @@
+services:
+  app:
+    build: .
+    environment:
+      NODE_ENV: production
+      HOSTNAME: 0.0.0.0
+      PORT: 3000
+      ADMIN_TOKEN: ${ADMIN_TOKEN:-local-admin-token}
+    ports:
+      - "3000:3000"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:3000/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  postgres:
+    image: postgres:17-alpine
+    profiles: ["postgres"]
+    environment:
+      POSTGRES_DB: madcamp_leaderboard
+      POSTGRES_USER: madcamp
+      POSTGRES_PASSWORD: madcamp
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+volumes:
+  postgres-data:

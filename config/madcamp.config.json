@@ -1,0 +1,44 @@
+{
+  "season": "2026-summer",
+  "displayName": "2026 여름학기",
+  "timezone": "Asia/Seoul",
+  "githubOrg": "madcamp-official",
+  "repoNamePattern": "{yy}{semCode}-w{week}-c{class}-{teamNumber}",
+  "commitScope": "all_branches",
+  "classCount": 3,
+  "weeks": [
+    {
+      "week": 1,
+      "label": "1주차",
+      "startAt": "2026-07-02T09:00:00+09:00",
+      "endAt": "2026-07-09T11:59:59+09:00",
+      "enabled": true
+    },
+    {
+      "week": 2,
+      "label": "2주차",
+      "startAt": "2026-07-09T12:00:00+09:00",
+      "endAt": "2026-07-16T11:59:59+09:00",
+      "enabled": true
+    },
+    {
+      "week": 3,
+      "label": "3주차",
+      "startAt": "2026-07-16T12:00:00+09:00",
+      "endAt": "2026-07-23T11:59:59+09:00",
+      "enabled": true
+    },
+    {
+      "week": 4,
+      "label": "4주차",
+      "startAt": "2026-07-23T12:00:00+09:00",
+      "endAt": "2026-07-31T11:59:59+09:00",
+      "enabled": true
+    }
+  ],
+  "ranking": {
+    "defaultClassMetric": "averagePerPerson",
+    "showDailyHighlights": true,
+    "dailyWindowHours": 24
+  }
+}

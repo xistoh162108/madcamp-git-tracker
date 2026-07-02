@@ -1,0 +1,213 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .text-pretty {
+    text-wrap: pretty;
+  }
+  /* numeric tabular for stats */
+  .tabular {
+    font-feature-settings: "tnum";
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@layer base {
+  :root {
+    --font-sans: var(--font-geist-sans);
+    --font-mono: var(--font-geist-mono);
+
+    /* Dark, calm GitHub-analytics surfaces (navy / charcoal) */
+    --background: 222 28% 6%;
+    --foreground: 210 40% 98%;
+
+    --card: 222 24% 9%;
+    --card-foreground: 210 20% 92%;
+
+    --popover: 222 26% 8%;
+    --popover-foreground: 210 20% 92%;
+
+    /* electric blue / cyan accent */
+    --primary: 196 90% 54%;
+    --primary-foreground: 222 40% 6%;
+
+    --secondary: 222 18% 14%;
+    --secondary-foreground: 210 18% 88%;
+
+    --muted: 222 16% 13%;
+    --muted-foreground: 215 20% 65%;
+
+    /* violet */
+    --accent: 264 70% 64%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 62% 52%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 16% 20%;
+    --input: 220 16% 17%;
+    --ring: 196 90% 54%;
+
+    /* supporting semantic accents */
+    --positive: 96 60% 50%; /* lime - positive change */
+    --gold: 42 92% 58%; /* top 1 */
+    --silver: 215 14% 65%;
+    --bronze: 28 60% 50%;
+
+    --radius: 0.75rem;
+
+    /* chart palette */
+    --chart-1: 196 90% 54%;
+    --chart-2: 264 70% 64%;
+    --chart-3: 96 60% 50%;
+    --chart-4: 42 92% 58%;
+    --chart-5: 215 60% 60%;
+
+    --sidebar-background: 222 26% 8%;
+    --sidebar-foreground: 210 18% 86%;
+    --sidebar-primary: 196 90% 54%;
+    --sidebar-primary-foreground: 222 40% 6%;
+    --sidebar-accent: 222 18% 14%;
+    --sidebar-accent-foreground: 210 18% 88%;
+    --sidebar-border: 220 16% 17%;
+    --sidebar-ring: 196 90% 54%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--primary) / 0.55) hsl(var(--background));
+  }
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: hsl(var(--background));
+  }
+  ::-webkit-scrollbar-thumb {
+    border: 2px solid hsl(var(--background));
+    border-radius: 999px;
+    background: linear-gradient(180deg, hsl(var(--primary) / 0.75), hsl(var(--accent) / 0.65));
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, hsl(var(--primary)), hsl(var(--accent)));
+  }
+}
+
+@layer utilities {
+  @keyframes rise-in {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  .animate-rise-in {
+    animation: rise-in 0.4s ease-out both;
+  }
+
+  @keyframes leaderboard-scan {
+    0% {
+      transform: translateX(-120%);
+      opacity: 0;
+    }
+    18% {
+      opacity: 0.55;
+    }
+    55% {
+      opacity: 0.2;
+    }
+    100% {
+      transform: translateX(120%);
+      opacity: 0;
+    }
+  }
+
+  @keyframes rank-pulse {
+    0%,
+    100% {
+      box-shadow: 0 0 0 0 hsl(var(--primary) / 0);
+    }
+    50% {
+      box-shadow: 0 0 28px -10px hsl(var(--primary) / 0.9);
+    }
+  }
+
+  @keyframes medal-glow {
+    0%,
+    100% {
+      filter: drop-shadow(0 0 0 hsl(var(--gold) / 0));
+    }
+    50% {
+      filter: drop-shadow(0 0 10px hsl(var(--gold) / 0.55));
+    }
+  }
+
+  @keyframes progress-glint {
+    from {
+      transform: translateX(-100%);
+    }
+    to {
+      transform: translateX(220%);
+    }
+  }
+
+  .leaderboard-arena {
+    background:
+      linear-gradient(135deg, hsl(var(--primary) / 0.08), transparent 34%),
+      radial-gradient(circle at 82% 12%, hsl(var(--gold) / 0.12), transparent 24%),
+      linear-gradient(180deg, hsl(var(--card) / 0.94), hsl(var(--background) / 0.82));
+  }
+
+  .leaderboard-scan::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(90deg, transparent, hsl(var(--primary) / 0.16), transparent);
+    animation: leaderboard-scan 4.8s ease-in-out infinite;
+  }
+
+  .rank-pulse {
+    animation: rank-pulse 2.8s ease-in-out infinite;
+  }
+
+  .medal-glow {
+    animation: medal-glow 2.6s ease-in-out infinite;
+  }
+
+  .progress-glint::after {
+    content: "";
+    position: absolute;
+    inset-block: 0;
+    left: 0;
+    width: 38%;
+    background: linear-gradient(90deg, transparent, hsl(var(--foreground) / 0.35), transparent);
+    animation: progress-glint 2.4s ease-in-out infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .leaderboard-scan::after,
+    .rank-pulse,
+    .medal-glow,
+    .progress-glint::after,
+    .animate-rise-in {
+      animation: none;
+    }
+  }
+}

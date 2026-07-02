@@ -1,0 +1,9 @@
+.codex_work
+.next
+.cache
+node_modules
+*.zip
+pnpm-lock.yaml
+madcamp_leaderboard_sdd_docs
+test-results
+playwright-report
