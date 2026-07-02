@@ -1,7 +1,7 @@
 {
-  "syncStartedAt": "2026-07-02T08:25:01.404Z",
-  "syncFinishedAt": "2026-07-02T08:25:21.693Z",
-  "durationMs": 20289,
+  "syncStartedAt": "2026-07-02T08:40:01.861Z",
+  "syncFinishedAt": "2026-07-02T08:40:21.552Z",
+  "durationMs": 19691,
   "week": 1,
   "status": "success",
   "commitScope": "all_branches",
@@ -11,14 +11,14 @@
   "reposFailed": 0,
   "branchesScanned": 27,
   "commitPagesFetched": 27,
-  "commitsFetched": 45,
-  "uniqueCommits": 35,
+  "commitsFetched": 49,
+  "uniqueCommits": 39,
   "unknownAuthors": 0,
   "rateLimit": {
     "limit": 5000,
-    "remaining": 4503,
+    "remaining": 4245,
     "reset": 1782983101,
-    "used": 497
+    "used": 755
   },
   "failedRepos": [],
   "repoReports": [
@@ -60,9 +60,9 @@
       "branchesScanned": 3,
       "branchesFetched": 1,
       "pagesFetched": 3,
-      "commitsFetched": 19,
+      "commitsFetched": 20,
       "firstCommitAt": "2026-07-02T07:40:54Z",
-      "lastCommitAt": "2026-07-02T08:22:46Z"
+      "lastCommitAt": "2026-07-02T08:25:25Z"
     },
     {
       "repoName": "26s-w1-c1-05",
@@ -106,9 +106,9 @@
       "branchesScanned": 1,
       "branchesFetched": 1,
       "pagesFetched": 1,
-      "commitsFetched": 1,
+      "commitsFetched": 2,
       "firstCommitAt": "2026-07-02T07:49:18Z",
-      "lastCommitAt": "2026-07-02T07:49:18Z"
+      "lastCommitAt": "2026-07-02T08:26:23Z"
     },
     {
       "repoName": "26s-w1-c2-02",
@@ -198,9 +198,9 @@
       "branchesScanned": 1,
       "branchesFetched": 1,
       "pagesFetched": 1,
-      "commitsFetched": 21,
+      "commitsFetched": 23,
       "firstCommitAt": "2026-07-02T05:20:04Z",
-      "lastCommitAt": "2026-07-02T08:22:46Z"
+      "lastCommitAt": "2026-07-02T08:33:09Z"
     },
     {
       "repoName": "26s-w1-c3-03",
@@ -277,7 +277,7 @@
   ],
   "warnings": [],
   "attribution": {
-    "participantCommits": 35,
+    "participantCommits": 39,
     "coAuthoredParticipantCommits": 0,
     "botWithParticipant": 0,
     "botOnly": 0,

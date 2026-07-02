@@ -1,11 +1,11 @@
 {
-  "generatedAt": "2026-07-02T08:25:21.751Z",
-  "generatedAtKst": "2026. 7. 2. PM 5:25",
+  "generatedAt": "2026-07-02T08:40:21.609Z",
+  "generatedAtKst": "2026. 7. 2. PM 5:40",
   "season": "2026-summer",
   "currentWeek": 1,
   "summary": {
-    "totalCommits": 35,
-    "mappedCommits": 35,
+    "totalCommits": 39,
+    "mappedCommits": 39,
     "activeRepos": 6,
     "participants": 50,
     "activeParticipants": 8
@@ -15,9 +15,9 @@
       {
         "id": "박수현-suh1088",
         "label": "박수현",
-        "commits": 12,
+        "commits": 13,
         "activeDays": 1,
-        "lastActivityAt": "2026-07-02T08:05:15Z",
+        "lastActivityAt": "2026-07-02T08:33:09Z",
         "meta": "suh1088",
         "activityStats": {
           "currentDayStreak": 1,
@@ -34,9 +34,9 @@
       {
         "id": "이지오-easy0131",
         "label": "이지오",
-        "commits": 9,
+        "commits": 10,
         "activeDays": 1,
-        "lastActivityAt": "2026-07-02T08:22:46Z",
+        "lastActivityAt": "2026-07-02T08:28:11Z",
         "meta": "easy0131",
         "activityStats": {
           "currentDayStreak": 1,
@@ -48,6 +48,25 @@
         "honorTitles": [],
         "rank": 2,
         "prevRank": 2,
+        "isNew": false
+      },
+      {
+        "id": "김태현-terry2549",
+        "label": "김태현",
+        "commits": 5,
+        "activeDays": 1,
+        "lastActivityAt": "2026-07-02T08:25:25Z",
+        "meta": "terry2549",
+        "activityStats": {
+          "currentDayStreak": 1,
+          "longestDayStreak": 1,
+          "currentHourStreak": 2,
+          "longestHourStreak": 2,
+          "activeHours": 2
+        },
+        "honorTitles": [],
+        "rank": 3,
+        "prevRank": 3,
         "isNew": false
       },
       {
@@ -65,27 +84,8 @@
           "activeHours": 2
         },
         "honorTitles": [],
-        "rank": 3,
-        "prevRank": 4,
-        "isNew": false
-      },
-      {
-        "id": "김태현-terry2549",
-        "label": "김태현",
-        "commits": 4,
-        "activeDays": 1,
-        "lastActivityAt": "2026-07-02T08:07:53Z",
-        "meta": "terry2549",
-        "activityStats": {
-          "currentDayStreak": 1,
-          "longestDayStreak": 1,
-          "currentHourStreak": 2,
-          "longestHourStreak": 2,
-          "activeHours": 2
-        },
-        "honorTitles": [],
         "rank": 4,
-        "prevRank": 3,
+        "prevRank": 4,
         "isNew": false
       },
       {
@@ -108,18 +108,18 @@
         "isNew": false
       },
       {
-        "id": "안종화-anjonghwa0",
-        "label": "안종화",
-        "commits": 1,
+        "id": "양우현-hyun020215",
+        "label": "양우현",
+        "commits": 2,
         "activeDays": 1,
-        "lastActivityAt": "2026-07-02T05:12:06Z",
-        "meta": "anjonghwa0",
+        "lastActivityAt": "2026-07-02T08:26:23Z",
+        "meta": "hyun020215",
         "activityStats": {
           "currentDayStreak": 1,
           "longestDayStreak": 1,
-          "currentHourStreak": 1,
-          "longestHourStreak": 1,
-          "activeHours": 1
+          "currentHourStreak": 2,
+          "longestHourStreak": 2,
+          "activeHours": 2
         },
         "honorTitles": [],
         "rank": 6,
@@ -127,12 +127,12 @@
         "isNew": false
       },
       {
-        "id": "양우현-hyun020215",
-        "label": "양우현",
+        "id": "안종화-anjonghwa0",
+        "label": "안종화",
         "commits": 1,
         "activeDays": 1,
-        "lastActivityAt": "2026-07-02T07:49:18Z",
-        "meta": "hyun020215",
+        "lastActivityAt": "2026-07-02T05:12:06Z",
+        "meta": "anjonghwa0",
         "activityStats": {
           "currentDayStreak": 1,
           "longestDayStreak": 1,
@@ -169,11 +169,11 @@
       {
         "id": "26s-w1-c3-02",
         "label": "26s-w1-c3-02",
-        "commits": 21,
+        "commits": 23,
         "activeDays": 1,
-        "lastActivityAt": "2026-07-02T08:22:46Z",
+        "lastActivityAt": "2026-07-02T08:33:09Z",
         "meta": "3분반 · 02팀",
-        "averagePerPerson": 10.5,
+        "averagePerPerson": 11.5,
         "rank": 1,
         "prevRank": 1,
         "isNew": false
@@ -181,13 +181,25 @@
       {
         "id": "26s-w1-c1-04",
         "label": "26s-w1-c1-04",
-        "commits": 9,
+        "commits": 10,
         "activeDays": 1,
-        "lastActivityAt": "2026-07-02T08:22:46Z",
+        "lastActivityAt": "2026-07-02T08:25:25Z",
         "meta": "1분반 · 04팀",
-        "averagePerPerson": 4.5,
+        "averagePerPerson": 5,
         "rank": 2,
         "prevRank": 2,
+        "isNew": false
+      },
+      {
+        "id": "26s-w1-c2-01",
+        "label": "26s-w1-c2-01",
+        "commits": 2,
+        "activeDays": 1,
+        "lastActivityAt": "2026-07-02T08:26:23Z",
+        "meta": "2분반 · 01팀",
+        "averagePerPerson": 2,
+        "rank": 3,
+        "prevRank": 3,
         "isNew": false
       },
       {
@@ -198,8 +210,8 @@
         "lastActivityAt": "2026-07-02T07:48:05Z",
         "meta": "3분반 · 09팀",
         "averagePerPerson": 2,
-        "rank": 3,
-        "prevRank": 3,
+        "rank": 4,
+        "prevRank": 4,
         "isNew": false
       },
       {
@@ -210,8 +222,8 @@
         "lastActivityAt": "2026-07-02T05:12:06Z",
         "meta": "1분반 · 05팀",
         "averagePerPerson": 1,
-        "rank": 4,
-        "prevRank": 4,
+        "rank": 5,
+        "prevRank": 5,
         "isNew": false
       },
       {
@@ -222,18 +234,6 @@
         "lastActivityAt": "2026-07-02T07:43:06Z",
         "meta": "1분반 · 07팀",
         "averagePerPerson": 1,
-        "rank": 5,
-        "prevRank": 5,
-        "isNew": false
-      },
-      {
-        "id": "26s-w1-c2-01",
-        "label": "26s-w1-c2-01",
-        "commits": 1,
-        "activeDays": 1,
-        "lastActivityAt": "2026-07-02T07:49:18Z",
-        "meta": "2분반 · 01팀",
-        "averagePerPerson": 1,
         "rank": 6,
         "prevRank": 6,
         "isNew": false
@@ -243,11 +243,11 @@
       {
         "id": "3",
         "label": "3분반",
-        "commits": 23,
+        "commits": 25,
         "activeDays": 1,
-        "lastActivityAt": "2026-07-02T08:22:46Z",
+        "lastActivityAt": "2026-07-02T08:33:09Z",
         "meta": "18명",
-        "averagePerPerson": 1.2777777777777777,
+        "averagePerPerson": 1.3888888888888888,
         "rank": 1,
         "prevRank": 1,
         "isNew": false
@@ -255,11 +255,11 @@
       {
         "id": "1",
         "label": "1분반",
-        "commits": 11,
+        "commits": 12,
         "activeDays": 1,
-        "lastActivityAt": "2026-07-02T08:22:46Z",
+        "lastActivityAt": "2026-07-02T08:25:25Z",
         "meta": "15명",
-        "averagePerPerson": 0.7333333333333333,
+        "averagePerPerson": 0.8,
         "rank": 2,
         "prevRank": 2,
         "isNew": false
@@ -267,11 +267,11 @@
       {
         "id": "2",
         "label": "2분반",
-        "commits": 1,
+        "commits": 2,
         "activeDays": 1,
-        "lastActivityAt": "2026-07-02T07:49:18Z",
+        "lastActivityAt": "2026-07-02T08:26:23Z",
         "meta": "17명",
-        "averagePerPerson": 0.058823529411764705,
+        "averagePerPerson": 0.11764705882352941,
         "rank": 3,
         "prevRank": 3,
         "isNew": false
@@ -279,6 +279,58 @@
     ]
   },
   "activityFeed": [
+    {
+      "id": "26s-w1-c3-02:40b092cd46386aa07c1c3d4cc21fc5116ea74e87",
+      "repoName": "26s-w1-c3-02",
+      "label": "suh1088",
+      "committedAt": "2026-07-02T08:33:09Z",
+      "summary": "정리",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-02/commit/40b092cd46386aa07c1c3d4cc21fc5116ea74e87",
+      "additions": 18,
+      "deletions": 35,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c3-02:9bb54f70c0ac5c7c222868cd8bb3ebc2e7853a19",
+      "repoName": "26s-w1-c3-02",
+      "label": "easy0131",
+      "committedAt": "2026-07-02T08:28:11Z",
+      "summary": "선택기능 상세",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-02/commit/9bb54f70c0ac5c7c222868cd8bb3ebc2e7853a19",
+      "additions": 12,
+      "deletions": 21,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c2-01:80ae0691e5b183d62bc0e2c46a1d2f8ee7e5b66b",
+      "repoName": "26s-w1-c2-01",
+      "label": "hyun020215",
+      "committedAt": "2026-07-02T08:26:23Z",
+      "summary": "README 업데이트: 워크스페이스 공유/초대 기능 추가 및 API 문서 확장",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-01/commit/80ae0691e5b183d62bc0e2c46a1d2f8ee7e5b66b",
+      "additions": 45,
+      "deletions": 2,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c1-04:980b46c6af33de395a9a2c2ceb25a063c5108d91",
+      "repoName": "26s-w1-c1-04",
+      "label": "terry2549",
+      "committedAt": "2026-07-02T08:25:25Z",
+      "summary": "Update README.md",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-04/commit/980b46c6af33de395a9a2c2ceb25a063c5108d91",
+      "additions": 2,
+      "deletions": 6,
+      "changedFiles": 1
+    },
     {
       "id": "26s-w1-c1-04:5edca3c8bc62d00d7d0ee3960656b712802e5561",
       "repoName": "26s-w1-c1-04",
@@ -738,7 +790,7 @@
   "heatmap": [
     {
       "date": "2026-07-02",
-      "count": 35
+      "count": 39
     }
   ],
   "unknownUsers": [],
@@ -747,11 +799,11 @@
     "failedRepos": [],
     "rateLimit": {
       "limit": 5000,
-      "remaining": 4503,
+      "remaining": 4245,
       "reset": 1782983101,
-      "used": 497
+      "used": 755
     },
     "reposScanned": 24,
-    "commitsProcessed": 35
+    "commitsProcessed": 39
   }
 }

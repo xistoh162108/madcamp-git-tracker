@@ -3,6 +3,7 @@ import Link from "next/link"
 import { notFound } from "next/navigation"
 import { ArrowLeft, Github, GitCommitHorizontal, CalendarClock, Hash } from "lucide-react"
 import { TopNav } from "@/components/top-nav"
+import { AutoRefresh } from "@/components/auto-refresh"
 import { InitialsAvatar } from "@/components/initials-avatar"
 import { HonorTitleChip } from "@/components/badge-chip"
 import { Notice } from "@/components/notice"
@@ -142,6 +143,7 @@ export default async function ParticipantDetailPage({ params }: { params: Promis
 
   return (
     <div className="min-h-screen">
+      <AutoRefresh />
       <TopNav />
       <main className="mx-auto max-w-[1280px] px-4 py-5 sm:px-6 sm:py-6">
         <Link

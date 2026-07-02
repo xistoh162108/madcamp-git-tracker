@@ -13,7 +13,7 @@ import { contributionNoticeText, kstNoticeText } from "@/lib/data"
 import type { AggregatedSnapshot } from "@/src/aggregation/aggregate"
 import type { WeekConfig } from "@/src/config/schema"
 
-const SNAPSHOT_REFRESH_MS = 10 * 60 * 1000
+const SNAPSHOT_REFRESH_MS = 60 * 1000
 
 interface LiveDashboardProps {
   initialSnapshot: AggregatedSnapshot

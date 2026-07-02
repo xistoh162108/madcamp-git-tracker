@@ -3,6 +3,7 @@ import Link from "next/link"
 import { notFound } from "next/navigation"
 import { ArrowLeft, Github, FileText, GitCommitHorizontal, Users, Clock, CalendarClock } from "lucide-react"
 import { TopNav } from "@/components/top-nav"
+import { AutoRefresh } from "@/components/auto-refresh"
 import { InitialsAvatar } from "@/components/initials-avatar"
 import { Notice } from "@/components/notice"
 import { DailyLineChart, MemberBarChart } from "@/components/detail-charts"
@@ -71,6 +72,7 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ rep
 
   return (
     <div className="min-h-screen">
+      <AutoRefresh />
       <TopNav />
       <main className="mx-auto max-w-[1100px] px-4 py-5 sm:px-6 sm:py-6">
         <Link
