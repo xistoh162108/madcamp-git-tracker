@@ -9,6 +9,7 @@ import { DailyLineChart, MemberBarChart } from "@/components/detail-charts"
 import { repoNoticeText } from "@/lib/data"
 import buildTimeSnapshot from "@/public/data/snapshots/latest.json"
 import type { AggregatedSnapshot } from "@/src/aggregation/aggregate"
+import { loadConfig } from "@/src/config/load-config"
 import { readSnapshotFallback } from "@/src/snapshot/fallback"
 
 export const dynamic = "force-dynamic"
@@ -17,11 +18,25 @@ function fmtRepoShort(repo: string) {
   return repo.replace(/^.*?(w\d+-c\d+-\d+)$/, "$1")
 }
 
+function dateKey(date: Date) {
+  return new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Seoul" }).format(date)
+}
+
 export default async function TeamDetailPage({ params }: { params: Promise<{ repo: string }> }) {
   const { repo } = await params
+  const config = loadConfig()
+  const weekNumber = Number(repo.match(/^w(\d+)-/)?.[1])
+  const weekConfig = config.weeks.find((week) => week.week === weekNumber)
+
+  const snapshotPath = weekConfig
+    ? path.join(process.cwd(), "public", "data", "snapshots", `${config.season}-w${weekNumber}.json`)
+    : path.join(process.cwd(), "public", "data", "snapshots", "latest.json")
   const snapshot = readSnapshotFallback<AggregatedSnapshot>(
-    path.join(process.cwd(), "public", "data", "snapshots", "latest.json"),
-    buildTimeSnapshot as AggregatedSnapshot,
+    snapshotPath,
+    readSnapshotFallback<AggregatedSnapshot>(
+      path.join(process.cwd(), "public", "data", "snapshots", "latest.json"),
+      buildTimeSnapshot as AggregatedSnapshot,
+    ),
   )
   const team = snapshot.rankings.teams.find((t) => fmtRepoShort(t.label) === repo || t.label === repo)
   if (!team) notFound()
@@ -34,9 +49,25 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ rep
     .map(([name, commits]) => ({ name, commits }))
     .sort((a, b) => b.commits - a.commits)
   const avg = (team.averagePerPerson ?? team.commits / Math.max(1, memberData.length)).toFixed(1)
-  const weekTrend = snapshot.heatmap
-    .slice(-7)
-    .map((day) => ({ date: day.date.slice(5).replace("-", "."), commits: day.count }))
+
+  const teamDayCounts = new Map<string, number>()
+  for (const item of teamFeed) {
+    const key = dateKey(new Date(item.committedAt))
+    teamDayCounts.set(key, (teamDayCounts.get(key) ?? 0) + 1)
+  }
+  const weekTrend = weekConfig
+    ? (() => {
+        const days: { date: string; commits: number }[] = []
+        const cursor = new Date(weekConfig.startAt)
+        const end = new Date(weekConfig.endAt)
+        while (cursor <= end) {
+          const key = dateKey(cursor)
+          days.push({ date: key.slice(5).replace("-", "."), commits: teamDayCounts.get(key) ?? 0 })
+          cursor.setDate(cursor.getDate() + 1)
+        }
+        return days
+      })()
+    : snapshot.heatmap.slice(-7).map((day) => ({ date: day.date.slice(5).replace("-", "."), commits: day.count }))
 
   return (
     <div className="min-h-screen">
@@ -62,7 +93,7 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ rep
                 <div className="mt-1.5 flex flex-wrap items-center gap-1.5 text-[11px]">
                   <span className="rounded border border-border/70 bg-muted/40 px-1.5 py-0.5">{team.meta}</span>
                   <span className="rounded border border-border/70 bg-muted/40 px-1.5 py-0.5">
-                    {snapshot.currentWeek ?? "-"}주차
+                    {weekNumber || "-"}주차
                   </span>
                   <span className="rounded border border-border/70 bg-muted/40 px-1.5 py-0.5">
                     팀 #{short.split("-").pop()}
@@ -116,7 +147,7 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ rep
         <div className="mt-4 grid gap-4 lg:grid-cols-2">
           <section className="rounded-xl border border-border/70 bg-card/70 p-4">
             <h2 className="text-sm font-semibold">팀원별 커밋 수</h2>
-            <p className="mt-0.5 text-xs text-muted-foreground">2주차 · 한국 시간</p>
+            <p className="mt-0.5 text-xs text-muted-foreground">{weekConfig?.label ?? `${weekNumber}주차`} · 한국 시간</p>
             <div className="mt-4">
               <MemberBarChart data={memberData} />
             </div>
@@ -124,7 +155,7 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ rep
 
           <section className="rounded-xl border border-border/70 bg-card/70 p-4">
             <h2 className="text-sm font-semibold">날짜별 커밋 추이</h2>
-            <p className="mt-0.5 text-xs text-muted-foreground">이번 주 · 한국 시간</p>
+            <p className="mt-0.5 text-xs text-muted-foreground">{weekConfig?.label ?? `${weekNumber}주차`} · 한국 시간</p>
             <div className="mt-4">
               <DailyLineChart data={weekTrend} />
             </div>
@@ -141,7 +172,7 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ rep
                   key={m.name}
                   className="flex items-center gap-3 rounded-lg border border-border/60 bg-background/40 p-2.5"
                 >
-                  <InitialsAvatar name={m.name} size="sm" />
+                  <InitialsAvatar name={m.name} githubUsername={m.name} size="sm" />
                   <span className="flex-1 text-sm font-medium">{m.name}</span>
                   <span className="text-sm font-bold tabular text-primary">{m.commits}</span>
                   <span className="text-[10px] text-muted-foreground">커밋</span>

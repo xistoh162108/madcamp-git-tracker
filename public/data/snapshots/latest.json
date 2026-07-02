@@ -1,69 +1,111 @@
 {
-  "generatedAt": "2026-07-02T07:30:20.850Z",
-  "generatedAtKst": "2026. 7. 2. PM 4:30",
+  "generatedAt": "2026-07-02T08:20:21.191Z",
+  "generatedAtKst": "2026. 7. 2. PM 5:20",
   "season": "2026-summer",
   "currentWeek": 1,
   "summary": {
-    "totalCommits": 13,
-    "mappedCommits": 13,
-    "activeRepos": 2,
+    "totalCommits": 33,
+    "mappedCommits": 33,
+    "activeRepos": 6,
     "participants": 50,
-    "activeParticipants": 3
+    "activeParticipants": 8
   },
   "rankings": {
     "personal": [
       {
         "id": "박수현-suh1088",
         "label": "박수현",
-        "commits": 7,
+        "commits": 12,
         "activeDays": 1,
-        "lastActivityAt": "2026-07-02T07:25:12Z",
+        "lastActivityAt": "2026-07-02T08:05:15Z",
         "meta": "suh1088",
         "activityStats": {
           "currentDayStreak": 1,
           "longestDayStreak": 1,
-          "currentHourStreak": 3,
-          "longestHourStreak": 3,
-          "activeHours": 3
+          "currentHourStreak": 4,
+          "longestHourStreak": 4,
+          "activeHours": 4
         },
-        "honorTitles": [
-          {
-            "id": "w1-top-committer",
-            "label": "1주차 최다 커밋자",
-            "desc": "1주차 개인 커밋 수 1위"
-          },
-          {
-            "id": "w1-top-team-member",
-            "label": "1주차 우승팀",
-            "desc": "1주차 팀 커밋 수 1위 팀 멤버"
-          }
-        ],
+        "honorTitles": [],
         "rank": 1,
-        "prevRank": 1
+        "prevRank": 1,
+        "isNew": false
       },
       {
         "id": "이지오-easy0131",
         "label": "이지오",
-        "commits": 5,
+        "commits": 8,
         "activeDays": 1,
-        "lastActivityAt": "2026-07-02T07:11:03Z",
+        "lastActivityAt": "2026-07-02T08:09:51Z",
         "meta": "easy0131",
         "activityStats": {
           "currentDayStreak": 1,
           "longestDayStreak": 1,
-          "currentHourStreak": 3,
-          "longestHourStreak": 3,
-          "activeHours": 3
+          "currentHourStreak": 4,
+          "longestHourStreak": 4,
+          "activeHours": 4
         },
-        "honorTitles": [
-          {
-            "id": "w1-top-team-member",
-            "label": "1주차 우승팀",
-            "desc": "1주차 팀 커밋 수 1위 팀 멤버"
-          }
-        ],
+        "honorTitles": [],
         "rank": 2,
-        "prevRank": 2
+        "prevRank": 2,
+        "isNew": false
+      },
+      {
+        "id": "김태현-terry2549",
+        "label": "김태현",
+        "commits": 4,
+        "activeDays": 1,
+        "lastActivityAt": "2026-07-02T08:07:53Z",
+        "meta": "terry2549",
+        "activityStats": {
+          "currentDayStreak": 1,
+          "longestDayStreak": 1,
+          "currentHourStreak": 2,
+          "longestHourStreak": 2,
+          "activeHours": 2
+        },
+        "honorTitles": [],
+        "rank": 3,
+        "prevRank": 3,
+        "isNew": false
+      },
+      {
+        "id": "이유담-omok00",
+        "label": "이유담",
+        "commits": 4,
+        "activeDays": 1,
+        "lastActivityAt": "2026-07-02T08:16:32Z",
+        "meta": "omok00",
+        "activityStats": {
+          "currentDayStreak": 1,
+          "longestDayStreak": 1,
+          "currentHourStreak": 2,
+          "longestHourStreak": 2,
+          "activeHours": 2
+        },
+        "honorTitles": [],
+        "rank": 4,
+        "prevRank": 4,
+        "isNew": false
+      },
+      {
+        "id": "김재훈-superloser030",
+        "label": "김재훈",
+        "commits": 2,
+        "activeDays": 1,
+        "lastActivityAt": "2026-07-02T07:48:05Z",
+        "meta": "superloser030",
+        "activityStats": {
+          "currentDayStreak": 1,
+          "longestDayStreak": 1,
+          "currentHourStreak": 1,
+          "longestHourStreak": 1,
+          "activeHours": 1
+        },
+        "honorTitles": [],
+        "rank": 5,
+        "prevRank": 5,
+        "isNew": false
       },
       {
         "id": "안종화-anjonghwa0",
@@ -80,21 +122,85 @@
           "activeHours": 1
         },
         "honorTitles": [],
-        "rank": 3,
-        "prevRank": 3
+        "rank": 6,
+        "prevRank": 6,
+        "isNew": false
+      },
+      {
+        "id": "양우현-hyun020215",
+        "label": "양우현",
+        "commits": 1,
+        "activeDays": 1,
+        "lastActivityAt": "2026-07-02T07:49:18Z",
+        "meta": "hyun020215",
+        "activityStats": {
+          "currentDayStreak": 1,
+          "longestDayStreak": 1,
+          "currentHourStreak": 1,
+          "longestHourStreak": 1,
+          "activeHours": 1
+        },
+        "honorTitles": [],
+        "rank": 7,
+        "prevRank": 7,
+        "isNew": false
+      },
+      {
+        "id": "이종혁-jonghklee",
+        "label": "이종혁",
+        "commits": 1,
+        "activeDays": 1,
+        "lastActivityAt": "2026-07-02T07:43:06Z",
+        "meta": "jonghklee",
+        "activityStats": {
+          "currentDayStreak": 1,
+          "longestDayStreak": 1,
+          "currentHourStreak": 1,
+          "longestHourStreak": 1,
+          "activeHours": 1
+        },
+        "honorTitles": [],
+        "rank": 8,
+        "prevRank": 8,
+        "isNew": false
       }
     ],
     "teams": [
       {
         "id": "26s-w1-c3-02",
         "label": "26s-w1-c3-02",
-        "commits": 12,
+        "commits": 20,
         "activeDays": 1,
-        "lastActivityAt": "2026-07-02T07:25:12Z",
+        "lastActivityAt": "2026-07-02T08:09:51Z",
         "meta": "3분반 · 02팀",
-        "averagePerPerson": 6,
+        "averagePerPerson": 10,
         "rank": 1,
-        "prevRank": 1
+        "prevRank": 1,
+        "isNew": false
+      },
+      {
+        "id": "26s-w1-c1-04",
+        "label": "26s-w1-c1-04",
+        "commits": 8,
+        "activeDays": 1,
+        "lastActivityAt": "2026-07-02T08:16:32Z",
+        "meta": "1분반 · 04팀",
+        "averagePerPerson": 4,
+        "rank": 2,
+        "prevRank": 2,
+        "isNew": false
+      },
+      {
+        "id": "26s-w1-c3-09",
+        "label": "26s-w1-c3-09",
+        "commits": 2,
+        "activeDays": 1,
+        "lastActivityAt": "2026-07-02T07:48:05Z",
+        "meta": "3분반 · 09팀",
+        "averagePerPerson": 2,
+        "rank": 3,
+        "prevRank": 3,
+        "isNew": false
       },
       {
         "id": "26s-w1-c1-05",
@@ -104,36 +210,275 @@
         "lastActivityAt": "2026-07-02T05:12:06Z",
         "meta": "1분반 · 05팀",
         "averagePerPerson": 1,
-        "rank": 2,
-        "prevRank": 2
+        "rank": 4,
+        "prevRank": 4,
+        "isNew": false
+      },
+      {
+        "id": "26s-w1-c1-07",
+        "label": "26s-w1-c1-07",
+        "commits": 1,
+        "activeDays": 1,
+        "lastActivityAt": "2026-07-02T07:43:06Z",
+        "meta": "1분반 · 07팀",
+        "averagePerPerson": 1,
+        "rank": 5,
+        "prevRank": 5,
+        "isNew": false
+      },
+      {
+        "id": "26s-w1-c2-01",
+        "label": "26s-w1-c2-01",
+        "commits": 1,
+        "activeDays": 1,
+        "lastActivityAt": "2026-07-02T07:49:18Z",
+        "meta": "2분반 · 01팀",
+        "averagePerPerson": 1,
+        "rank": 6,
+        "prevRank": 6,
+        "isNew": false
       }
     ],
     "classes": [
       {
         "id": "3",
         "label": "3분반",
-        "commits": 12,
+        "commits": 22,
         "activeDays": 1,
-        "lastActivityAt": "2026-07-02T07:25:12Z",
+        "lastActivityAt": "2026-07-02T08:09:51Z",
         "meta": "18명",
-        "averagePerPerson": 0.6666666666666666,
+        "averagePerPerson": 1.2222222222222223,
         "rank": 1,
-        "prevRank": 1
+        "prevRank": 1,
+        "isNew": false
       },
       {
         "id": "1",
         "label": "1분반",
+        "commits": 10,
+        "activeDays": 1,
+        "lastActivityAt": "2026-07-02T08:16:32Z",
+        "meta": "15명",
+        "averagePerPerson": 0.6666666666666666,
+        "rank": 2,
+        "prevRank": 2,
+        "isNew": false
+      },
+      {
+        "id": "2",
+        "label": "2분반",
         "commits": 1,
         "activeDays": 1,
-        "lastActivityAt": "2026-07-02T05:12:06Z",
-        "meta": "15명",
-        "averagePerPerson": 0.06666666666666667,
-        "rank": 2,
-        "prevRank": 2
+        "lastActivityAt": "2026-07-02T07:49:18Z",
+        "meta": "17명",
+        "averagePerPerson": 0.058823529411764705,
+        "rank": 3,
+        "prevRank": 3,
+        "isNew": false
       }
     ]
   },
   "activityFeed": [
+    {
+      "id": "26s-w1-c1-04:1d6a0a14cc94ed5d878fc8949864564f6406049f",
+      "repoName": "26s-w1-c1-04",
+      "label": "omok00",
+      "committedAt": "2026-07-02T08:16:32Z",
+      "summary": "ab",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-04/commit/1d6a0a14cc94ed5d878fc8949864564f6406049f"
+    },
+    {
+      "id": "26s-w1-c3-02:c2ca8fad35fe94c8feb3731457a4ed20d4ca09ac",
+      "repoName": "26s-w1-c3-02",
+      "label": "easy0131",
+      "committedAt": "2026-07-02T08:09:51Z",
+      "summary": "선택기능",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-02/commit/c2ca8fad35fe94c8feb3731457a4ed20d4ca09ac"
+    },
+    {
+      "id": "26s-w1-c1-04:0fd84226702b38550f0f2e9122225400580542be",
+      "repoName": "26s-w1-c1-04",
+      "label": "terry2549",
+      "committedAt": "2026-07-02T08:07:53Z",
+      "summary": "t Merge branch 'main' of https://github.com/madcamp-official/26s-w1-c1-04",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-04/commit/0fd84226702b38550f0f2e9122225400580542be"
+    },
+    {
+      "id": "26s-w1-c3-02:f2317cdcf79254dff7468a577d39a610934de665",
+      "repoName": "26s-w1-c3-02",
+      "label": "easy0131",
+      "committedAt": "2026-07-02T08:07:05Z",
+      "summary": "즐겨찾기",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-02/commit/f2317cdcf79254dff7468a577d39a610934de665"
+    },
+    {
+      "id": "26s-w1-c3-02:4ea7d92dff2c6683fed3dae05ff479e39ab7ce4f",
+      "repoName": "26s-w1-c3-02",
+      "label": "easy0131",
+      "committedAt": "2026-07-02T08:06:32Z",
+      "summary": "즐겨찾기",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-02/commit/4ea7d92dff2c6683fed3dae05ff479e39ab7ce4f"
+    },
+    {
+      "id": "26s-w1-c3-02:7ee16591029c9167f666963daafaed31e46d9f98",
+      "repoName": "26s-w1-c3-02",
+      "label": "suh1088",
+      "committedAt": "2026-07-02T08:05:15Z",
+      "summary": "기능",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-02/commit/7ee16591029c9167f666963daafaed31e46d9f98"
+    },
+    {
+      "id": "26s-w1-c3-02:cde16dbcfb1216b14b6a4003ac8722605244f1f3",
+      "repoName": "26s-w1-c3-02",
+      "label": "suh1088",
+      "committedAt": "2026-07-02T08:01:13Z",
+      "summary": "mod",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-02/commit/cde16dbcfb1216b14b6a4003ac8722605244f1f3"
+    },
+    {
+      "id": "26s-w1-c1-04:0ad65a915080e2a5c131cb2c479c1e815db2dd6d",
+      "repoName": "26s-w1-c1-04",
+      "label": "omok00",
+      "committedAt": "2026-07-02T08:00:50Z",
+      "summary": "Merge pull request #2 from madcamp-official/terry2549",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-04/commit/0ad65a915080e2a5c131cb2c479c1e815db2dd6d"
+    },
+    {
+      "id": "26s-w1-c1-04:e88e4182fa7ba8e3d79928ef4f510c16b12d72f1",
+      "repoName": "26s-w1-c1-04",
+      "label": "terry2549",
+      "committedAt": "2026-07-02T08:00:24Z",
+      "summary": "Merge pull request #1 from madcamp-official/omok00",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-04/commit/e88e4182fa7ba8e3d79928ef4f510c16b12d72f1"
+    },
+    {
+      "id": "26s-w1-c1-04:ebdeb1e6f06d18630fab1b6cb91b7a1570393726",
+      "repoName": "26s-w1-c1-04",
+      "label": "terry2549",
+      "committedAt": "2026-07-02T07:56:50Z",
+      "summary": "Add main.cpp",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-04/commit/ebdeb1e6f06d18630fab1b6cb91b7a1570393726"
+    },
+    {
+      "id": "26s-w1-c3-02:63d6ce91b403ae075b03bf611b79ebdce0c0169e",
+      "repoName": "26s-w1-c3-02",
+      "label": "suh1088",
+      "committedAt": "2026-07-02T07:55:30Z",
+      "summary": "Kiro",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-02/commit/63d6ce91b403ae075b03bf611b79ebdce0c0169e"
+    },
+    {
+      "id": "26s-w1-c1-04:a33d76a57fc5a9de93f19807ce9fd712bc03208e",
+      "repoName": "26s-w1-c1-04",
+      "label": "omok00",
+      "committedAt": "2026-07-02T07:52:05Z",
+      "summary": "add main.py",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-04/commit/a33d76a57fc5a9de93f19807ce9fd712bc03208e"
+    },
+    {
+      "id": "26s-w1-c1-04:f298e6211417fc78be4b01177a7c677a30465546",
+      "repoName": "26s-w1-c1-04",
+      "label": "terry2549",
+      "committedAt": "2026-07-02T07:49:36Z",
+      "summary": "Update README",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-04/commit/f298e6211417fc78be4b01177a7c677a30465546"
+    },
+    {
+      "id": "26s-w1-c2-01:d92404764d5bf273bafd536415e0fb2b5f710338",
+      "repoName": "26s-w1-c2-01",
+      "label": "hyun020215",
+      "committedAt": "2026-07-02T07:49:18Z",
+      "summary": "Enhance README with team and project information",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-01/commit/d92404764d5bf273bafd536415e0fb2b5f710338"
+    },
+    {
+      "id": "26s-w1-c3-02:4860817cad40fba142637c6b6f2358655d681991",
+      "repoName": "26s-w1-c3-02",
+      "label": "suh1088",
+      "committedAt": "2026-07-02T07:48:25Z",
+      "summary": "spec",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-02/commit/4860817cad40fba142637c6b6f2358655d681991"
+    },
+    {
+      "id": "26s-w1-c3-09:a1d19e49b5824f30cb2ad79eba0d9cfdba304bba",
+      "repoName": "26s-w1-c3-09",
+      "label": "superloser030",
+      "committedAt": "2026-07-02T07:48:05Z",
+      "summary": "Remove .gitignore (archive/ was personal-only, moved to local exclude)",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-09/commit/a1d19e49b5824f30cb2ad79eba0d9cfdba304bba"
+    },
+    {
+      "id": "26s-w1-c1-07:398eea1c0425a9b94872f87f02f42eeb1fabbb3a",
+      "repoName": "26s-w1-c1-07",
+      "label": "jonghklee",
+      "committedAt": "2026-07-02T07:43:06Z",
+      "summary": "Update README.md",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-07/commit/398eea1c0425a9b94872f87f02f42eeb1fabbb3a"
+    },
+    {
+      "id": "26s-w1-c1-04:df7ecf5898a9b8384e5e1eef6aff0529dee82811",
+      "repoName": "26s-w1-c1-04",
+      "label": "omok00",
+      "committedAt": "2026-07-02T07:40:54Z",
+      "summary": "first commit",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-04/commit/df7ecf5898a9b8384e5e1eef6aff0529dee82811"
+    },
+    {
+      "id": "26s-w1-c3-02:c13a48ef6ea530733988f4c1d9696c5b0980d4b5",
+      "repoName": "26s-w1-c3-02",
+      "label": "suh1088",
+      "committedAt": "2026-07-02T07:35:25Z",
+      "summary": "spec-kit",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-02/commit/c13a48ef6ea530733988f4c1d9696c5b0980d4b5"
+    },
+    {
+      "id": "26s-w1-c3-09:25e8d721665ccd21e2a8637f16fd902511c14cd5",
+      "repoName": "26s-w1-c3-09",
+      "label": "superloser030",
+      "committedAt": "2026-07-02T07:33:18Z",
+      "summary": "first commit",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-09/commit/25e8d721665ccd21e2a8637f16fd902511c14cd5"
+    },
     {
       "id": "26s-w1-c3-02:f080d0278bbdc5d94a06e8f243de9f2a41fa2589",
       "repoName": "26s-w1-c3-02",
@@ -268,7 +613,7 @@
   "heatmap": [
     {
       "date": "2026-07-02",
-      "count": 13
+      "count": 33
     }
   ],
   "unknownUsers": [],
@@ -277,11 +622,11 @@
     "failedRepos": [],
     "rateLimit": {
       "limit": 5000,
-      "remaining": 4748,
-      "reset": 1782979473,
-      "used": 252
+      "remaining": 4641,
+      "reset": 1782983101,
+      "used": 359
     },
     "reposScanned": 24,
-    "commitsProcessed": 13
+    "commitsProcessed": 33
   }
 }

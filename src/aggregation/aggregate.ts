@@ -43,23 +43,30 @@ export interface AggregatedSnapshot {
 }
 
 function rank(
-  entries: Omit<RankedEntry, "rank" | "prevRank">[],
-  metric: (entry: Omit<RankedEntry, "rank" | "prevRank">) => number,
+  entries: Omit<RankedEntry, "rank" | "prevRank" | "isNew">[],
+  metric: (entry: Omit<RankedEntry, "rank" | "prevRank" | "isNew">) => number,
   previousRankOf?: (id: string) => number | undefined,
 ): RankedEntry[] {
   return [...entries]
     .sort((a, b) => metric(b) - metric(a) || a.label.localeCompare(b.label))
     .map((entry, index) => {
       const currentRank = index + 1
-      return { ...entry, rank: currentRank, prevRank: previousRankOf?.(entry.id) ?? currentRank }
+      const prevRank = previousRankOf?.(entry.id)
+      return {
+        ...entry,
+        rank: currentRank,
+        prevRank: prevRank ?? currentRank,
+        isNew: previousRankOf !== undefined && prevRank === undefined,
+      }
     })
 }
 
 function previousRankLookup(
   previousSnapshot: AggregatedSnapshot | undefined,
   kind: keyof AggregatedSnapshot["rankings"],
-): (id: string) => number | undefined {
-  const map = new Map(previousSnapshot?.rankings[kind].map((entry) => [entry.id, entry.rank]) ?? [])
+): ((id: string) => number | undefined) | undefined {
+  if (!previousSnapshot) return undefined
+  const map = new Map(previousSnapshot.rankings[kind].map((entry) => [entry.id, entry.rank]))
   return (id: string) => map.get(id)
 }
 
@@ -147,6 +154,7 @@ export function aggregateSnapshot(params: {
   commits: CommitRecord[]
   unknownUsers?: UnknownUser[]
   previousSnapshot?: AggregatedSnapshot
+  weekEnded?: boolean
 }): AggregatedSnapshot {
   const commits = dedupeCommits(params.commits)
   const participantMap = new Map(params.participants.map((participant) => [participant.participantId, participant]))
@@ -204,14 +212,18 @@ export function aggregateSnapshot(params: {
   const personal = rank(
     personalEntries.map((entry) => {
       const titles: Array<{ id: string; label: string; desc: string }> = []
-      if (params.currentWeek && entry.commits === Math.max(0, ...personalEntries.map((item) => item.commits))) {
+      if (
+        params.currentWeek &&
+        params.weekEnded &&
+        entry.commits === Math.max(0, ...personalEntries.map((item) => item.commits))
+      ) {
         titles.push({
           id: `w${params.currentWeek}-top-committer`,
           label: `${params.currentWeek}주차 최다 커밋자`,
           desc: `${params.currentWeek}주차 개인 커밋 수 1위`,
         })
       }
-      if (params.currentWeek && topTeamParticipantIds.has(entry.id)) {
+      if (params.currentWeek && params.weekEnded && topTeamParticipantIds.has(entry.id)) {
         titles.push({
           id: `w${params.currentWeek}-top-team-member`,
           label: `${params.currentWeek}주차 우승팀`,
@@ -269,19 +281,23 @@ export function aggregateSnapshot(params: {
       .slice()
       .sort((a, b) => Date.parse(b.committedAt) - Date.parse(a.committedAt))
       .slice(0, 200)
-      .map((commit) => ({
-        id: `${commit.repoName}:${commit.sha}`,
-        repoName: commit.repoName,
-        label: commit.authorGithubUsername ?? commit.authorName ?? "unknown",
-        committedAt: commit.committedAt,
-        summary: (commit.messageSummary ?? "commit").replace(/[<>]/g, "").slice(0, 100),
-        attributionStatus: commit.attributionStatus,
-        detectedBots: commit.detectedBots,
-        commitUrl: commit.commitUrl,
-        additions: commit.additions,
-        deletions: commit.deletions,
-        changedFiles: commit.changedFiles,
-      })),
+      .map((commit) => {
+        const matchedParticipant = participantMap.get(participantIdsForCommit(commit)[0] ?? "")
+        return {
+          id: `${commit.repoName}:${commit.sha}`,
+          repoName: commit.repoName,
+          label:
+            matchedParticipant?.githubUsername ?? commit.authorGithubUsername ?? commit.authorName ?? "unknown",
+          committedAt: commit.committedAt,
+          summary: (commit.messageSummary ?? "commit").replace(/[<>]/g, "").slice(0, 100),
+          attributionStatus: commit.attributionStatus,
+          detectedBots: commit.detectedBots,
+          commitUrl: commit.commitUrl,
+          additions: commit.additions,
+          deletions: commit.deletions,
+          changedFiles: commit.changedFiles,
+        }
+      }),
     heatmap: [...heatmapCounts.entries()]
       .sort(([a], [b]) => a.localeCompare(b))
       .map(([date, count]) => ({ date, count })),

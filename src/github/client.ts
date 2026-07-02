@@ -29,6 +29,11 @@ export interface GitHubCommitSummary {
   committer?: {
     login?: string | null
   } | null
+  stats?: {
+    additions?: number
+    deletions?: number
+  } | null
+  files?: unknown[]
 }
 
 export interface GitHubBranchSummary {
@@ -102,6 +107,12 @@ export class GitHubClient {
         until: params.until,
       },
     )
+  }
+
+  async getCommit(params: { owner: string; repo: string; ref: string }): Promise<GitHubCommitSummary> {
+    return (await this.request(
+      `/repos/${encodeURIComponent(params.owner)}/${encodeURIComponent(params.repo)}/commits/${encodeURIComponent(params.ref)}`,
+    )) as GitHubCommitSummary
   }
 
   async fetchRateLimit(): Promise<GitHubRateLimit> {

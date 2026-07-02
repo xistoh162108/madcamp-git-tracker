@@ -24,6 +24,7 @@ interface PersonalRow {
   rank: number
   displayRank?: number
   prevRank: number
+  isNew: boolean
   name: string
   username: string
   class?: string
@@ -38,6 +39,7 @@ interface PersonalRow {
 interface TeamRow {
   rank: number
   prevRank: number
+  isNew: boolean
   repo: string
   class: string
   members: string[]
@@ -53,6 +55,7 @@ interface TeamRow {
 interface ClassRow {
   rank: number
   prevRank: number
+  isNew: boolean
   className: string
   participants: number
   activeParticipants: number
@@ -82,13 +85,14 @@ function repoMetaFromName(repoName?: string) {
 }
 
 function personalRowsFromSnapshot(snapshot?: AggregatedSnapshot): PersonalRow[] {
-  if (!snapshot) return individuals.map((i) => ({ ...i, name: i.name, username: i.username }))
+  if (!snapshot) return individuals.map((i) => ({ ...i, name: i.name, username: i.username, isNew: false }))
   return snapshot.rankings.personal.map((entry) => {
     const feedItem = snapshot.activityFeed.find((item) => item.label === entry.meta || item.label === entry.id)
     const repoMeta = repoMetaFromName(feedItem?.repoName)
     return {
       rank: entry.rank,
       prevRank: entry.prevRank,
+      isNew: entry.isNew,
       name: entry.label,
       username: entry.meta ?? entry.id,
       class: repoMeta.className,
@@ -106,6 +110,7 @@ function teamRowsFromSnapshot(snapshot?: AggregatedSnapshot): TeamRow[] {
   if (!snapshot)
     return teams.map((team) => ({
       ...team,
+      isNew: false,
       externalCount: 0,
       botCount: 0,
       unknownCount: 0,
@@ -124,11 +129,12 @@ function teamRowsFromSnapshot(snapshot?: AggregatedSnapshot): TeamRow[] {
     return {
       rank: entry.rank,
       prevRank: entry.prevRank,
+      isNew: entry.isNew,
       repo: entry.label,
       class: entry.meta?.split(" · ")[0] ?? "-",
       members: participantMembers,
       externalCount: externalActors.length,
-      botCount: repoItems.filter((item) => item.detectedBots?.length || item.attributionStatus === "bot_only").length,
+      botCount: repoItems.filter((item) => item.attributionStatus === "bot_only").length,
       unknownCount: repoItems.filter((item) => item.attributionStatus === "unknown").length,
       commits: entry.commits,
       activeDays: entry.activeDays,
@@ -142,11 +148,13 @@ function classRowsFromSnapshot(snapshot?: AggregatedSnapshot): ClassRow[] {
   if (!snapshot)
     return classes.map((classRow) => ({
       ...classRow,
+      isNew: false,
       activeParticipants: classRow.participants,
     }))
   return snapshot.rankings.classes.map((entry) => ({
     rank: entry.rank,
     prevRank: entry.prevRank,
+    isNew: entry.isNew,
     className: entry.label,
     participants: Number(entry.meta?.match(/\d+/)?.[0] ?? 0),
     activeParticipants: snapshot.rankings.personal.filter((person) => {
@@ -192,7 +200,7 @@ export function LeaderboardSection({
 }) {
   const [type, setType] = useState<RankType>("individual")
   const [classFilter, setClassFilter] = useState<string>("all")
-  const [teamMetric, setTeamMetric] = useState<TeamMetric>("commits")
+  const [teamMetric, setTeamMetric] = useState<TeamMetric>("averagePerPerson")
   const [classMetric, setClassMetric] = useState<ClassMetric>(config.defaultClassRankingMetric)
   const personalData = useMemo(() => personalRowsFromSnapshot(snapshot), [snapshot])
   const teamData = useMemo(() => teamRowsFromSnapshot(snapshot), [snapshot])
@@ -301,15 +309,6 @@ export function LeaderboardSection({
           {type === "team" && (
             <div className="ml-auto inline-flex rounded-lg border border-border bg-muted/40 p-0.5 text-xs">
               <button
-                onClick={() => setTeamMetric("commits")}
-                className={cn(
-                  "rounded-md px-2.5 py-1 font-medium transition-colors",
-                  teamMetric === "commits" ? "bg-background text-foreground shadow-sm" : "text-muted-foreground",
-                )}
-              >
-                총 커밋
-              </button>
-              <button
                 onClick={() => setTeamMetric("averagePerPerson")}
                 className={cn(
                   "rounded-md px-2.5 py-1 font-medium transition-colors",
@@ -319,6 +318,15 @@ export function LeaderboardSection({
                 )}
               >
                 인당 평균
+              </button>
+              <button
+                onClick={() => setTeamMetric("commits")}
+                className={cn(
+                  "rounded-md px-2.5 py-1 font-medium transition-colors",
+                  teamMetric === "commits" ? "bg-background text-foreground shadow-sm" : "text-muted-foreground",
+                )}
+              >
+                총 커밋
               </button>
             </div>
           )}
@@ -343,7 +351,7 @@ export function LeaderboardSection({
                   classMetric === "total" ? "bg-background text-foreground shadow-sm" : "text-muted-foreground",
                 )}
               >
-                총합
+                총 커밋
               </button>
             </div>
           )}
@@ -373,11 +381,11 @@ export function LeaderboardSection({
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -8 }}
           transition={{ duration: 0.22 }}
-          className="mt-4 space-y-1.5"
+          className="mt-4 max-h-[620px] space-y-1.5 overflow-y-auto pr-1"
         >
-          {type === "individual" && <IndividualRows data={filteredIndividuals} />}
-          {type === "team" && <TeamRows data={sortedTeams} metric={teamMetric} />}
-          {type === "class" && <ClassRows data={sortedClasses} metric={classMetric} />}
+          {type === "individual" && <IndividualRows data={filteredIndividuals.slice(0, 50)} />}
+          {type === "team" && <TeamRows data={sortedTeams.slice(0, 50)} metric={teamMetric} />}
+          {type === "class" && <ClassRows data={sortedClasses.slice(0, 50)} metric={classMetric} />}
         </motion.div>
       </AnimatePresence>
 
@@ -499,7 +507,7 @@ function IndividualRows({ data }: { data: PersonalRow[] }) {
         return (
           <RowShell key={i.username} href={`/participant/${i.username}`} index={index}>
             <RankMedal rank={rank} />
-            <InitialsAvatar name={i.name} size="sm" />
+            <InitialsAvatar name={i.name} githubUsername={i.username} size="sm" />
             <div className="min-w-0 flex-1">
               <div className="flex items-center gap-2">
                 {tied ? (
@@ -544,7 +552,7 @@ function IndividualRows({ data }: { data: PersonalRow[] }) {
               <p className="text-base font-bold tabular">{i.commits}</p>
               <p className="text-[10px] text-muted-foreground">commits</p>
             </div>
-            <RankChange rank={i.rank} prevRank={i.prevRank} className="w-8 justify-end" />
+            <RankChange rank={i.rank} prevRank={i.prevRank} isNew={i.isNew} className="w-8 justify-end" />
             <ChevronRight className="h-4 w-4 text-muted-foreground/50 transition-colors group-hover:text-primary" />
           </RowShell>
         )
@@ -619,7 +627,7 @@ function TeamRows({ data, metric }: { data: TeamRow[]; metric: TeamMetric }) {
               <p className="text-lg font-bold tabular">{mainValue}</p>
               <p className="text-[10px] text-muted-foreground">{mainLabel}</p>
             </div>
-            <RankChange rank={t.rank} prevRank={t.prevRank} className="w-8 justify-end" />
+            <RankChange rank={t.rank} prevRank={t.prevRank} isNew={t.isNew} className="w-8 justify-end" />
             <ChevronRight className="h-4 w-4 text-muted-foreground/50 transition-colors group-hover:text-primary" />
           </RowShell>
         )
@@ -679,7 +687,7 @@ function ClassRows({ data, metric }: { data: ClassRow[]; metric: ClassMetric }) 
               <p className="text-lg font-bold tabular">{mainValue}</p>
               <p className="text-[10px] text-muted-foreground">{mainLabel}</p>
             </div>
-            <RankChange rank={c.rank} prevRank={c.prevRank} className="w-8 justify-end" />
+            <RankChange rank={c.rank} prevRank={c.prevRank} isNew={c.isNew} className="w-8 justify-end" />
           </RowShell>
         )
       })}

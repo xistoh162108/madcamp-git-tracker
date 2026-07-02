@@ -109,7 +109,7 @@ function sumOptional(a?: number, b?: number) {
 function kindForGroup(group: FeedGroup) {
   const message = group.items[0]?.message.toLowerCase() ?? ""
   if (group.attributionStatus === "unknown") return { label: "기타", icon: AlertTriangle, cls: "text-destructive" }
-  if (group.attributionStatus === "bot_only" || group.detectedBots.length > 0) {
+  if (group.attributionStatus === "bot_only") {
     return { label: "자동화", icon: Bot, cls: "text-accent" }
   }
   if (group.attributionStatus === "multiple_participants" || group.attributionStatus === "bot_with_participant") {

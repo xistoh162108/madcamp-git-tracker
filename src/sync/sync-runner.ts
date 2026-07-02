@@ -173,6 +173,7 @@ export async function runGithubSync(options: SyncRunnerOptions = {}): Promise<Sy
     options.ledgerPath ?? path.join(process.cwd(), "data", "commits", `${config.season}-w${currentWeek ?? "all"}.jsonl`)
   const reportPath = options.reportPath ?? path.join(process.cwd(), "data", "sync-reports", "latest.json")
   const uniqueCommits = dedupeCommits(commits)
+  await enrichCommitStats(client, config.githubOrg, uniqueCommits, readPreviousLedger(ledgerPath))
   writeCommitLedgerSafely(ledgerPath, uniqueCommits)
 
   const report = buildSyncReport({
@@ -207,6 +208,10 @@ export async function runGithubSync(options: SyncRunnerOptions = {}): Promise<Sy
     }
   }
 
+  const weekEnded = Boolean(
+    currentWeek && config.weeks.find((week) => week.week === currentWeek && Date.now() > Date.parse(week.endAt)),
+  )
+
   const snapshot = aggregateSnapshot({
     season: config.season,
     currentWeek,
@@ -214,6 +219,7 @@ export async function runGithubSync(options: SyncRunnerOptions = {}): Promise<Sy
     commits: uniqueCommits,
     unknownUsers,
     previousSnapshot: readPreviousSnapshot(snapshotPath),
+    weekEnded,
   })
   writeSnapshotSafely(snapshotPath, {
     ...snapshot,
@@ -281,6 +287,45 @@ async function fetchRepoCommits(params: {
     branchesScanned: branches.values.length,
     branchesFetched: branches.pagesFetched,
     pagesFetched: commitPagesFetched,
+  }
+}
+
+function readPreviousLedger(ledgerPath: string): Map<string, CommitRecord> {
+  const map = new Map<string, CommitRecord>()
+  try {
+    const lines = fs.readFileSync(ledgerPath, "utf8").split("\n").filter(Boolean)
+    for (const line of lines) {
+      const record = JSON.parse(line) as CommitRecord
+      map.set(record.sha, record)
+    }
+  } catch {
+    // no previous ledger yet
+  }
+  return map
+}
+
+async function enrichCommitStats(
+  client: GitHubClient,
+  owner: string,
+  commits: CommitRecord[],
+  previousLedger: Map<string, CommitRecord>,
+): Promise<void> {
+  for (const commit of commits) {
+    const cached = previousLedger.get(commit.sha)
+    if (cached?.additions !== undefined) {
+      commit.additions = cached.additions
+      commit.deletions = cached.deletions
+      commit.changedFiles = cached.changedFiles
+      continue
+    }
+    try {
+      const detail = await client.getCommit({ owner, repo: commit.repoName, ref: commit.sha })
+      commit.additions = detail.stats?.additions ?? 0
+      commit.deletions = detail.stats?.deletions ?? 0
+      commit.changedFiles = detail.files?.length ?? 0
+    } catch {
+      // leave stats undefined if the detail fetch fails; not fatal to the sync
+    }
   }
 }
 

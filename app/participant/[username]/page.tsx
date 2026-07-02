@@ -155,7 +155,7 @@ export default async function ParticipantDetailPage({ params }: { params: Promis
         <div className="rounded-2xl border border-border/70 bg-card/70 p-5">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div className="flex items-center gap-4">
-              <InitialsAvatar name={p.label} size="lg" />
+              <InitialsAvatar name={p.label} githubUsername={p.meta} size="lg" />
               <div>
                 <div className="flex items-center gap-2">
                   <h1 className="text-xl font-bold tracking-tight">{p.label}</h1>
@@ -247,8 +247,8 @@ export default async function ParticipantDetailPage({ params }: { params: Promis
           <section className="rounded-xl border border-border/70 bg-card/70 p-4">
             <h2 className="text-sm font-semibold">최근 커밋</h2>
             <p className="mt-0.5 text-xs text-muted-foreground">KST 기준 · 원본 커밋 메시지</p>
-            <ul className="mt-3 space-y-2">
-              {participantFeed.slice(0, 12).map((item) => {
+            <ul className="mt-3 max-h-[520px] space-y-2 overflow-y-auto pr-1">
+              {participantFeed.slice(0, 50).map((item) => {
                 const stats = [
                   item.additions !== undefined ? `+${item.additions}` : null,
                   item.deletions !== undefined ? `-${item.deletions}` : null,

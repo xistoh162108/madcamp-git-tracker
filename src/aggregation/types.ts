@@ -37,6 +37,7 @@ export interface CommitRecord {
 export interface RankedEntry {
   rank: number
   prevRank: number
+  isNew: boolean
   id: string
   label: string
   commits: number
