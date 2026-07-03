@@ -14,6 +14,8 @@ import type { AggregatedSnapshot } from "@/src/aggregation/aggregate"
 import type { WeekConfig } from "@/src/config/schema"
 
 const SNAPSHOT_REFRESH_MS = 60 * 1000
+const SEEN_LIVE_EVENTS_KEY = "madcamp:seen-live-events:v1"
+const MAX_SEEN_LIVE_EVENTS = 160
 
 interface LiveDashboardProps {
   initialSnapshot: AggregatedSnapshot
@@ -134,6 +136,25 @@ function eventIcon(kind: LiveEvent["kind"]) {
   return Bell
 }
 
+function readSeenLiveEventIds() {
+  if (typeof window === "undefined") return new Set<string>()
+  try {
+    const raw = window.sessionStorage.getItem(SEEN_LIVE_EVENTS_KEY)
+    const parsed = raw ? (JSON.parse(raw) as string[]) : []
+    return new Set(parsed.filter((item) => typeof item === "string"))
+  } catch {
+    return new Set<string>()
+  }
+}
+
+function writeSeenLiveEventIds(ids: string[]) {
+  try {
+    window.sessionStorage.setItem(SEEN_LIVE_EVENTS_KEY, JSON.stringify(ids.slice(-MAX_SEEN_LIVE_EVENTS)))
+  } catch {
+    // Notification dedupe is best-effort; private browsing/storage limits should not break the dashboard.
+  }
+}
+
 function LiveEventStack({ events }: { events: LiveEvent[] }) {
   return (
     <div className="pointer-events-none fixed right-4 top-4 z-50 flex w-[min(360px,calc(100vw-32px))] flex-col gap-2">
@@ -201,9 +222,13 @@ export function LiveDashboard({ initialSnapshot, displayName, weeks, currentWeek
   const timeLeft = selectedWeekNumber ? timeLeftLabel(activeWeek?.endAt) : "-"
   const pushEvents = useCallback((nextEvents: LiveEvent[]) => {
     if (nextEvents.length === 0) return
-    setEvents((current) => [...nextEvents, ...current].slice(0, 5))
+    const seen = readSeenLiveEventIds()
+    const unseen = nextEvents.filter((event) => !seen.has(event.id))
+    if (unseen.length === 0) return
+    writeSeenLiveEventIds([...seen, ...unseen.map((event) => event.id)])
+    setEvents((current) => [...unseen, ...current].slice(0, 5))
     window.setTimeout(() => {
-      setEvents((current) => current.filter((event) => !nextEvents.some((nextEvent) => nextEvent.id === event.id)))
+      setEvents((current) => current.filter((event) => !unseen.some((nextEvent) => nextEvent.id === event.id)))
     }, 8200)
   }, [])
 
