@@ -183,7 +183,13 @@ export function MemberBarChart({ data }: { data: { name: string; commits: number
   )
 }
 
-export function HourlyBarChart({ data }: { data: { hour: string; commits: number }[] }) {
+export function HourlyBarChart({
+  data,
+  name = "커밋 수",
+}: {
+  data: { hour: string; commits: number }[]
+  name?: string
+}) {
   return (
     <div className="h-48">
       <ResponsiveContainer width="100%" height="100%">
@@ -192,7 +198,7 @@ export function HourlyBarChart({ data }: { data: { hour: string; commits: number
           <XAxis dataKey="hour" stroke="hsl(216 12% 58%)" fontSize={10} tickLine={false} axisLine={false} />
           <YAxis stroke="hsl(216 12% 58%)" fontSize={11} tickLine={false} axisLine={false} />
           <Tooltip contentStyle={tooltipStyle} cursor={{ fill: "hsl(220 16% 14%)" }} />
-          <Bar dataKey="commits" name="커밋 수" fill="hsl(264 70% 64%)" radius={[5, 5, 0, 0]} />
+          <Bar dataKey="commits" name={name} fill="hsl(264 70% 64%)" radius={[5, 5, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </div>

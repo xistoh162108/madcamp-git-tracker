@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion"
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from "recharts"
-import { HourlyBarChart } from "@/components/detail-charts"
+import { HourlyBarChart, SprintBoard } from "@/components/detail-charts"
 import { dailyTrend } from "@/lib/data"
 import type { AggregatedSnapshot } from "@/src/aggregation/aggregate"
 import type { WeekConfig } from "@/src/config/schema"
@@ -15,25 +15,6 @@ const tooltipStyle = {
   color: "hsl(210 20% 92%)",
 }
 
-function dateKey(date: Date) {
-  return new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Seoul" }).format(date)
-}
-
-function dayLabel(iso: string) {
-  const match = iso.match(/\d{4}-(\d{2})-(\d{2})/)
-  return match ? `${match[1]}.${match[2]}` : iso
-}
-
-function weekdayLabel(iso: string) {
-  return new Intl.DateTimeFormat("ko-KR", { timeZone: "Asia/Seoul", weekday: "short" }).format(new Date(iso))
-}
-
-function intensity(count: number, max: number) {
-  if (count <= 0) return 0
-  if (max <= 1) return 1
-  return Math.max(1, Math.ceil((count / max) * 4))
-}
-
 function SprintHeatmap({
   snapshot,
   weeks,
@@ -43,13 +24,6 @@ function SprintHeatmap({
   weeks?: WeekConfig[]
   currentWeek?: number | null
 }) {
-  const heatmap = normalizedHeatmap(snapshot)
-  const counts = new Map(heatmap.map((day) => [day.date, day.count]))
-  const max = Math.max(1, ...[...counts.values()])
-  const configuredWeeks = weeks?.slice(0, 4) ?? []
-  const today = dateKey(new Date())
-  const weekdays = ["월", "화", "수", "목", "금", "토", "일"]
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 14 }}
@@ -59,81 +33,8 @@ function SprintHeatmap({
     >
       <h3 className="text-sm font-semibold">4주 스프린트 보드</h3>
       <p className="mt-0.5 text-xs text-muted-foreground">캠프 기간 동안의 날짜별 활동 밀도</p>
-      <div className="mt-4 space-y-2.5">
-        <div className="grid grid-cols-[44px_1fr] items-center gap-2">
-          <span />
-          <div className="grid grid-cols-7 gap-1.5 text-center text-[10px] font-medium text-muted-foreground">
-            {weekdays.map((day) => (
-              <span key={day}>{day}</span>
-            ))}
-          </div>
-        </div>
-        {configuredWeeks.map((week) => {
-          const start = new Date(week.startAt)
-          const days = Array.from({ length: 7 }, (_, index) => {
-            const date = new Date(start)
-            date.setDate(start.getDate() + index)
-            const key = dateKey(date)
-            const disabled = currentWeek ? week.week > currentWeek : false
-            const count = disabled ? 0 : (counts.get(key) ?? 0)
-            return { key, label: dayLabel(key), count, level: intensity(count, max), disabled, today: key === today }
-          })
-          return (
-            <div key={week.week} className="grid grid-cols-[44px_1fr] items-center gap-2">
-              <span className="text-xs font-medium text-muted-foreground">{week.label}</span>
-              <div className="grid grid-cols-7 gap-1.5">
-                {days.map((day, dayIndex) => (
-                  <motion.span
-                    key={day.key}
-                    title={`${weekdayLabel(day.key)} ${day.label} · ${day.disabled ? "예정" : `${day.count} commits`}`}
-                    initial={{ opacity: 0, scale: 0.72 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    whileHover={!day.disabled ? { scale: 1.16, y: -2 } : undefined}
-                    transition={{ duration: 0.18, delay: week.week * 0.04 + dayIndex * 0.018 }}
-                    className={[
-                      "h-8 rounded-md border transition-colors",
-                      day.disabled
-                        ? "border-border/40 bg-muted/20 opacity-45"
-                        : day.level === 0
-                          ? "border-border/50 bg-muted/40"
-                          : day.level === 1
-                            ? "border-primary/20 bg-primary/15"
-                            : day.level === 2
-                              ? "border-primary/30 bg-primary/30"
-                              : day.level === 3
-                                ? "border-primary/40 bg-primary/55"
-                                : "border-primary/60 bg-primary/80",
-                      day.today ? "ring-1 ring-gold" : "",
-                    ].join(" ")}
-                  />
-                ))}
-              </div>
-            </div>
-          )
-        })}
-      </div>
-      <div className="mt-3 flex items-center justify-between text-[10px] text-muted-foreground">
-        <span>낮음</span>
-        <div className="flex gap-1">
-          {[0, 1, 2, 3, 4].map((level) => (
-            <span
-              key={level}
-              className={[
-                "h-2.5 w-5 rounded-sm",
-                level === 0
-                  ? "bg-muted/40"
-                  : level === 1
-                    ? "bg-primary/15"
-                    : level === 2
-                      ? "bg-primary/30"
-                      : level === 3
-                        ? "bg-primary/55"
-                        : "bg-primary/80",
-              ].join(" ")}
-            />
-          ))}
-        </div>
-        <span>높음</span>
+      <div className="mt-4">
+        <SprintBoard heatmap={normalizedHeatmap(snapshot)} weeks={weeks ?? []} currentWeek={currentWeek ?? null} />
       </div>
     </motion.div>
   )
@@ -189,9 +90,9 @@ export function TrendCharts({
         className="rounded-xl border border-border/70 bg-card/70 p-4 lg:col-span-2"
       >
         <h3 className="text-sm font-semibold">시간대별 커밋 분포</h3>
-        <p className="mt-0.5 text-xs text-muted-foreground">KST 기준 · 현재 선택한 기간</p>
+        <p className="mt-0.5 text-xs text-muted-foreground">KST 기준 · 현재 선택한 기간의 시간대별 평균 커밋 수</p>
         <div className="mt-4">
-          <HourlyBarChart data={hourly} />
+          <HourlyBarChart data={hourly} name="평균 커밋 수" />
         </div>
       </motion.div>
     </div>
@@ -214,12 +115,22 @@ function hourOfKst(iso: string) {
   }).format(new Date(iso))
 }
 
+function dayOfKst(iso: string) {
+  return new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Seoul" }).format(new Date(iso))
+}
+
 function normalizedHourly(snapshot?: AggregatedSnapshot) {
   const counts = new Map(Array.from({ length: 24 }, (_, hour) => [String(hour).padStart(2, "0"), 0]))
   const source = snapshot?.activityFeed ?? []
+  const activeDays = new Set<string>()
   for (const item of source) {
     const hour = hourOfKst(item.committedAt)
     counts.set(hour, (counts.get(hour) ?? 0) + 1)
+    activeDays.add(dayOfKst(item.committedAt))
   }
-  return [...counts.entries()].map(([hour, commits]) => ({ hour, commits }))
+  const dayCount = Math.max(1, activeDays.size)
+  return [...counts.entries()].map(([hour, commits]) => ({
+    hour,
+    commits: Math.round((commits / dayCount) * 10) / 10,
+  }))
 }
