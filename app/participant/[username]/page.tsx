@@ -133,7 +133,11 @@ export default async function ParticipantDetailPage({ params }: { params: Promis
     const hour = kstHour(item.committedAt)
     hourlyCounts.set(hour, (hourlyCounts.get(hour) ?? 0) + 1)
   }
-  const hourly = [...hourlyCounts.entries()].map(([hour, commits]) => ({ hour, commits }))
+  const activeDayCount = Math.max(1, participantHeatmap.length)
+  const hourly = [...hourlyCounts.entries()].map(([hour, commits]) => ({
+    hour,
+    commits: Math.round((commits / activeDayCount) * 10) / 10,
+  }))
   const dailyAverage = p.activeDays > 0 ? (p.commits / p.activeDays).toFixed(1) : "0.0"
   const mostActiveHour = hourly.reduce(
     (best, item) => (item.commits > best.commits ? item : best),
@@ -381,9 +385,9 @@ export default async function ParticipantDetailPage({ params }: { params: Promis
           <h2 className="text-sm font-semibold">시간대별 커밋 패턴</h2>
           {showHourlyChart ? (
             <>
-              <p className="mt-0.5 text-xs text-muted-foreground">KST 기준 · 개인 활동</p>
+              <p className="mt-0.5 text-xs text-muted-foreground">KST 기준 · 활동일 평균 커밋 수</p>
               <div className="mt-4">
-                <HourlyBarChart data={hourly} />
+                <HourlyBarChart data={hourly} name="평균 커밋 수" />
               </div>
             </>
           ) : (
