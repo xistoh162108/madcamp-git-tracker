@@ -1,0 +1,3324 @@
+{
+  "generatedAt": "2026-07-03T04:45:27.693Z",
+  "generatedAtKst": "07.03 13:45",
+  "season": "2026-summer",
+  "currentWeek": 1,
+  "summary": {
+    "totalCommits": 153,
+    "mappedCommits": 148,
+    "activeRepos": 18,
+    "participants": 50,
+    "activeParticipants": 26
+  },
+  "rankings": {
+    "personal": [
+      {
+        "id": "박정준-jungjun0708",
+        "label": "박정준",
+        "commits": 17,
+        "activeDays": 2,
+        "lastActivityAt": "2026-07-03T04:38:56Z",
+        "meta": "jungjun0708",
+        "activityStats": {
+          "currentDayStreak": 2,
+          "longestDayStreak": 2,
+          "currentHourStreak": 1,
+          "longestHourStreak": 3,
+          "activeHours": 5
+        },
+        "honorTitles": [],
+        "rank": 1,
+        "prevRank": 1,
+        "isNew": true
+      },
+      {
+        "id": "박수현-suh1088",
+        "label": "박수현",
+        "commits": 15,
+        "activeDays": 2,
+        "lastActivityAt": "2026-07-03T04:40:36Z",
+        "meta": "suh1088",
+        "activityStats": {
+          "currentDayStreak": 2,
+          "longestDayStreak": 2,
+          "currentHourStreak": 1,
+          "longestHourStreak": 4,
+          "activeHours": 6
+        },
+        "honorTitles": [],
+        "rank": 2,
+        "prevRank": 1,
+        "isNew": false
+      },
+      {
+        "id": "김태현-terry2549",
+        "label": "김태현",
+        "commits": 14,
+        "activeDays": 2,
+        "lastActivityAt": "2026-07-03T03:45:42Z",
+        "meta": "terry2549",
+        "activityStats": {
+          "currentDayStreak": 2,
+          "longestDayStreak": 2,
+          "currentHourStreak": 0,
+          "longestHourStreak": 2,
+          "activeHours": 6
+        },
+        "honorTitles": [],
+        "rank": 3,
+        "prevRank": 4,
+        "isNew": false
+      },
+      {
+        "id": "이예지-yeochi369",
+        "label": "이예지",
+        "commits": 13,
+        "activeDays": 2,
+        "lastActivityAt": "2026-07-03T04:40:15Z",
+        "meta": "yeochi369",
+        "activityStats": {
+          "currentDayStreak": 2,
+          "longestDayStreak": 2,
+          "currentHourStreak": 4,
+          "longestHourStreak": 4,
+          "activeHours": 5
+        },
+        "honorTitles": [],
+        "rank": 4,
+        "prevRank": 4,
+        "isNew": true
+      },
+      {
+        "id": "황시우-ssiuuuuuu",
+        "label": "황시우",
+        "commits": 13,
+        "activeDays": 2,
+        "lastActivityAt": "2026-07-03T03:22:00Z",
+        "meta": "ssiuuuuuu",
+        "activityStats": {
+          "currentDayStreak": 2,
+          "longestDayStreak": 2,
+          "currentHourStreak": 0,
+          "longestHourStreak": 1,
+          "activeHours": 3
+        },
+        "honorTitles": [],
+        "rank": 5,
+        "prevRank": 5,
+        "isNew": true
+      },
+      {
+        "id": "이지오-easy0131",
+        "label": "이지오",
+        "commits": 11,
+        "activeDays": 2,
+        "lastActivityAt": "2026-07-03T01:51:36Z",
+        "meta": "easy0131",
+        "activityStats": {
+          "currentDayStreak": 2,
+          "longestDayStreak": 2,
+          "currentHourStreak": 0,
+          "longestHourStreak": 4,
+          "activeHours": 5
+        },
+        "honorTitles": [],
+        "rank": 6,
+        "prevRank": 2,
+        "isNew": false
+      },
+      {
+        "id": "김경원-kkw610",
+        "label": "김경원",
+        "commits": 9,
+        "activeDays": 2,
+        "lastActivityAt": "2026-07-03T04:17:48Z",
+        "meta": "kkw610",
+        "activityStats": {
+          "currentDayStreak": 2,
+          "longestDayStreak": 2,
+          "currentHourStreak": 4,
+          "longestHourStreak": 4,
+          "activeHours": 5
+        },
+        "honorTitles": [],
+        "rank": 7,
+        "prevRank": 7,
+        "isNew": true
+      },
+      {
+        "id": "이유담-omok00",
+        "label": "이유담",
+        "commits": 7,
+        "activeDays": 1,
+        "lastActivityAt": "2026-07-02T11:36:00Z",
+        "meta": "omok00",
+        "activityStats": {
+          "currentDayStreak": 0,
+          "longestDayStreak": 1,
+          "currentHourStreak": 0,
+          "longestHourStreak": 2,
+          "activeHours": 3
+        },
+        "honorTitles": [],
+        "rank": 8,
+        "prevRank": 3,
+        "isNew": false
+      },
+      {
+        "id": "안종화-anjonghwa0",
+        "label": "안종화",
+        "commits": 5,
+        "activeDays": 2,
+        "lastActivityAt": "2026-07-03T03:44:45Z",
+        "meta": "anjonghwa0",
+        "activityStats": {
+          "currentDayStreak": 2,
+          "longestDayStreak": 2,
+          "currentHourStreak": 0,
+          "longestHourStreak": 2,
+          "activeHours": 5
+        },
+        "honorTitles": [],
+        "rank": 9,
+        "prevRank": 11,
+        "isNew": false
+      },
+      {
+        "id": "유영석-yskstuff",
+        "label": "유영석",
+        "commits": 5,
+        "activeDays": 1,
+        "lastActivityAt": "2026-07-03T04:27:42Z",
+        "meta": "yskstuff",
+        "activityStats": {
+          "currentDayStreak": 1,
+          "longestDayStreak": 1,
+          "currentHourStreak": 1,
+          "longestHourStreak": 2,
+          "activeHours": 3
+        },
+        "honorTitles": [],
+        "rank": 10,
+        "prevRank": 10,
+        "isNew": true
+      },
+      {
+        "id": "김혜리-ireyhye",
+        "label": "김혜리",
+        "commits": 4,
+        "activeDays": 2,
+        "lastActivityAt": "2026-07-03T02:09:34Z",
+        "meta": "ireyhye",
+        "activityStats": {
+          "currentDayStreak": 2,
+          "longestDayStreak": 2,
+          "currentHourStreak": 0,
+          "longestHourStreak": 1,
+          "activeHours": 4
+        },
+        "honorTitles": [],
+        "rank": 11,
+        "prevRank": 9,
+        "isNew": false
+      },
+      {
+        "id": "서영빈-izayoieosd",
+        "label": "서영빈",
+        "commits": 4,
+        "activeDays": 1,
+        "lastActivityAt": "2026-07-02T11:28:10Z",
+        "meta": "izayoieosd",
+        "activityStats": {
+          "currentDayStreak": 0,
+          "longestDayStreak": 1,
+          "currentHourStreak": 0,
+          "longestHourStreak": 3,
+          "activeHours": 3
+        },
+        "honorTitles": [],
+        "rank": 12,
+        "prevRank": 10,
+        "isNew": false
+      },
+      {
+        "id": "양우현-hyun020215",
+        "label": "양우현",
+        "commits": 4,
+        "activeDays": 2,
+        "lastActivityAt": "2026-07-03T01:56:14Z",
+        "meta": "hyun020215",
+        "activityStats": {
+          "currentDayStreak": 2,
+          "longestDayStreak": 2,
+          "currentHourStreak": 0,
+          "longestHourStreak": 2,
+          "activeHours": 4
+        },
+        "honorTitles": [],
+        "rank": 13,
+        "prevRank": 7,
+        "isNew": false
+      },
+      {
+        "id": "최재윤-jaeyun-18",
+        "label": "최재윤",
+        "commits": 4,
+        "activeDays": 1,
+        "lastActivityAt": "2026-07-03T01:29:08Z",
+        "meta": "jaeyun-18",
+        "activityStats": {
+          "currentDayStreak": 1,
+          "longestDayStreak": 1,
+          "currentHourStreak": 0,
+          "longestHourStreak": 1,
+          "activeHours": 1
+        },
+        "honorTitles": [],
+        "rank": 14,
+        "prevRank": 14,
+        "isNew": true
+      },
+      {
+        "id": "박지호-batiger00",
+        "label": "박지호",
+        "commits": 3,
+        "activeDays": 1,
+        "lastActivityAt": "2026-07-02T10:33:58Z",
+        "meta": "batiger00",
+        "activityStats": {
+          "currentDayStreak": 0,
+          "longestDayStreak": 1,
+          "currentHourStreak": 0,
+          "longestHourStreak": 2,
+          "activeHours": 2
+        },
+        "honorTitles": [],
+        "rank": 15,
+        "prevRank": 6,
+        "isNew": false
+      },
+      {
+        "id": "이서영-sksy930",
+        "label": "이서영",
+        "commits": 3,
+        "activeDays": 1,
+        "lastActivityAt": "2026-07-03T03:44:43Z",
+        "meta": "sksy930",
+        "activityStats": {
+          "currentDayStreak": 1,
+          "longestDayStreak": 1,
+          "currentHourStreak": 0,
+          "longestHourStreak": 1,
+          "activeHours": 1
+        },
+        "honorTitles": [],
+        "rank": 16,
+        "prevRank": 16,
+        "isNew": true
+      },
+      {
+        "id": "이서진a-seojinnlee",
+        "label": "이서진A",
+        "commits": 3,
+        "activeDays": 1,
+        "lastActivityAt": "2026-07-03T02:15:16Z",
+        "meta": "seojinnlee",
+        "activityStats": {
+          "currentDayStreak": 1,
+          "longestDayStreak": 1,
+          "currentHourStreak": 0,
+          "longestHourStreak": 1,
+          "activeHours": 1
+        },
+        "honorTitles": [],
+        "rank": 17,
+        "prevRank": 17,
+        "isNew": true
+      },
+      {
+        "id": "이재준-dannyiscard",
+        "label": "이재준",
+        "commits": 3,
+        "activeDays": 2,
+        "lastActivityAt": "2026-07-03T02:30:37Z",
+        "meta": "dannyiscard",
+        "activityStats": {
+          "currentDayStreak": 2,
+          "longestDayStreak": 2,
+          "currentHourStreak": 0,
+          "longestHourStreak": 2,
+          "activeHours": 3
+        },
+        "honorTitles": [],
+        "rank": 18,
+        "prevRank": 18,
+        "isNew": true
+      },
+      {
+        "id": "임성진-nounmoumn",
+        "label": "임성진",
+        "commits": 3,
+        "activeDays": 2,
+        "lastActivityAt": "2026-07-03T01:56:39Z",
+        "meta": "nounmoumn",
+        "activityStats": {
+          "currentDayStreak": 2,
+          "longestDayStreak": 2,
+          "currentHourStreak": 0,
+          "longestHourStreak": 1,
+          "activeHours": 2
+        },
+        "honorTitles": [],
+        "rank": 19,
+        "prevRank": 8,
+        "isNew": false
+      },
+      {
+        "id": "김재훈-superloser030",
+        "label": "김재훈",
+        "commits": 2,
+        "activeDays": 1,
+        "lastActivityAt": "2026-07-02T07:48:05Z",
+        "meta": "superloser030",
+        "activityStats": {
+          "currentDayStreak": 0,
+          "longestDayStreak": 1,
+          "currentHourStreak": 0,
+          "longestHourStreak": 1,
+          "activeHours": 1
+        },
+        "honorTitles": [],
+        "rank": 20,
+        "prevRank": 5,
+        "isNew": false
+      },
+      {
+        "id": "김민재-kminj2296",
+        "label": "김민재",
+        "commits": 1,
+        "activeDays": 1,
+        "lastActivityAt": "2026-07-03T01:45:10Z",
+        "meta": "kminj2296",
+        "activityStats": {
+          "currentDayStreak": 1,
+          "longestDayStreak": 1,
+          "currentHourStreak": 0,
+          "longestHourStreak": 1,
+          "activeHours": 1
+        },
+        "honorTitles": [],
+        "rank": 21,
+        "prevRank": 21,
+        "isNew": true
+      },
+      {
+        "id": "박민수-miinspp",
+        "label": "박민수",
+        "commits": 1,
+        "activeDays": 1,
+        "lastActivityAt": "2026-07-03T04:23:26Z",
+        "meta": "miinspp",
+        "activityStats": {
+          "currentDayStreak": 1,
+          "longestDayStreak": 1,
+          "currentHourStreak": 1,
+          "longestHourStreak": 1,
+          "activeHours": 1
+        },
+        "honorTitles": [],
+        "rank": 22,
+        "prevRank": 22,
+        "isNew": true
+      },
+      {
+        "id": "유나연-yxxnxyxxn",
+        "label": "유나연",
+        "commits": 1,
+        "activeDays": 1,
+        "lastActivityAt": "2026-07-03T01:51:19Z",
+        "meta": "yxxnxyxxn",
+        "activityStats": {
+          "currentDayStreak": 1,
+          "longestDayStreak": 1,
+          "currentHourStreak": 0,
+          "longestHourStreak": 1,
+          "activeHours": 1
+        },
+        "honorTitles": [],
+        "rank": 23,
+        "prevRank": 23,
+        "isNew": true
+      },
+      {
+        "id": "이종혁-jonghklee",
+        "label": "이종혁",
+        "commits": 1,
+        "activeDays": 1,
+        "lastActivityAt": "2026-07-02T07:43:06Z",
+        "meta": "jonghklee",
+        "activityStats": {
+          "currentDayStreak": 0,
+          "longestDayStreak": 1,
+          "currentHourStreak": 0,
+          "longestHourStreak": 1,
+          "activeHours": 1
+        },
+        "honorTitles": [],
+        "rank": 24,
+        "prevRank": 12,
+        "isNew": false
+      },
+      {
+        "id": "조예준-jossi-jossi",
+        "label": "조예준",
+        "commits": 1,
+        "activeDays": 1,
+        "lastActivityAt": "2026-07-02T12:05:20Z",
+        "meta": "jossi-jossi",
+        "activityStats": {
+          "currentDayStreak": 0,
+          "longestDayStreak": 1,
+          "currentHourStreak": 0,
+          "longestHourStreak": 1,
+          "activeHours": 1
+        },
+        "honorTitles": [],
+        "rank": 25,
+        "prevRank": 25,
+        "isNew": true
+      },
+      {
+        "id": "조준호-milleion",
+        "label": "조준호",
+        "commits": 1,
+        "activeDays": 1,
+        "lastActivityAt": "2026-07-02T17:37:17Z",
+        "meta": "milleion",
+        "activityStats": {
+          "currentDayStreak": 1,
+          "longestDayStreak": 1,
+          "currentHourStreak": 0,
+          "longestHourStreak": 1,
+          "activeHours": 1
+        },
+        "honorTitles": [],
+        "rank": 26,
+        "prevRank": 26,
+        "isNew": true
+      }
+    ],
+    "teams": [
+      {
+        "id": "26s-w1-c2-04",
+        "label": "26s-w1-c2-04",
+        "commits": 26,
+        "activeDays": 2,
+        "lastActivityAt": "2026-07-03T04:40:15Z",
+        "meta": "2분반 · 04팀",
+        "averagePerPerson": 13,
+        "rank": 1,
+        "prevRank": 1,
+        "isNew": true
+      },
+      {
+        "id": "26s-w1-c3-02",
+        "label": "26s-w1-c3-02",
+        "commits": 26,
+        "activeDays": 2,
+        "lastActivityAt": "2026-07-03T04:40:36Z",
+        "meta": "3분반 · 02팀",
+        "averagePerPerson": 13,
+        "rank": 2,
+        "prevRank": 1,
+        "isNew": false
+      },
+      {
+        "id": "26s-w1-c1-04",
+        "label": "26s-w1-c1-04",
+        "commits": 21,
+        "activeDays": 2,
+        "lastActivityAt": "2026-07-03T03:45:42Z",
+        "meta": "1분반 · 04팀",
+        "averagePerPerson": 10.5,
+        "rank": 3,
+        "prevRank": 2,
+        "isNew": false
+      },
+      {
+        "id": "26s-w1-c2-07",
+        "label": "26s-w1-c2-07",
+        "commits": 17,
+        "activeDays": 2,
+        "lastActivityAt": "2026-07-03T04:38:56Z",
+        "meta": "2분반 · 07팀",
+        "averagePerPerson": 17,
+        "rank": 4,
+        "prevRank": 4,
+        "isNew": true
+      },
+      {
+        "id": "26s-w1-c2-01",
+        "label": "26s-w1-c2-01",
+        "commits": 13,
+        "activeDays": 2,
+        "lastActivityAt": "2026-07-03T04:17:48Z",
+        "meta": "2분반 · 01팀",
+        "averagePerPerson": 6.5,
+        "rank": 5,
+        "prevRank": 3,
+        "isNew": false
+      },
+      {
+        "id": "26s-w1-c2-08",
+        "label": "26s-w1-c2-08",
+        "commits": 12,
+        "activeDays": 1,
+        "lastActivityAt": "2026-07-03T04:23:54Z",
+        "meta": "2분반 · 08팀",
+        "averagePerPerson": 6,
+        "rank": 6,
+        "prevRank": 6,
+        "isNew": true
+      },
+      {
+        "id": "26s-w1-c3-06",
+        "label": "26s-w1-c3-06",
+        "commits": 8,
+        "activeDays": 2,
+        "lastActivityAt": "2026-07-03T02:09:34Z",
+        "meta": "3분반 · 06팀",
+        "averagePerPerson": 4,
+        "rank": 7,
+        "prevRank": 6,
+        "isNew": false
+      },
+      {
+        "id": "26s-w1-c1-01",
+        "label": "26s-w1-c1-01",
+        "commits": 6,
+        "activeDays": 1,
+        "lastActivityAt": "2026-07-03T04:27:42Z",
+        "meta": "1분반 · 01팀",
+        "averagePerPerson": 3,
+        "rank": 8,
+        "prevRank": 8,
+        "isNew": true
+      },
+      {
+        "id": "26s-w1-c1-05",
+        "label": "26s-w1-c1-05",
+        "commits": 5,
+        "activeDays": 2,
+        "lastActivityAt": "2026-07-03T03:44:45Z",
+        "meta": "1분반 · 05팀",
+        "averagePerPerson": 5,
+        "rank": 9,
+        "prevRank": 8,
+        "isNew": false
+      },
+      {
+        "id": "26s-w1-c1-02",
+        "label": "26s-w1-c1-02",
+        "commits": 3,
+        "activeDays": 1,
+        "lastActivityAt": "2026-07-03T02:15:16Z",
+        "meta": "1분반 · 02팀",
+        "averagePerPerson": 3,
+        "rank": 10,
+        "prevRank": 10,
+        "isNew": true
+      },
+      {
+        "id": "26s-w1-c2-05",
+        "label": "26s-w1-c2-05",
+        "commits": 3,
+        "activeDays": 2,
+        "lastActivityAt": "2026-07-03T02:30:37Z",
+        "meta": "2분반 · 05팀",
+        "averagePerPerson": 3,
+        "rank": 11,
+        "prevRank": 11,
+        "isNew": true
+      },
+      {
+        "id": "26s-w1-c3-01",
+        "label": "26s-w1-c3-01",
+        "commits": 3,
+        "activeDays": 1,
+        "lastActivityAt": "2026-07-02T10:33:58Z",
+        "meta": "3분반 · 01팀",
+        "averagePerPerson": 3,
+        "rank": 12,
+        "prevRank": 4,
+        "isNew": false
+      },
+      {
+        "id": "26s-w1-c3-05",
+        "label": "26s-w1-c3-05",
+        "commits": 3,
+        "activeDays": 2,
+        "lastActivityAt": "2026-07-03T01:56:39Z",
+        "meta": "3분반 · 05팀",
+        "averagePerPerson": 3,
+        "rank": 13,
+        "prevRank": 5,
+        "isNew": false
+      },
+      {
+        "id": "26s-w1-c3-09",
+        "label": "26s-w1-c3-09",
+        "commits": 3,
+        "activeDays": 2,
+        "lastActivityAt": "2026-07-03T04:23:26Z",
+        "meta": "3분반 · 09팀",
+        "averagePerPerson": 1.5,
+        "rank": 14,
+        "prevRank": 7,
+        "isNew": false
+      },
+      {
+        "id": "26s-w1-c1-07",
+        "label": "26s-w1-c1-07",
+        "commits": 1,
+        "activeDays": 1,
+        "lastActivityAt": "2026-07-02T07:43:06Z",
+        "meta": "1분반 · 07팀",
+        "averagePerPerson": 1,
+        "rank": 15,
+        "prevRank": 9,
+        "isNew": false
+      },
+      {
+        "id": "26s-w1-c2-03",
+        "label": "26s-w1-c2-03",
+        "commits": 1,
+        "activeDays": 1,
+        "lastActivityAt": "2026-07-03T01:45:10Z",
+        "meta": "2분반 · 03팀",
+        "averagePerPerson": 1,
+        "rank": 16,
+        "prevRank": 16,
+        "isNew": true
+      },
+      {
+        "id": "26s-w1-c3-03",
+        "label": "26s-w1-c3-03",
+        "commits": 1,
+        "activeDays": 1,
+        "lastActivityAt": "2026-07-02T12:05:20Z",
+        "meta": "3분반 · 03팀",
+        "averagePerPerson": 1,
+        "rank": 17,
+        "prevRank": 17,
+        "isNew": true
+      },
+      {
+        "id": "26s-w1-c3-07",
+        "label": "26s-w1-c3-07",
+        "commits": 1,
+        "activeDays": 1,
+        "lastActivityAt": "2026-07-02T17:37:17Z",
+        "meta": "3분반 · 07팀",
+        "averagePerPerson": 1,
+        "rank": 18,
+        "prevRank": 18,
+        "isNew": true
+      }
+    ],
+    "classes": [
+      {
+        "id": "2",
+        "label": "2분반",
+        "commits": 72,
+        "activeDays": 2,
+        "lastActivityAt": "2026-07-03T04:40:15Z",
+        "meta": "17명",
+        "averagePerPerson": 4.235294117647059,
+        "rank": 1,
+        "prevRank": 3,
+        "isNew": false
+      },
+      {
+        "id": "3",
+        "label": "3분반",
+        "commits": 45,
+        "activeDays": 2,
+        "lastActivityAt": "2026-07-03T04:40:36Z",
+        "meta": "18명",
+        "averagePerPerson": 2.5,
+        "rank": 2,
+        "prevRank": 1,
+        "isNew": false
+      },
+      {
+        "id": "1",
+        "label": "1분반",
+        "commits": 36,
+        "activeDays": 2,
+        "lastActivityAt": "2026-07-03T04:27:42Z",
+        "meta": "15명",
+        "averagePerPerson": 2.4,
+        "rank": 3,
+        "prevRank": 2,
+        "isNew": false
+      }
+    ]
+  },
+  "activityFeed": [
+    {
+      "id": "26s-w1-c3-02:e7f72d33127027c7e6584858faef8d0ad009b458",
+      "repoName": "26s-w1-c3-02",
+      "label": "suh1088",
+      "committedAt": "2026-07-03T04:40:36Z",
+      "summary": "db 스키마",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-02/commit/e7f72d33127027c7e6584858faef8d0ad009b458",
+      "branches": [
+        "main"
+      ],
+      "additions": 1,
+      "deletions": 1,
+      "changedFiles": 2
+    },
+    {
+      "id": "26s-w1-c2-04:54eeb83d2ac96b650a5cd4a7879632a92c27b8e8",
+      "repoName": "26s-w1-c2-04",
+      "label": "yeochi369",
+      "committedAt": "2026-07-03T04:40:15Z",
+      "summary": "init added",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-04/commit/54eeb83d2ac96b650a5cd4a7879632a92c27b8e8",
+      "branches": [
+        "main"
+      ],
+      "additions": 0,
+      "deletions": 0,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c2-07:663053f9e9a0e21de237e330fd0615ee281b3777",
+      "repoName": "26s-w1-c2-07",
+      "label": "jungjun0708",
+      "committedAt": "2026-07-03T04:38:56Z",
+      "summary": "Merge pull request #6 from jungjun0708/docs/project-plan",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-07/commit/663053f9e9a0e21de237e330fd0615ee281b3777",
+      "branches": [
+        "main"
+      ],
+      "additions": 15,
+      "deletions": 15,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c2-07:f0c7ca21519798360fb9341a82c31e8ba48dad60",
+      "repoName": "26s-w1-c2-07",
+      "label": "jungjun0708",
+      "committedAt": "2026-07-03T04:37:22Z",
+      "summary": "docs: remove checklist markers from feature headings",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-07/commit/f0c7ca21519798360fb9341a82c31e8ba48dad60",
+      "branches": [
+        "main"
+      ],
+      "additions": 15,
+      "deletions": 15,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c2-07:f3088d77c16e43e22e2e762aef45805186724016",
+      "repoName": "26s-w1-c2-07",
+      "label": "jungjun0708",
+      "committedAt": "2026-07-03T04:34:30Z",
+      "summary": "Merge pull request #5 from jungjun0708/docs/project-plan",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-07/commit/f3088d77c16e43e22e2e762aef45805186724016",
+      "branches": [
+        "main"
+      ],
+      "additions": 186,
+      "deletions": 10,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c2-07:82d7e554b40154371f81da18ae034c1b376cf300",
+      "repoName": "26s-w1-c2-07",
+      "label": "jungjun0708",
+      "committedAt": "2026-07-03T04:33:16Z",
+      "summary": "docs: move auth to required features",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-07/commit/82d7e554b40154371f81da18ae034c1b376cf300",
+      "branches": [
+        "main"
+      ],
+      "additions": 10,
+      "deletions": 10,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c2-07:08962a2dfd24d0ffb5438df0e957516813c46efd",
+      "repoName": "26s-w1-c2-07",
+      "label": "jungjun0708",
+      "committedAt": "2026-07-03T04:29:23Z",
+      "summary": "docs: simplify feature specification",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-07/commit/08962a2dfd24d0ffb5438df0e957516813c46efd",
+      "branches": [
+        "main"
+      ],
+      "additions": 102,
+      "deletions": 544,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c1-01:320f3399e3a3e6d2d53d19ec117b38048ecdfc57",
+      "repoName": "26s-w1-c1-01",
+      "label": "yskstuff",
+      "committedAt": "2026-07-03T04:27:42Z",
+      "summary": "Update recommendation service details in README",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-01/commit/320f3399e3a3e6d2d53d19ec117b38048ecdfc57",
+      "branches": [
+        "main"
+      ],
+      "additions": 1,
+      "deletions": 2,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c2-08:f9f04e0078e3f41e0a8f129b5a690ccebae3d0a2",
+      "repoName": "26s-w1-c2-08",
+      "label": "abiatarprado",
+      "committedAt": "2026-07-03T04:23:54Z",
+      "summary": "Merge remote-tracking branch 'origin/main'",
+      "attributionStatus": "bot_only",
+      "detectedBots": [
+        "abiatarprado",
+        "abiatarprado"
+      ],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-08/commit/f9f04e0078e3f41e0a8f129b5a690ccebae3d0a2",
+      "branches": [
+        "main"
+      ],
+      "additions": 0,
+      "deletions": 0,
+      "changedFiles": 0
+    },
+    {
+      "id": "26s-w1-c3-09:4079a9013f3054210959eef6716df137bdaff950",
+      "repoName": "26s-w1-c3-09",
+      "label": "miinspp",
+      "committedAt": "2026-07-03T04:23:26Z",
+      "summary": "md파일 수정",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-09/commit/4079a9013f3054210959eef6716df137bdaff950",
+      "branches": [
+        "main"
+      ],
+      "additions": 10,
+      "deletions": 8,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c2-08:f6328371e8d0a2de564b30ef3098bd936f0d2080",
+      "repoName": "26s-w1-c2-08",
+      "label": "abiatarprado",
+      "committedAt": "2026-07-03T04:20:38Z",
+      "summary": "Initial full-stack project setup",
+      "attributionStatus": "bot_only",
+      "detectedBots": [
+        "abiatarprado",
+        "abiatarprado"
+      ],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-08/commit/f6328371e8d0a2de564b30ef3098bd936f0d2080",
+      "branches": [
+        "main"
+      ],
+      "additions": 2885,
+      "deletions": 0,
+      "changedFiles": 31
+    },
+    {
+      "id": "26s-w1-c2-01:b9baae769de68eb6e6541a653fbd6d025fbf5d4f",
+      "repoName": "26s-w1-c2-01",
+      "label": "kkw610",
+      "committedAt": "2026-07-03T04:17:48Z",
+      "summary": "chore: backend 구조 및 alembic 설정",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-01/commit/b9baae769de68eb6e6541a653fbd6d025fbf5d4f",
+      "branches": [
+        "backend"
+      ],
+      "additions": 53,
+      "deletions": 0,
+      "changedFiles": 8
+    },
+    {
+      "id": "26s-w1-c2-01:d3ef0543ccfeff3dcc67f2200b2f241f57d0b562",
+      "repoName": "26s-w1-c2-01",
+      "label": "kkw610",
+      "committedAt": "2026-07-03T04:08:03Z",
+      "summary": "feat: 프론트 API 호출 시 CORS 정책 완화",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-01/commit/d3ef0543ccfeff3dcc67f2200b2f241f57d0b562",
+      "branches": [
+        "backend"
+      ],
+      "additions": 8,
+      "deletions": 0,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c2-04:9442bc207219dedd51fe9e1e918ccb06579caab3",
+      "repoName": "26s-w1-c2-04",
+      "label": "yeochi369",
+      "committedAt": "2026-07-03T04:03:25Z",
+      "summary": "Merge branch 'main' of https://github.com/madcamp-official/26s-w1-c2-04",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-04/commit/9442bc207219dedd51fe9e1e918ccb06579caab3",
+      "branches": [
+        "main"
+      ],
+      "additions": 2,
+      "deletions": 2,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c2-04:b19747dc90446f46db709dc9264a021b75743c9b",
+      "repoName": "26s-w1-c2-04",
+      "label": "yeochi369",
+      "committedAt": "2026-07-03T04:03:19Z",
+      "summary": "schemas",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-04/commit/b19747dc90446f46db709dc9264a021b75743c9b",
+      "branches": [
+        "main"
+      ],
+      "additions": 14,
+      "deletions": 0,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c2-08:2d0b1751f658e06c08488285c58cf96ed980fda2",
+      "repoName": "26s-w1-c2-08",
+      "label": "codex",
+      "committedAt": "2026-07-03T04:02:50Z",
+      "summary": "Merge branch 'initialization'",
+      "attributionStatus": "bot_only",
+      "detectedBots": [
+        "codex@local",
+        "codex@local"
+      ],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-08/commit/2d0b1751f658e06c08488285c58cf96ed980fda2",
+      "branches": [
+        "main"
+      ],
+      "additions": 2526,
+      "deletions": 0,
+      "changedFiles": 19
+    },
+    {
+      "id": "26s-w1-c2-08:42c0bade0c251fc4febef4e8a250a60e20ebdaa0",
+      "repoName": "26s-w1-c2-08",
+      "label": "codex",
+      "committedAt": "2026-07-03T04:01:57Z",
+      "summary": "docs: refine item review service draft",
+      "attributionStatus": "bot_only",
+      "detectedBots": [
+        "codex@local",
+        "codex@local"
+      ],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-08/commit/42c0bade0c251fc4febef4e8a250a60e20ebdaa0",
+      "branches": [
+        "main"
+      ],
+      "additions": 171,
+      "deletions": 0,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c2-01:9afc98371e780cdf8a53803845b73b05f6af5594",
+      "repoName": "26s-w1-c2-01",
+      "label": "kkw610",
+      "committedAt": "2026-07-03T03:58:55Z",
+      "summary": "fix: docker-compose.yml 5433 포트 변경",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-01/commit/9afc98371e780cdf8a53803845b73b05f6af5594",
+      "branches": [
+        "backend"
+      ],
+      "additions": 1,
+      "deletions": 1,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c2-01:9e7fb443438e874f140c2c46e6fb2bf96a06f60b",
+      "repoName": "26s-w1-c2-01",
+      "label": "kkw610",
+      "committedAt": "2026-07-03T03:57:13Z",
+      "summary": "chore: .env 형식 추가",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-01/commit/9e7fb443438e874f140c2c46e6fb2bf96a06f60b",
+      "branches": [
+        "backend"
+      ],
+      "additions": 7,
+      "deletions": 0,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c1-04:1a307af8840c6f425fe225d5a184885d3b5994f3",
+      "repoName": "26s-w1-c1-04",
+      "label": "terry2549",
+      "committedAt": "2026-07-03T03:45:42Z",
+      "summary": "Merge branch 'terry2549' of https://github.com/madcamp-official/26s-w1-c1-04 into terry2549",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-04/commit/1a307af8840c6f425fe225d5a184885d3b5994f3",
+      "branches": [
+        "terry2549"
+      ],
+      "additions": 0,
+      "deletions": 0,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c1-05:fdaef03188ea484854374ce775cacb883715ecba",
+      "repoName": "26s-w1-c1-05",
+      "label": "anjonghwa0",
+      "committedAt": "2026-07-03T03:44:45Z",
+      "summary": "mvp demo developed",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-05/commit/fdaef03188ea484854374ce775cacb883715ecba",
+      "branches": [
+        "anjonghwa"
+      ],
+      "additions": 5695,
+      "deletions": 53,
+      "changedFiles": 64
+    },
+    {
+      "id": "26s-w1-c1-04:b817bdd42e2a1b7aceaff2147b3739a69288661d",
+      "repoName": "26s-w1-c1-04",
+      "label": "terry2549",
+      "committedAt": "2026-07-03T03:44:44Z",
+      "summary": "resolve conflict removing scrum mote",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-04/commit/b817bdd42e2a1b7aceaff2147b3739a69288661d",
+      "branches": [
+        "terry2549"
+      ],
+      "additions": 0,
+      "deletions": 0,
+      "changedFiles": 0
+    },
+    {
+      "id": "26s-w1-c2-08:5af0374e4780482faccf8cd6fa5811062311bd2a",
+      "repoName": "26s-w1-c2-08",
+      "label": "sksy930",
+      "committedAt": "2026-07-03T03:44:43Z",
+      "summary": "update README",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-08/commit/5af0374e4780482faccf8cd6fa5811062311bd2a",
+      "branches": [
+        "main"
+      ],
+      "additions": 7,
+      "deletions": 7,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c2-08:625d33c4f5f9ee48c5582b961bbd63437b1970cc",
+      "repoName": "26s-w1-c2-08",
+      "label": "sksy930",
+      "committedAt": "2026-07-03T03:43:09Z",
+      "summary": "docs: update README",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-08/commit/625d33c4f5f9ee48c5582b961bbd63437b1970cc",
+      "branches": [
+        "main"
+      ],
+      "additions": 7,
+      "deletions": 7,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c2-08:32b32801a582aa56734578e290462b4007a47905",
+      "repoName": "26s-w1-c2-08",
+      "label": "sksy930",
+      "committedAt": "2026-07-03T03:41:04Z",
+      "summary": "docs: update README",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-08/commit/32b32801a582aa56734578e290462b4007a47905",
+      "branches": [
+        "main"
+      ],
+      "additions": 7,
+      "deletions": 1,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c2-04:e418ee6e3407ada67c9922f722e79898c2ae23b4",
+      "repoName": "26s-w1-c2-04",
+      "label": "ssiuuuuuu",
+      "committedAt": "2026-07-03T03:22:00Z",
+      "summary": "docs: Update README with IA document link",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-04/commit/e418ee6e3407ada67c9922f722e79898c2ae23b4",
+      "branches": [
+        "main"
+      ],
+      "additions": 1,
+      "deletions": 1,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c2-04:3b66e0fab217ae3cbbacbda2b1b8c9ebb8d1798b",
+      "repoName": "26s-w1-c2-04",
+      "label": "ssiuuuuuu",
+      "committedAt": "2026-07-03T03:20:17Z",
+      "summary": "Merge branch 'main' of https://github.com/madcamp-official/26s-w1-c2-04",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-04/commit/3b66e0fab217ae3cbbacbda2b1b8c9ebb8d1798b",
+      "branches": [
+        "main"
+      ],
+      "additions": 30,
+      "deletions": 7,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c2-04:6139b7b87c33300d05c6cdcf763a2673fba62a35",
+      "repoName": "26s-w1-c2-04",
+      "label": "ssiuuuuuu",
+      "committedAt": "2026-07-03T03:18:45Z",
+      "summary": "update README",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-04/commit/6139b7b87c33300d05c6cdcf763a2673fba62a35",
+      "branches": [
+        "main"
+      ],
+      "additions": 3,
+      "deletions": 2,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c2-04:eb1c44a7359100dbf81493d73a194938da187def",
+      "repoName": "26s-w1-c2-04",
+      "label": "ssiuuuuuu",
+      "committedAt": "2026-07-03T03:17:33Z",
+      "summary": "update README with some detail",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-04/commit/eb1c44a7359100dbf81493d73a194938da187def",
+      "branches": [
+        "main"
+      ],
+      "additions": 72,
+      "deletions": 0,
+      "changedFiles": 5
+    },
+    {
+      "id": "26s-w1-c2-04:2eff01db603879a1343f0227e9214d1c2106968a",
+      "repoName": "26s-w1-c2-04",
+      "label": "yeochi369",
+      "committedAt": "2026-07-03T03:15:51Z",
+      "summary": "main update",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-04/commit/2eff01db603879a1343f0227e9214d1c2106968a",
+      "branches": [
+        "main"
+      ],
+      "additions": 30,
+      "deletions": 7,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c2-04:3b24a987874225b14f683b6b7d49cc87e4e1633d",
+      "repoName": "26s-w1-c2-04",
+      "label": "ssiuuuuuu",
+      "committedAt": "2026-07-03T03:10:46Z",
+      "summary": "docs: Update README with IA document link",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-04/commit/3b24a987874225b14f683b6b7d49cc87e4e1633d",
+      "branches": [
+        "main"
+      ],
+      "additions": 2,
+      "deletions": 1,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c2-07:d497c5a3f68e57471f9ee31f51ebffcf542be7fd",
+      "repoName": "26s-w1-c2-07",
+      "label": "jungjun0708",
+      "committedAt": "2026-07-03T02:40:13Z",
+      "summary": "docs: revise feature spec for AI seat maps",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-07/commit/d497c5a3f68e57471f9ee31f51ebffcf542be7fd",
+      "branches": [
+        "main"
+      ],
+      "additions": 238,
+      "deletions": 95,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c1-01:35baeea240dcbcc46d8ae045bd7f1e58c5505557",
+      "repoName": "26s-w1-c1-01",
+      "label": "yskstuff",
+      "committedAt": "2026-07-03T02:33:22Z",
+      "summary": "Update README with project details and features",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-01/commit/35baeea240dcbcc46d8ae045bd7f1e58c5505557",
+      "branches": [
+        "main"
+      ],
+      "additions": 8,
+      "deletions": 3,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c2-05:0f11972c4cdc40ee9238bf26bacc77003bbeafaa",
+      "repoName": "26s-w1-c2-05",
+      "label": "dannyiscard",
+      "committedAt": "2026-07-03T02:30:37Z",
+      "summary": "Update README.md",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-05/commit/0f11972c4cdc40ee9238bf26bacc77003bbeafaa",
+      "branches": [
+        "main"
+      ],
+      "additions": 2,
+      "deletions": 2,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c1-04:3d18d51138efe63221af3b1ef8e8f6b9ff12e045",
+      "repoName": "26s-w1-c1-04",
+      "label": "terry2549",
+      "committedAt": "2026-07-03T02:29:27Z",
+      "summary": "Delete ~$젝트 기획서.docx",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-04/commit/3d18d51138efe63221af3b1ef8e8f6b9ff12e045",
+      "branches": [
+        "terry2549"
+      ],
+      "additions": 0,
+      "deletions": 0,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c1-04:5f1e848fe9913072df6a531c716268d91f82ea57",
+      "repoName": "26s-w1-c1-04",
+      "label": "terry2549",
+      "committedAt": "2026-07-03T02:24:58Z",
+      "summary": "Add 기획서",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-04/commit/5f1e848fe9913072df6a531c716268d91f82ea57",
+      "branches": [
+        "terry2549"
+      ],
+      "additions": 0,
+      "deletions": 0,
+      "changedFiles": 2
+    },
+    {
+      "id": "26s-w1-c2-07:28dcd714c5b59aa3434290b0725f21e1e55d0f68",
+      "repoName": "26s-w1-c2-07",
+      "label": "jungjun0708",
+      "committedAt": "2026-07-03T02:20:56Z",
+      "summary": "docs: add feature specification",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-07/commit/28dcd714c5b59aa3434290b0725f21e1e55d0f68",
+      "branches": [
+        "main"
+      ],
+      "additions": 480,
+      "deletions": 5,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c2-01:58d15e60c292db3c5b7bdffc80c2b2d6421fd3a2",
+      "repoName": "26s-w1-c2-01",
+      "label": "kkw610",
+      "committedAt": "2026-07-03T02:17:26Z",
+      "summary": "chore: config.py에 JWT/CORS 설정 추가",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-01/commit/58d15e60c292db3c5b7bdffc80c2b2d6421fd3a2",
+      "branches": [
+        "backend"
+      ],
+      "additions": 14,
+      "deletions": 0,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c2-07:10d5757649e7a247f13952de610cb2bd882b8313",
+      "repoName": "26s-w1-c2-07",
+      "label": "jungjun0708",
+      "committedAt": "2026-07-03T02:16:05Z",
+      "summary": "Merge pull request #4 from jungjun0708/docs/project-plan",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-07/commit/10d5757649e7a247f13952de610cb2bd882b8313",
+      "branches": [
+        "main"
+      ],
+      "additions": 0,
+      "deletions": 26,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c1-02:e6c5063067fc924e839f7c1f25fa4928bc6d7c3d",
+      "repoName": "26s-w1-c1-02",
+      "label": "seojinnlee",
+      "committedAt": "2026-07-03T02:15:16Z",
+      "summary": "기획안",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-02/commit/e6c5063067fc924e839f7c1f25fa4928bc6d7c3d",
+      "branches": [
+        "main"
+      ],
+      "additions": 5,
+      "deletions": 4,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c2-01:ce7d50407fd96bf13e5198cd2b782cf9811bd92e",
+      "repoName": "26s-w1-c2-01",
+      "label": "kkw610",
+      "committedAt": "2026-07-03T02:12:23Z",
+      "summary": "chore: requirements.txt 업데이트",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-01/commit/ce7d50407fd96bf13e5198cd2b782cf9811bd92e",
+      "branches": [
+        "backend"
+      ],
+      "additions": 7,
+      "deletions": 1,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c1-02:de95216efb25e7f31cb4279a9a8a05cfd9330fc7",
+      "repoName": "26s-w1-c1-02",
+      "label": "seojinnlee",
+      "committedAt": "2026-07-03T02:10:44Z",
+      "summary": "기능 명세서 1차",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-02/commit/de95216efb25e7f31cb4279a9a8a05cfd9330fc7",
+      "branches": [
+        "main"
+      ],
+      "additions": 5,
+      "deletions": 2,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c3-06:1144424a2ee8e33ef906cf0069390e73e51533db",
+      "repoName": "26s-w1-c3-06",
+      "label": "ireyhye",
+      "committedAt": "2026-07-03T02:09:34Z",
+      "summary": "add IA",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-06/commit/1144424a2ee8e33ef906cf0069390e73e51533db",
+      "branches": [
+        "main"
+      ],
+      "additions": 25,
+      "deletions": 0,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c1-01:c91c2f25dbaa957247701cf32b1171b8995a833a",
+      "repoName": "26s-w1-c1-01",
+      "label": "yskstuff",
+      "committedAt": "2026-07-03T02:06:54Z",
+      "summary": "Update project theme and purpose in README",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-01/commit/c91c2f25dbaa957247701cf32b1171b8995a833a",
+      "branches": [
+        "main"
+      ],
+      "additions": 4,
+      "deletions": 4,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c2-07:2ae40ad2a042c8d3bc22829f7ff47b46d6af0e37",
+      "repoName": "26s-w1-c2-07",
+      "label": "jungjun0708",
+      "committedAt": "2026-07-03T02:06:00Z",
+      "summary": "docs: remove duplicate team section",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-07/commit/2ae40ad2a042c8d3bc22829f7ff47b46d6af0e37",
+      "branches": [
+        "main"
+      ],
+      "additions": 0,
+      "deletions": 26,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c2-07:3f5a29918caa9342b95a8db403c31a58629a269f",
+      "repoName": "26s-w1-c2-07",
+      "label": "jungjun0708",
+      "committedAt": "2026-07-03T02:03:11Z",
+      "summary": "Merge pull request #3 from jungjun0708/docs/project-plan",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-07/commit/3f5a29918caa9342b95a8db403c31a58629a269f",
+      "branches": [
+        "main"
+      ],
+      "additions": 47,
+      "deletions": 12,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c1-02:d7cb20a37de65f5c7ff7f148586b6fca8bfadafc",
+      "repoName": "26s-w1-c1-02",
+      "label": "seojinnlee",
+      "committedAt": "2026-07-03T02:02:13Z",
+      "summary": "팀원 이름",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-02/commit/d7cb20a37de65f5c7ff7f148586b6fca8bfadafc",
+      "branches": [
+        "main"
+      ],
+      "additions": 3,
+      "deletions": 3,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c2-07:c246ae471307336bbd280849440fe90cc98039a4",
+      "repoName": "26s-w1-c2-07",
+      "label": "jungjun0708",
+      "committedAt": "2026-07-03T02:00:17Z",
+      "summary": "docs: improve team role table layout",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-07/commit/c246ae471307336bbd280849440fe90cc98039a4",
+      "branches": [
+        "main"
+      ],
+      "additions": 47,
+      "deletions": 12,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c2-04:af260557101d00369cbc093b5f8353a056108727",
+      "repoName": "26s-w1-c2-04",
+      "label": "yeochi369",
+      "committedAt": "2026-07-03T02:00:13Z",
+      "summary": "11am update",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-04/commit/af260557101d00369cbc093b5f8353a056108727",
+      "branches": [
+        "main"
+      ],
+      "additions": 58,
+      "deletions": 0,
+      "changedFiles": 4
+    },
+    {
+      "id": "26s-w1-c3-05:818891a1fad829b703e5a3a1a6b9051d5bfea5d5",
+      "repoName": "26s-w1-c3-05",
+      "label": "nounmoumn",
+      "committedAt": "2026-07-03T01:56:39Z",
+      "summary": "Update README.md",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-05/commit/818891a1fad829b703e5a3a1a6b9051d5bfea5d5",
+      "branches": [
+        "main"
+      ],
+      "additions": 1,
+      "deletions": 1,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c2-01:0285109bcced2dd674540cb82ac61e4cb33b457e",
+      "repoName": "26s-w1-c2-01",
+      "label": "hyun020215",
+      "committedAt": "2026-07-03T01:56:14Z",
+      "summary": "Set up frontend development environment",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-01/commit/0285109bcced2dd674540cb82ac61e4cb33b457e",
+      "branches": [
+        "frontend"
+      ],
+      "additions": 12580,
+      "deletions": 0,
+      "changedFiles": 69
+    },
+    {
+      "id": "26s-w1-c2-08:a017c5101c0ad982de0c824b3034606a6b786956",
+      "repoName": "26s-w1-c2-08",
+      "label": "codex",
+      "committedAt": "2026-07-03T01:55:46Z",
+      "summary": "chore: initialize frontend and backend",
+      "attributionStatus": "bot_only",
+      "detectedBots": [
+        "codex@local",
+        "codex@local"
+      ],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-08/commit/a017c5101c0ad982de0c824b3034606a6b786956",
+      "branches": [
+        "main"
+      ],
+      "additions": 2355,
+      "deletions": 0,
+      "changedFiles": 18
+    },
+    {
+      "id": "26s-w1-c1-01:877a9f62ecb10a3fcb1fe99666a3167050c7228b",
+      "repoName": "26s-w1-c1-01",
+      "label": "yskstuff",
+      "committedAt": "2026-07-03T01:55:26Z",
+      "summary": "Update project topic to '여행지앱'",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-01/commit/877a9f62ecb10a3fcb1fe99666a3167050c7228b",
+      "branches": [
+        "main"
+      ],
+      "additions": 1,
+      "deletions": 1,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c2-07:32b78977f883a69fc22be13edbf44602d61138c9",
+      "repoName": "26s-w1-c2-07",
+      "label": "jungjun0708",
+      "committedAt": "2026-07-03T01:53:36Z",
+      "summary": "Merge pull request #2 from jungjun0708/docs/project-plan",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-07/commit/32b78977f883a69fc22be13edbf44602d61138c9",
+      "branches": [
+        "main"
+      ],
+      "additions": 5,
+      "deletions": 5,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c2-01:f799c50ea1f38eae40c3b46cda683c14b05de3d0",
+      "repoName": "26s-w1-c2-01",
+      "label": "kkw610",
+      "committedAt": "2026-07-03T01:53:23Z",
+      "summary": "docs: README.md 업데이트 - 노드 컬러 추가",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-01/commit/f799c50ea1f38eae40c3b46cda683c14b05de3d0",
+      "branches": [
+        "backend"
+      ],
+      "additions": 8,
+      "deletions": 6,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c3-02:f7e8a5f0bd997244f1769b46c4bc6633d0307ffb",
+      "repoName": "26s-w1-c3-02",
+      "label": "easy0131",
+      "committedAt": "2026-07-03T01:51:36Z",
+      "summary": "그룹 주석방 추가",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-02/commit/f7e8a5f0bd997244f1769b46c4bc6633d0307ffb",
+      "branches": [
+        "main"
+      ],
+      "additions": 4,
+      "deletions": 4,
+      "changedFiles": 2
+    },
+    {
+      "id": "26s-w1-c1-01:a9e15c25f2124edd932ce710cd2f35b208755962",
+      "repoName": "26s-w1-c1-01",
+      "label": "yxxnxyxxn",
+      "committedAt": "2026-07-03T01:51:19Z",
+      "summary": "Update README.md",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-01/commit/a9e15c25f2124edd932ce710cd2f35b208755962",
+      "branches": [
+        "main"
+      ],
+      "additions": 1,
+      "deletions": 1,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c1-01:0cbd55fddd8c5decaab44b6e4f215dc76f9f8756",
+      "repoName": "26s-w1-c1-01",
+      "label": "yskstuff",
+      "committedAt": "2026-07-03T01:50:01Z",
+      "summary": "Update team member information in README",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-01/commit/0cbd55fddd8c5decaab44b6e4f215dc76f9f8756",
+      "branches": [
+        "main"
+      ],
+      "additions": 2,
+      "deletions": 2,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c2-07:3aa5ecc9f2cdcbd2e3a5e59b08e51a95e46f0d1f",
+      "repoName": "26s-w1-c2-07",
+      "label": "jungjun0708",
+      "committedAt": "2026-07-03T01:45:41Z",
+      "summary": "docs: update team member names",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-07/commit/3aa5ecc9f2cdcbd2e3a5e59b08e51a95e46f0d1f",
+      "branches": [
+        "main"
+      ],
+      "additions": 5,
+      "deletions": 5,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c2-03:35e76c06fdc06c74c80f9ba779ac33700751f873",
+      "repoName": "26s-w1-c2-03",
+      "label": "kminj2296",
+      "committedAt": "2026-07-03T01:45:10Z",
+      "summary": "Revise project overview and team roles in README",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-03/commit/35e76c06fdc06c74c80f9ba779ac33700751f873",
+      "branches": [
+        "main"
+      ],
+      "additions": 17,
+      "deletions": 7,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c2-08:425793edf94e0f77d53ca10fa97fce31287689b6",
+      "repoName": "26s-w1-c2-08",
+      "label": "jaeyun-18",
+      "committedAt": "2026-07-03T01:29:08Z",
+      "summary": "readme.txt 수정",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-08/commit/425793edf94e0f77d53ca10fa97fce31287689b6",
+      "branches": [
+        "main"
+      ],
+      "additions": 6,
+      "deletions": 3,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c2-08:ef30f2354549c5da9416e4d9e7821a878885af17",
+      "repoName": "26s-w1-c2-08",
+      "label": "jaeyun-18",
+      "committedAt": "2026-07-03T01:26:22Z",
+      "summary": "readme.txt 수정",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-08/commit/ef30f2354549c5da9416e4d9e7821a878885af17",
+      "branches": [
+        "main"
+      ],
+      "additions": 0,
+      "deletions": 3,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c2-08:2c4d5af05cfb90b1883830efcd15699e13a39635",
+      "repoName": "26s-w1-c2-08",
+      "label": "jaeyun-18",
+      "committedAt": "2026-07-03T01:25:15Z",
+      "summary": "readme.txt 수정",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-08/commit/2c4d5af05cfb90b1883830efcd15699e13a39635",
+      "branches": [
+        "main"
+      ],
+      "additions": 3,
+      "deletions": 0,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c2-08:b0303225d44f3569c2a22e99a0e64e685cd4a0cc",
+      "repoName": "26s-w1-c2-08",
+      "label": "jaeyun-18",
+      "committedAt": "2026-07-03T01:24:48Z",
+      "summary": "readme.txt 수정",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-08/commit/b0303225d44f3569c2a22e99a0e64e685cd4a0cc",
+      "branches": [
+        "main"
+      ],
+      "additions": 7,
+      "deletions": 4,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c2-04:f8b8c59ecb7980a863b84d19590bd5f1223f935d",
+      "repoName": "26s-w1-c2-04",
+      "label": "yeochi369",
+      "committedAt": "2026-07-03T01:08:26Z",
+      "summary": "Merge branch 'main' of https://github.com/madcamp-official/26s-w1-c2-04",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-04/commit/f8b8c59ecb7980a863b84d19590bd5f1223f935d",
+      "branches": [
+        "main"
+      ],
+      "additions": 3316,
+      "deletions": 7,
+      "changedFiles": 23
+    },
+    {
+      "id": "26s-w1-c2-04:12aea96c75737c1737065cb93a3b94292fc278c8",
+      "repoName": "26s-w1-c2-04",
+      "label": "yeochi369",
+      "committedAt": "2026-07-03T01:08:21Z",
+      "summary": "overall plan added",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-04/commit/12aea96c75737c1737065cb93a3b94292fc278c8",
+      "branches": [
+        "main"
+      ],
+      "additions": 19,
+      "deletions": 3,
+      "changedFiles": 2
+    },
+    {
+      "id": "26s-w1-c2-07:7bf54e29a79c2b43e7a985a723c2115716b03b58",
+      "repoName": "26s-w1-c2-07",
+      "label": "jungjun0708",
+      "committedAt": "2026-07-03T00:58:56Z",
+      "summary": "Merge pull request #1 from jungjun0708/docs/project-plan",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-07/commit/7bf54e29a79c2b43e7a985a723c2115716b03b58",
+      "branches": [
+        "main"
+      ],
+      "additions": 22,
+      "deletions": 4,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c3-07:0a8cad7e9e6935cf50a335132471a14138f31474",
+      "repoName": "26s-w1-c3-07",
+      "label": "milleion",
+      "committedAt": "2026-07-02T17:37:17Z",
+      "summary": "test commit",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-07/commit/0a8cad7e9e6935cf50a335132471a14138f31474",
+      "branches": [
+        "backend"
+      ],
+      "additions": 0,
+      "deletions": 0,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c1-05:f435b107972f8198f96561cb10f0295031ffd223",
+      "repoName": "26s-w1-c1-05",
+      "label": "anjonghwa0",
+      "committedAt": "2026-07-02T16:39:59Z",
+      "summary": "directory arrangement",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-05/commit/f435b107972f8198f96561cb10f0295031ffd223",
+      "branches": [
+        "anjonghwa"
+      ],
+      "additions": 96,
+      "deletions": 7340,
+      "changedFiles": 96
+    },
+    {
+      "id": "26s-w1-c1-05:f1e78d38d2d890c688973f0fefb76c4d44d18723",
+      "repoName": "26s-w1-c1-05",
+      "label": "anjonghwa0",
+      "committedAt": "2026-07-02T15:19:18Z",
+      "summary": "server rebuild",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-05/commit/f1e78d38d2d890c688973f0fefb76c4d44d18723",
+      "branches": [
+        "anjonghwa"
+      ],
+      "additions": 9493,
+      "deletions": 133,
+      "changedFiles": 79
+    },
+    {
+      "id": "26s-w1-c2-04:db817212e96009db8d711e0ba4db5d06a1912ef2",
+      "repoName": "26s-w1-c2-04",
+      "label": "ssiuuuuuu",
+      "committedAt": "2026-07-02T12:47:41Z",
+      "summary": "remove test",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-04/commit/db817212e96009db8d711e0ba4db5d06a1912ef2",
+      "branches": [
+        "main"
+      ],
+      "additions": 0,
+      "deletions": 7,
+      "changedFiles": 3
+    },
+    {
+      "id": "26s-w1-c2-04:afacf6f92493a3b1406ba98270493f6d620c917f",
+      "repoName": "26s-w1-c2-04",
+      "label": "ssiuuuuuu",
+      "committedAt": "2026-07-02T12:43:42Z",
+      "summary": "project structure",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-04/commit/afacf6f92493a3b1406ba98270493f6d620c917f",
+      "branches": [
+        "main"
+      ],
+      "additions": 3316,
+      "deletions": 0,
+      "changedFiles": 20
+    },
+    {
+      "id": "26s-w1-c3-06:539ab2a4b528bb450eba2fa8eec087497d6c3e1d",
+      "repoName": "26s-w1-c3-06",
+      "label": "ireyhye",
+      "committedAt": "2026-07-02T12:11:55Z",
+      "summary": "브랜치 합치기",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-06/commit/539ab2a4b528bb450eba2fa8eec087497d6c3e1d",
+      "branches": [
+        "main"
+      ],
+      "additions": 21,
+      "deletions": 5,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c3-03:21f2ce96a26f748b73a11bcc8ec0823418dfb79c",
+      "repoName": "26s-w1-c3-03",
+      "label": "jossi-jossi",
+      "committedAt": "2026-07-02T12:05:20Z",
+      "summary": "기획서 작성 중",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-03/commit/21f2ce96a26f748b73a11bcc8ec0823418dfb79c",
+      "branches": [
+        "Trial_1"
+      ],
+      "additions": 12,
+      "deletions": 9,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c1-04:4ab456de4f27e400d02a08d740295c14c0c2d491",
+      "repoName": "26s-w1-c1-04",
+      "label": "omok00",
+      "committedAt": "2026-07-02T11:36:00Z",
+      "summary": "final",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-04/commit/4ab456de4f27e400d02a08d740295c14c0c2d491",
+      "branches": [
+        "omok00"
+      ],
+      "additions": 28,
+      "deletions": 1,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c3-06:59d6017ff09e7b419450a92e8f3154e20a043706",
+      "repoName": "26s-w1-c3-06",
+      "label": "izayoieosd",
+      "committedAt": "2026-07-02T11:28:10Z",
+      "summary": "tmptmp",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-06/commit/59d6017ff09e7b419450a92e8f3154e20a043706",
+      "branches": [
+        "api_spec"
+      ],
+      "additions": 4,
+      "deletions": 1,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c2-05:d768e06c6f768c8a3b937df81e780b8cc79d7ea4",
+      "repoName": "26s-w1-c2-05",
+      "label": "dannyiscard",
+      "committedAt": "2026-07-02T11:25:38Z",
+      "summary": "Update README.md",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-05/commit/d768e06c6f768c8a3b937df81e780b8cc79d7ea4",
+      "branches": [
+        "main"
+      ],
+      "additions": 1,
+      "deletions": 1,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c1-05:77a468d25f0eb3fb413b7eb5cf5771d1452c41e1",
+      "repoName": "26s-w1-c1-05",
+      "label": "anjonghwa0",
+      "committedAt": "2026-07-02T11:15:22Z",
+      "summary": "test build",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-05/commit/77a468d25f0eb3fb413b7eb5cf5771d1452c41e1",
+      "branches": [
+        "anjonghwa"
+      ],
+      "additions": 7388,
+      "deletions": 23,
+      "changedFiles": 19
+    },
+    {
+      "id": "26s-w1-c1-04:b52a5a9fb488bd17c0d372a4460d70eef2fb0ef7",
+      "repoName": "26s-w1-c1-04",
+      "label": "terry2549",
+      "committedAt": "2026-07-02T11:09:28Z",
+      "summary": "Update scrum note",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-04/commit/b52a5a9fb488bd17c0d372a4460d70eef2fb0ef7",
+      "branches": [
+        "terry2549"
+      ],
+      "additions": 2,
+      "deletions": 1,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c1-04:015657b6be7198a76f3409192fecc08fc2cbc091",
+      "repoName": "26s-w1-c1-04",
+      "label": "terry2549",
+      "committedAt": "2026-07-02T11:08:02Z",
+      "summary": "Update scrum note",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-04/commit/015657b6be7198a76f3409192fecc08fc2cbc091",
+      "branches": [
+        "terry2549"
+      ],
+      "additions": 5,
+      "deletions": 0,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c3-06:ea721b40cd4db8fd11383b8cf2bc756c04bd7bfc",
+      "repoName": "26s-w1-c3-06",
+      "label": "ireyhye",
+      "committedAt": "2026-07-02T10:59:40Z",
+      "summary": "0702/7:58",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-06/commit/ea721b40cd4db8fd11383b8cf2bc756c04bd7bfc",
+      "branches": [
+        "main"
+      ],
+      "additions": 29,
+      "deletions": 25,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c2-01:0389f747fb1e6c4772d53c329a86ff93986596d8",
+      "repoName": "26s-w1-c2-01",
+      "label": "hyun020215",
+      "committedAt": "2026-07-02T10:57:01Z",
+      "summary": "백엔드 프로젝트 초기 설정 및 기본 구조 추가",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-01/commit/0389f747fb1e6c4772d53c329a86ff93986596d8",
+      "branches": [
+        "backend"
+      ],
+      "additions": 269,
+      "deletions": 0,
+      "changedFiles": 17
+    },
+    {
+      "id": "26s-w1-c2-04:42e52755e33a7e0c08f831be3e9925db13108178",
+      "repoName": "26s-w1-c2-04",
+      "label": "yeochi369",
+      "committedAt": "2026-07-02T10:55:38Z",
+      "summary": "Merge branch 'main' of https://github.com/madcamp-official/26s-w1-c2-04",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-04/commit/42e52755e33a7e0c08f831be3e9925db13108178",
+      "branches": [
+        "main"
+      ],
+      "additions": 1,
+      "deletions": 1,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c2-04:7f2b1117391614a644a892cd48731aee35bcf04e",
+      "repoName": "26s-w1-c2-04",
+      "label": "yeochi369",
+      "committedAt": "2026-07-02T10:55:34Z",
+      "summary": "again",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-04/commit/7f2b1117391614a644a892cd48731aee35bcf04e",
+      "branches": [
+        "main"
+      ],
+      "additions": 2,
+      "deletions": 2,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c2-07:4e2b211fa7966458777b933834c98017c8ebec2c",
+      "repoName": "26s-w1-c2-07",
+      "label": "jungjun0708",
+      "committedAt": "2026-07-02T10:52:32Z",
+      "summary": "docs: add team responsibilities",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-07/commit/4e2b211fa7966458777b933834c98017c8ebec2c",
+      "branches": [
+        "main"
+      ],
+      "additions": 12,
+      "deletions": 2,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c2-04:d8bde197b681c2bb85a5ae4fa69c9b8d531c4ef3",
+      "repoName": "26s-w1-c2-04",
+      "label": "ssiuuuuuu",
+      "committedAt": "2026-07-02T10:50:26Z",
+      "summary": "v2",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-04/commit/d8bde197b681c2bb85a5ae4fa69c9b8d531c4ef3",
+      "branches": [
+        "main"
+      ],
+      "additions": 1,
+      "deletions": 1,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c1-04:1de45e8a2420242ec0e991f849929bfb6e3cfbcc",
+      "repoName": "26s-w1-c1-04",
+      "label": "terry2549",
+      "committedAt": "2026-07-02T10:48:57Z",
+      "summary": "Delete scrum directory",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-04/commit/1de45e8a2420242ec0e991f849929bfb6e3cfbcc",
+      "branches": [
+        "main",
+        "terry2549"
+      ],
+      "additions": 0,
+      "deletions": 0,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c3-06:e2348b33341ca67b8290b9636c717650db573c4c",
+      "repoName": "26s-w1-c3-06",
+      "label": "izayoieosd",
+      "committedAt": "2026-07-02T10:48:46Z",
+      "summary": "tmp spec",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-06/commit/e2348b33341ca67b8290b9636c717650db573c4c",
+      "branches": [
+        "api_spec"
+      ],
+      "additions": 0,
+      "deletions": 4,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c3-06:c528f350d8a0edae5d38a58f437ccd6b86dc9b64",
+      "repoName": "26s-w1-c3-06",
+      "label": "izayoieosd",
+      "committedAt": "2026-07-02T10:48:13Z",
+      "summary": "tmp spec",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-06/commit/c528f350d8a0edae5d38a58f437ccd6b86dc9b64",
+      "branches": [
+        "api_spec"
+      ],
+      "additions": 62,
+      "deletions": 39,
+      "changedFiles": 2
+    },
+    {
+      "id": "26s-w1-c3-02:4e0a8d68d82f90054c20e2687b8e3d737f2d09d7",
+      "repoName": "26s-w1-c3-02",
+      "label": "suh1088",
+      "committedAt": "2026-07-02T10:47:43Z",
+      "summary": "readme",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-02/commit/4e0a8d68d82f90054c20e2687b8e3d737f2d09d7",
+      "branches": [
+        "main"
+      ],
+      "additions": 29,
+      "deletions": 8,
+      "changedFiles": 8
+    },
+    {
+      "id": "26s-w1-c2-04:9e43c4d29b55271f854d614d80d5e6a09680df2c",
+      "repoName": "26s-w1-c2-04",
+      "label": "yeochi369",
+      "committedAt": "2026-07-02T10:47:01Z",
+      "summary": "helooooo",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-04/commit/9e43c4d29b55271f854d614d80d5e6a09680df2c",
+      "branches": [
+        "main"
+      ],
+      "additions": 1,
+      "deletions": 0,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c2-07:7ca688a4f51ae507f0e834ac8e91583d565e425c",
+      "repoName": "26s-w1-c2-07",
+      "label": "jungjun0708",
+      "committedAt": "2026-07-02T10:46:55Z",
+      "summary": "docs: update project plan scope",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-07/commit/7ca688a4f51ae507f0e834ac8e91583d565e425c",
+      "branches": [
+        "main"
+      ],
+      "additions": 6,
+      "deletions": 6,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c2-01:16fe71a6a577b8aa9534b5631045d8de0dd18f51",
+      "repoName": "26s-w1-c2-01",
+      "label": "kkw610",
+      "committedAt": "2026-07-02T10:46:41Z",
+      "summary": "docs: README.md 업데이트",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-01/commit/16fe71a6a577b8aa9534b5631045d8de0dd18f51",
+      "branches": [
+        "backend",
+        "frontend",
+        "main"
+      ],
+      "additions": 2,
+      "deletions": 61,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c1-04:31e98c0ebceab49a3a6e280bba5916f280074419",
+      "repoName": "26s-w1-c1-04",
+      "label": "terry2549",
+      "committedAt": "2026-07-02T10:45:42Z",
+      "summary": "Merge pull request #3 from madcamp-official/terry2549",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-04/commit/31e98c0ebceab49a3a6e280bba5916f280074419",
+      "branches": [
+        "main",
+        "terry2549"
+      ],
+      "additions": 2,
+      "deletions": 1,
+      "changedFiles": 2
+    },
+    {
+      "id": "26s-w1-c2-04:24f3b1de07c5fbc4a96fec2c61498aae9fc821a3",
+      "repoName": "26s-w1-c2-04",
+      "label": "yeochi369",
+      "committedAt": "2026-07-02T10:44:15Z",
+      "summary": "jkl",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-04/commit/24f3b1de07c5fbc4a96fec2c61498aae9fc821a3",
+      "branches": [
+        "main"
+      ],
+      "additions": 5,
+      "deletions": 5,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c1-04:4e3e8f76ada9205fe116b1e956752235e86ad8de",
+      "repoName": "26s-w1-c1-04",
+      "label": "terry2549",
+      "committedAt": "2026-07-02T10:43:59Z",
+      "summary": "Add 260703.txt",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-04/commit/4e3e8f76ada9205fe116b1e956752235e86ad8de",
+      "branches": [
+        "main",
+        "terry2549"
+      ],
+      "additions": 0,
+      "deletions": 0,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c2-04:dfe2a15c57ee2acbd61983ab39ccce049a1d1cc7",
+      "repoName": "26s-w1-c2-04",
+      "label": "ssiuuuuuu",
+      "committedAt": "2026-07-02T10:42:21Z",
+      "summary": "cc",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-04/commit/dfe2a15c57ee2acbd61983ab39ccce049a1d1cc7",
+      "branches": [
+        "main"
+      ],
+      "additions": 2,
+      "deletions": 1,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c2-04:55768dd8092baae7fd2c919b4e3583cb54c02447",
+      "repoName": "26s-w1-c2-04",
+      "label": "ssiuuuuuu",
+      "committedAt": "2026-07-02T10:41:55Z",
+      "summary": "Merge branch 'main' of https://github.com/madcamp-official/26s-w1-c2-04",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-04/commit/55768dd8092baae7fd2c919b4e3583cb54c02447",
+      "branches": [
+        "main"
+      ],
+      "additions": 3,
+      "deletions": 1,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c2-01:3833c83aa4c82a7012efe2a745adf8fe8982e588",
+      "repoName": "26s-w1-c2-01",
+      "label": "kkw610",
+      "committedAt": "2026-07-02T10:41:40Z",
+      "summary": "docs: README.md 업데이트",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-01/commit/3833c83aa4c82a7012efe2a745adf8fe8982e588",
+      "branches": [
+        "backend",
+        "frontend",
+        "main"
+      ],
+      "additions": 279,
+      "deletions": 61,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c2-04:d0fefa265c960b90a13699b4b489b5dd5dff344b",
+      "repoName": "26s-w1-c2-04",
+      "label": "ssiuuuuuu",
+      "committedAt": "2026-07-02T10:41:28Z",
+      "summary": "change",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-04/commit/d0fefa265c960b90a13699b4b489b5dd5dff344b",
+      "branches": [
+        "main"
+      ],
+      "additions": 1,
+      "deletions": 0,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c2-07:8a181e30162c7b72272d2413181e0e4e4c0d441c",
+      "repoName": "26s-w1-c2-07",
+      "label": "jungjun0708",
+      "committedAt": "2026-07-02T10:39:47Z",
+      "summary": "docs: add project plan",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-07/commit/8a181e30162c7b72272d2413181e0e4e4c0d441c",
+      "branches": [
+        "main"
+      ],
+      "additions": 10,
+      "deletions": 2,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c3-01:bfbd45e8b26b9a63c88b0660057cee01dc2a6660",
+      "repoName": "26s-w1-c3-01",
+      "label": "batiger00",
+      "committedAt": "2026-07-02T10:33:58Z",
+      "summary": "docs: refine project proposal",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-01/commit/bfbd45e8b26b9a63c88b0660057cee01dc2a6660",
+      "branches": [
+        "main"
+      ],
+      "additions": 14,
+      "deletions": 8,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c2-04:7d83c8ff34032693bfad293e495a731da6298743",
+      "repoName": "26s-w1-c2-04",
+      "label": "yeochi369",
+      "committedAt": "2026-07-02T10:32:47Z",
+      "summary": "Merge branch 'main' of https://github.com/madcamp-official/26s-w1-c2-04",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-04/commit/7d83c8ff34032693bfad293e495a731da6298743",
+      "branches": [
+        "main"
+      ],
+      "additions": 1,
+      "deletions": 0,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c2-04:77743c639c832f06f1681f89e977d50c60a30f94",
+      "repoName": "26s-w1-c2-04",
+      "label": "yeochi369",
+      "committedAt": "2026-07-02T10:32:34Z",
+      "summary": "test2",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-04/commit/77743c639c832f06f1681f89e977d50c60a30f94",
+      "branches": [
+        "main"
+      ],
+      "additions": 3,
+      "deletions": 1,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c2-05:590a2d5e7b707fa6dce0e84e3e86d1c342db6554",
+      "repoName": "26s-w1-c2-05",
+      "label": "dannyiscard",
+      "committedAt": "2026-07-02T10:31:12Z",
+      "summary": "2026.07.02 기능 명세 수정",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-05/commit/590a2d5e7b707fa6dce0e84e3e86d1c342db6554",
+      "branches": [
+        "main"
+      ],
+      "additions": 13,
+      "deletions": 9,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c2-04:4ff1e11aa9b3e351c493f8f77c2b12295dda1e96",
+      "repoName": "26s-w1-c2-04",
+      "label": "ssiuuuuuu",
+      "committedAt": "2026-07-02T10:30:30Z",
+      "summary": "test2",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-04/commit/4ff1e11aa9b3e351c493f8f77c2b12295dda1e96",
+      "branches": [
+        "main"
+      ],
+      "additions": 1,
+      "deletions": 0,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c2-04:31001a0250f6a9d5f55dab0dc9cca50e98e076f5",
+      "repoName": "26s-w1-c2-04",
+      "label": "ssiuuuuuu",
+      "committedAt": "2026-07-02T10:17:25Z",
+      "summary": "test",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-04/commit/31001a0250f6a9d5f55dab0dc9cca50e98e076f5",
+      "branches": [
+        "main"
+      ],
+      "additions": 1,
+      "deletions": 0,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c3-05:4db2350105637af97723622044038608df970e37",
+      "repoName": "26s-w1-c3-05",
+      "label": "nounmoumn",
+      "committedAt": "2026-07-02T09:53:18Z",
+      "summary": "Fix formatting issues in README.md",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-05/commit/4db2350105637af97723622044038608df970e37",
+      "branches": [
+        "main"
+      ],
+      "additions": 1,
+      "deletions": 1,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c3-05:4610d7f6a84e92fe51e812c5aad87cfa58dd3a6c",
+      "repoName": "26s-w1-c3-05",
+      "label": "nounmoumn",
+      "committedAt": "2026-07-02T09:52:42Z",
+      "summary": "기획안 추가",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-05/commit/4610d7f6a84e92fe51e812c5aad87cfa58dd3a6c",
+      "branches": [
+        "main"
+      ],
+      "additions": 4,
+      "deletions": 4,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c3-06:adc4c0180bb19100a205ecdc3202c59828afc689",
+      "repoName": "26s-w1-c3-06",
+      "label": "izayoieosd",
+      "committedAt": "2026-07-02T09:47:27Z",
+      "summary": "tmp spec",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-06/commit/adc4c0180bb19100a205ecdc3202c59828afc689",
+      "branches": [
+        "api_spec",
+        "main"
+      ],
+      "additions": 3,
+      "deletions": 4,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c3-01:a0ac9e525d0e8a12bce89620708ac3c177c940b4",
+      "repoName": "26s-w1-c3-01",
+      "label": "batiger00",
+      "committedAt": "2026-07-02T09:09:16Z",
+      "summary": "docs: update project plan",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-01/commit/a0ac9e525d0e8a12bce89620708ac3c177c940b4",
+      "branches": [
+        "main"
+      ],
+      "additions": 20,
+      "deletions": 24,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c3-01:5987d6fe27dc96df8cdd23e1564464e10ec82480",
+      "repoName": "26s-w1-c3-01",
+      "label": "batiger00",
+      "committedAt": "2026-07-02T09:00:49Z",
+      "summary": "docs: update feature specification",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-01/commit/5987d6fe27dc96df8cdd23e1564464e10ec82480",
+      "branches": [
+        "main"
+      ],
+      "additions": 18,
+      "deletions": 3,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c3-06:7221ac9694254abd6ee63fe9ce7bf9e8df73c0d8",
+      "repoName": "26s-w1-c3-06",
+      "label": "ireyhye",
+      "committedAt": "2026-07-02T08:54:38Z",
+      "summary": "temporary spec",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-06/commit/7221ac9694254abd6ee63fe9ce7bf9e8df73c0d8",
+      "branches": [
+        "api_spec",
+        "main"
+      ],
+      "additions": 125,
+      "deletions": 107,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c1-04:27c5346623a4ea1d41bca889bf0ce3029aa735e5",
+      "repoName": "26s-w1-c1-04",
+      "label": "omok00",
+      "committedAt": "2026-07-02T08:43:48Z",
+      "summary": "scrum",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-04/commit/27c5346623a4ea1d41bca889bf0ce3029aa735e5",
+      "branches": [
+        "omok00"
+      ],
+      "additions": 3,
+      "deletions": 0,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c3-02:40b092cd46386aa07c1c3d4cc21fc5116ea74e87",
+      "repoName": "26s-w1-c3-02",
+      "label": "suh1088",
+      "committedAt": "2026-07-02T08:33:09Z",
+      "summary": "정리",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-02/commit/40b092cd46386aa07c1c3d4cc21fc5116ea74e87",
+      "branches": [
+        "main"
+      ],
+      "additions": 18,
+      "deletions": 35,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c3-02:9bb54f70c0ac5c7c222868cd8bb3ebc2e7853a19",
+      "repoName": "26s-w1-c3-02",
+      "label": "easy0131",
+      "committedAt": "2026-07-02T08:28:11Z",
+      "summary": "선택기능 상세",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-02/commit/9bb54f70c0ac5c7c222868cd8bb3ebc2e7853a19",
+      "branches": [
+        "main"
+      ],
+      "additions": 12,
+      "deletions": 21,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c2-01:80ae0691e5b183d62bc0e2c46a1d2f8ee7e5b66b",
+      "repoName": "26s-w1-c2-01",
+      "label": "hyun020215",
+      "committedAt": "2026-07-02T08:26:23Z",
+      "summary": "README 업데이트: 워크스페이스 공유/초대 기능 추가 및 API 문서 확장",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-01/commit/80ae0691e5b183d62bc0e2c46a1d2f8ee7e5b66b",
+      "branches": [
+        "backend",
+        "frontend",
+        "main"
+      ],
+      "additions": 45,
+      "deletions": 2,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c1-04:980b46c6af33de395a9a2c2ceb25a063c5108d91",
+      "repoName": "26s-w1-c1-04",
+      "label": "terry2549",
+      "committedAt": "2026-07-02T08:25:25Z",
+      "summary": "Update README.md",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-04/commit/980b46c6af33de395a9a2c2ceb25a063c5108d91",
+      "branches": [
+        "main",
+        "terry2549"
+      ],
+      "additions": 2,
+      "deletions": 6,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c1-04:5edca3c8bc62d00d7d0ee3960656b712802e5561",
+      "repoName": "26s-w1-c1-04",
+      "label": "omok00",
+      "committedAt": "2026-07-02T08:22:46Z",
+      "summary": "test1",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-04/commit/5edca3c8bc62d00d7d0ee3960656b712802e5561",
+      "branches": [
+        "omok00"
+      ],
+      "additions": 1,
+      "deletions": 1,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c3-02:f8080895c34a27bc380dce138675cce471c5408e",
+      "repoName": "26s-w1-c3-02",
+      "label": "easy0131",
+      "committedAt": "2026-07-02T08:22:46Z",
+      "summary": "필수기능상세",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-02/commit/f8080895c34a27bc380dce138675cce471c5408e",
+      "branches": [
+        "main"
+      ],
+      "additions": 19,
+      "deletions": 8,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c1-04:1d6a0a14cc94ed5d878fc8949864564f6406049f",
+      "repoName": "26s-w1-c1-04",
+      "label": "omok00",
+      "committedAt": "2026-07-02T08:16:32Z",
+      "summary": "ab",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-04/commit/1d6a0a14cc94ed5d878fc8949864564f6406049f",
+      "branches": [
+        "omok00"
+      ],
+      "additions": 1,
+      "deletions": 1,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c3-02:c2ca8fad35fe94c8feb3731457a4ed20d4ca09ac",
+      "repoName": "26s-w1-c3-02",
+      "label": "easy0131",
+      "committedAt": "2026-07-02T08:09:51Z",
+      "summary": "선택기능",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-02/commit/c2ca8fad35fe94c8feb3731457a4ed20d4ca09ac",
+      "branches": [
+        "main"
+      ],
+      "additions": 4,
+      "deletions": 0,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c1-04:0fd84226702b38550f0f2e9122225400580542be",
+      "repoName": "26s-w1-c1-04",
+      "label": "terry2549",
+      "committedAt": "2026-07-02T08:07:53Z",
+      "summary": "t Merge branch 'main' of https://github.com/madcamp-official/26s-w1-c1-04",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-04/commit/0fd84226702b38550f0f2e9122225400580542be",
+      "branches": [
+        "main",
+        "terry2549"
+      ],
+      "additions": 11,
+      "deletions": 0,
+      "changedFiles": 3
+    },
+    {
+      "id": "26s-w1-c3-02:f2317cdcf79254dff7468a577d39a610934de665",
+      "repoName": "26s-w1-c3-02",
+      "label": "easy0131",
+      "committedAt": "2026-07-02T08:07:05Z",
+      "summary": "즐겨찾기",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-02/commit/f2317cdcf79254dff7468a577d39a610934de665",
+      "branches": [
+        "main"
+      ],
+      "additions": 1,
+      "deletions": 1,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c3-02:4ea7d92dff2c6683fed3dae05ff479e39ab7ce4f",
+      "repoName": "26s-w1-c3-02",
+      "label": "easy0131",
+      "committedAt": "2026-07-02T08:06:32Z",
+      "summary": "즐겨찾기",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-02/commit/4ea7d92dff2c6683fed3dae05ff479e39ab7ce4f",
+      "branches": [
+        "main"
+      ],
+      "additions": 3,
+      "deletions": 0,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c3-02:7ee16591029c9167f666963daafaed31e46d9f98",
+      "repoName": "26s-w1-c3-02",
+      "label": "suh1088",
+      "committedAt": "2026-07-02T08:05:15Z",
+      "summary": "기능",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-02/commit/7ee16591029c9167f666963daafaed31e46d9f98",
+      "branches": [
+        "main"
+      ],
+      "additions": 5,
+      "deletions": 3,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c3-02:cde16dbcfb1216b14b6a4003ac8722605244f1f3",
+      "repoName": "26s-w1-c3-02",
+      "label": "suh1088",
+      "committedAt": "2026-07-02T08:01:13Z",
+      "summary": "mod",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-02/commit/cde16dbcfb1216b14b6a4003ac8722605244f1f3",
+      "branches": [
+        "main"
+      ],
+      "additions": 0,
+      "deletions": 0,
+      "changedFiles": 3
+    },
+    {
+      "id": "26s-w1-c1-04:0ad65a915080e2a5c131cb2c479c1e815db2dd6d",
+      "repoName": "26s-w1-c1-04",
+      "label": "omok00",
+      "committedAt": "2026-07-02T08:00:50Z",
+      "summary": "Merge pull request #2 from madcamp-official/terry2549",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-04/commit/0ad65a915080e2a5c131cb2c479c1e815db2dd6d",
+      "branches": [
+        "main",
+        "omok00",
+        "terry2549"
+      ],
+      "additions": 0,
+      "deletions": 0,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c1-04:e88e4182fa7ba8e3d79928ef4f510c16b12d72f1",
+      "repoName": "26s-w1-c1-04",
+      "label": "terry2549",
+      "committedAt": "2026-07-02T08:00:24Z",
+      "summary": "Merge pull request #1 from madcamp-official/omok00",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-04/commit/e88e4182fa7ba8e3d79928ef4f510c16b12d72f1",
+      "branches": [
+        "main",
+        "omok00",
+        "terry2549"
+      ],
+      "additions": 6,
+      "deletions": 0,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c1-04:ebdeb1e6f06d18630fab1b6cb91b7a1570393726",
+      "repoName": "26s-w1-c1-04",
+      "label": "terry2549",
+      "committedAt": "2026-07-02T07:56:50Z",
+      "summary": "Add main.cpp",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-04/commit/ebdeb1e6f06d18630fab1b6cb91b7a1570393726",
+      "branches": [
+        "main",
+        "omok00",
+        "terry2549"
+      ],
+      "additions": 0,
+      "deletions": 0,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c3-02:63d6ce91b403ae075b03bf611b79ebdce0c0169e",
+      "repoName": "26s-w1-c3-02",
+      "label": "suh1088",
+      "committedAt": "2026-07-02T07:55:30Z",
+      "summary": "Kiro",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-02/commit/63d6ce91b403ae075b03bf611b79ebdce0c0169e",
+      "branches": [
+        "main"
+      ],
+      "additions": 124,
+      "deletions": 4354,
+      "changedFiles": 30
+    },
+    {
+      "id": "26s-w1-c1-04:a33d76a57fc5a9de93f19807ce9fd712bc03208e",
+      "repoName": "26s-w1-c1-04",
+      "label": "omok00",
+      "committedAt": "2026-07-02T07:52:05Z",
+      "summary": "add main.py",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-04/commit/a33d76a57fc5a9de93f19807ce9fd712bc03208e",
+      "branches": [
+        "main",
+        "omok00",
+        "terry2549"
+      ],
+      "additions": 6,
+      "deletions": 0,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c1-04:f298e6211417fc78be4b01177a7c677a30465546",
+      "repoName": "26s-w1-c1-04",
+      "label": "terry2549",
+      "committedAt": "2026-07-02T07:49:36Z",
+      "summary": "Update README",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-04/commit/f298e6211417fc78be4b01177a7c677a30465546",
+      "branches": [
+        "main",
+        "terry2549"
+      ],
+      "additions": 2,
+      "deletions": 2,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c2-01:d92404764d5bf273bafd536415e0fb2b5f710338",
+      "repoName": "26s-w1-c2-01",
+      "label": "hyun020215",
+      "committedAt": "2026-07-02T07:49:18Z",
+      "summary": "Enhance README with team and project information",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-01/commit/d92404764d5bf273bafd536415e0fb2b5f710338",
+      "branches": [
+        "backend",
+        "frontend",
+        "main"
+      ],
+      "additions": 13,
+      "deletions": 8,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c3-02:4860817cad40fba142637c6b6f2358655d681991",
+      "repoName": "26s-w1-c3-02",
+      "label": "suh1088",
+      "committedAt": "2026-07-02T07:48:25Z",
+      "summary": "spec",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-02/commit/4860817cad40fba142637c6b6f2358655d681991",
+      "branches": [
+        "main"
+      ],
+      "additions": 4,
+      "deletions": 4,
+      "changedFiles": 3
+    },
+    {
+      "id": "26s-w1-c3-09:a1d19e49b5824f30cb2ad79eba0d9cfdba304bba",
+      "repoName": "26s-w1-c3-09",
+      "label": "superloser030",
+      "committedAt": "2026-07-02T07:48:05Z",
+      "summary": "Remove .gitignore (archive/ was personal-only, moved to local exclude)",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-09/commit/a1d19e49b5824f30cb2ad79eba0d9cfdba304bba",
+      "branches": [
+        "main"
+      ],
+      "additions": 0,
+      "deletions": 2,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c1-07:398eea1c0425a9b94872f87f02f42eeb1fabbb3a",
+      "repoName": "26s-w1-c1-07",
+      "label": "jonghklee",
+      "committedAt": "2026-07-02T07:43:06Z",
+      "summary": "Update README.md",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-07/commit/398eea1c0425a9b94872f87f02f42eeb1fabbb3a",
+      "branches": [
+        "main"
+      ],
+      "additions": 2,
+      "deletions": 2,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c1-04:df7ecf5898a9b8384e5e1eef6aff0529dee82811",
+      "repoName": "26s-w1-c1-04",
+      "label": "omok00",
+      "committedAt": "2026-07-02T07:40:54Z",
+      "summary": "first commit",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-04/commit/df7ecf5898a9b8384e5e1eef6aff0529dee82811",
+      "branches": [
+        "main",
+        "omok00",
+        "terry2549"
+      ],
+      "additions": 2,
+      "deletions": 2,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c3-02:c13a48ef6ea530733988f4c1d9696c5b0980d4b5",
+      "repoName": "26s-w1-c3-02",
+      "label": "suh1088",
+      "committedAt": "2026-07-02T07:35:25Z",
+      "summary": "spec-kit",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-02/commit/c13a48ef6ea530733988f4c1d9696c5b0980d4b5",
+      "branches": [
+        "main"
+      ],
+      "additions": 4354,
+      "deletions": 0,
+      "changedFiles": 27
+    },
+    {
+      "id": "26s-w1-c3-09:25e8d721665ccd21e2a8637f16fd902511c14cd5",
+      "repoName": "26s-w1-c3-09",
+      "label": "superloser030",
+      "committedAt": "2026-07-02T07:33:18Z",
+      "summary": "first commit",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-09/commit/25e8d721665ccd21e2a8637f16fd902511c14cd5",
+      "branches": [
+        "main"
+      ],
+      "additions": 2,
+      "deletions": 0,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c3-02:f080d0278bbdc5d94a06e8f243de9f2a41fa2589",
+      "repoName": "26s-w1-c3-02",
+      "label": "suh1088",
+      "committedAt": "2026-07-02T07:25:12Z",
+      "summary": "ㅇㅇ",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-02/commit/f080d0278bbdc5d94a06e8f243de9f2a41fa2589",
+      "branches": [
+        "main"
+      ],
+      "additions": 25,
+      "deletions": 20,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c3-02:b2ea36bbc5160cfeca4322a1723a65f569f4bad7",
+      "repoName": "26s-w1-c3-02",
+      "label": "suh1088",
+      "committedAt": "2026-07-02T07:19:42Z",
+      "summary": "형식 변경",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-02/commit/b2ea36bbc5160cfeca4322a1723a65f569f4bad7",
+      "branches": [
+        "main"
+      ],
+      "additions": 20,
+      "deletions": 25,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c3-02:444c8e2ccfb572bf0fc1c4bba089ad1fd9657ab3",
+      "repoName": "26s-w1-c3-02",
+      "label": "easy0131",
+      "committedAt": "2026-07-02T07:11:03Z",
+      "summary": "기능 명세서",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-02/commit/444c8e2ccfb572bf0fc1c4bba089ad1fd9657ab3",
+      "branches": [
+        "main"
+      ],
+      "additions": 31,
+      "deletions": 2,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c3-02:c26ce7f14274bf19c708238631f48a72c297b360",
+      "repoName": "26s-w1-c3-02",
+      "label": "easy0131",
+      "committedAt": "2026-07-02T07:08:16Z",
+      "summary": "기능 추가",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-02/commit/c26ce7f14274bf19c708238631f48a72c297b360",
+      "branches": [
+        "main"
+      ],
+      "additions": 2,
+      "deletions": 0,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c3-02:89ff7fe48eb05e28808a8897019ceaad097a886f",
+      "repoName": "26s-w1-c3-02",
+      "label": "easy0131",
+      "committedAt": "2026-07-02T06:59:44Z",
+      "summary": "Merge remote link updates",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-02/commit/89ff7fe48eb05e28808a8897019ceaad097a886f",
+      "branches": [
+        "main"
+      ],
+      "additions": 3,
+      "deletions": 3,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c3-02:13fb6d4cbcaf8071146996fb04305b50394a8f3f",
+      "repoName": "26s-w1-c3-02",
+      "label": "easy0131",
+      "committedAt": "2026-07-02T06:57:58Z",
+      "summary": "Merge remote main",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-02/commit/13fb6d4cbcaf8071146996fb04305b50394a8f3f",
+      "branches": [
+        "main"
+      ],
+      "additions": 5,
+      "deletions": 2,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c3-02:2431aa1c1e16d5de2f1a41cb4965e2fd038df172",
+      "repoName": "26s-w1-c3-02",
+      "label": "suh1088",
+      "committedAt": "2026-07-02T06:55:30Z",
+      "summary": "링크",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-02/commit/2431aa1c1e16d5de2f1a41cb4965e2fd038df172",
+      "branches": [
+        "main"
+      ],
+      "additions": 2,
+      "deletions": 2,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c3-02:8d2fb6099b914155f0eb1686168972b18de4e32e",
+      "repoName": "26s-w1-c3-02",
+      "label": "suh1088",
+      "committedAt": "2026-07-02T06:53:25Z",
+      "summary": "링크",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-02/commit/8d2fb6099b914155f0eb1686168972b18de4e32e",
+      "branches": [
+        "main"
+      ],
+      "additions": 1,
+      "deletions": 1,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c3-02:ccea0154c13a5a4c638628cbc9040fcb52c03be9",
+      "repoName": "26s-w1-c3-02",
+      "label": "easy0131",
+      "committedAt": "2026-07-02T05:24:55Z",
+      "summary": "팀원별역할",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-02/commit/ccea0154c13a5a4c638628cbc9040fcb52c03be9",
+      "branches": [
+        "main"
+      ],
+      "additions": 2,
+      "deletions": 0,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c3-02:0e37656be61619e87c1e979133804816eb0c60d7",
+      "repoName": "26s-w1-c3-02",
+      "label": "suh1088",
+      "committedAt": "2026-07-02T05:22:59Z",
+      "summary": "팀원 이름",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-02/commit/0e37656be61619e87c1e979133804816eb0c60d7",
+      "branches": [
+        "main"
+      ],
+      "additions": 2,
+      "deletions": 2,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c3-02:8f3237215438df6208a2d096aa25b907ed9b7146",
+      "repoName": "26s-w1-c3-02",
+      "label": "suh1088",
+      "committedAt": "2026-07-02T05:21:52Z",
+      "summary": "기획안 수정",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-02/commit/8f3237215438df6208a2d096aa25b907ed9b7146",
+      "branches": [
+        "main"
+      ],
+      "additions": 3,
+      "deletions": 0,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c3-02:e404f27721ce858c8db3896e3a2f89907b14ecdf",
+      "repoName": "26s-w1-c3-02",
+      "label": "suh1088",
+      "committedAt": "2026-07-02T05:20:04Z",
+      "summary": "기획",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-02/commit/e404f27721ce858c8db3896e3a2f89907b14ecdf",
+      "branches": [
+        "main"
+      ],
+      "additions": 17,
+      "deletions": 1,
+      "changedFiles": 1
+    },
+    {
+      "id": "26s-w1-c1-05:dbf4e20ac1299a80c326f463493cf04fefa659fc",
+      "repoName": "26s-w1-c1-05",
+      "label": "anjonghwa0",
+      "committedAt": "2026-07-02T05:12:06Z",
+      "summary": "initial commit",
+      "attributionStatus": "single_participant",
+      "detectedBots": [],
+      "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-05/commit/dbf4e20ac1299a80c326f463493cf04fefa659fc",
+      "branches": [
+        "anjonghwa"
+      ],
+      "additions": 2,
+      "deletions": 0,
+      "changedFiles": 1
+    }
+  ],
+  "heatmap": [
+    {
+      "date": "2026-07-02",
+      "count": 83
+    },
+    {
+      "date": "2026-07-03",
+      "count": 70
+    }
+  ],
+  "unknownUsers": [
+    {
+      "repoName": "26s-w1-c2-08",
+      "sha": "f9f04e0078e3f41e0a8f129b5a690ccebae3d0a2",
+      "authorLogin": "abiatarprado",
+      "authorEmail": "codex@example.com",
+      "authorName": "Codex",
+      "committedAt": "2026-07-03T04:23:54Z",
+      "reason": "bot"
+    },
+    {
+      "repoName": "26s-w1-c2-08",
+      "sha": "f6328371e8d0a2de564b30ef3098bd936f0d2080",
+      "authorLogin": "abiatarprado",
+      "authorEmail": "codex@example.com",
+      "authorName": "Codex",
+      "committedAt": "2026-07-03T04:20:38Z",
+      "reason": "bot"
+    },
+    {
+      "repoName": "26s-w1-c2-08",
+      "sha": "2d0b1751f658e06c08488285c58cf96ed980fda2",
+      "authorEmail": "codex@local",
+      "authorName": "codex",
+      "committedAt": "2026-07-03T04:02:50Z",
+      "reason": "bot"
+    },
+    {
+      "repoName": "26s-w1-c2-08",
+      "sha": "42c0bade0c251fc4febef4e8a250a60e20ebdaa0",
+      "authorEmail": "codex@local",
+      "authorName": "codex",
+      "committedAt": "2026-07-03T04:01:57Z",
+      "reason": "bot"
+    },
+    {
+      "repoName": "26s-w1-c2-08",
+      "sha": "a017c5101c0ad982de0c824b3034606a6b786956",
+      "authorEmail": "codex@local",
+      "authorName": "codex",
+      "committedAt": "2026-07-03T01:55:46Z",
+      "reason": "bot"
+    }
+  ],
+  "sync": {
+    "status": "ok",
+    "failedRepos": [],
+    "rateLimit": {
+      "limit": 5000,
+      "remaining": 4505,
+      "reset": 1783055121,
+      "used": 495
+    },
+    "reposScanned": 24,
+    "commitsProcessed": 153
+  }
+}

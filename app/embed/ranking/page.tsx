@@ -1,6 +1,6 @@
 import path from "node:path"
 import { RankingMiniCard, type RankingMiniEntry } from "@/components/ranking-mini-card"
-import buildTimeSnapshot from "@/public/data/snapshots/latest.json"
+import buildTimeSnapshot from "@/public/data/snapshots/seed.json"
 import type { AggregatedSnapshot } from "@/src/aggregation/aggregate"
 import { loadConfig } from "@/src/config/load-config"
 import { readSnapshotFallback } from "@/src/snapshot/fallback"

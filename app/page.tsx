@@ -1,7 +1,7 @@
 import path from "node:path"
 import { TopNav } from "@/components/top-nav"
 import { LiveDashboard } from "@/components/live-dashboard"
-import buildTimeSnapshot from "@/public/data/snapshots/latest.json"
+import buildTimeSnapshot from "@/public/data/snapshots/seed.json"
 import type { AggregatedSnapshot } from "@/src/aggregation/aggregate"
 import { loadConfig } from "@/src/config/load-config"
 import { resolveCurrentWeek } from "@/src/config/schema"
