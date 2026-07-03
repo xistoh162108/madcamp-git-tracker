@@ -53,6 +53,7 @@ trap rollback ERR
 as_madcamp "git merge --ff-only origin/main" >>"$LOG_FILE" 2>&1
 as_madcamp "corepack prepare pnpm@$PNPM_VERSION --activate" >>"$LOG_FILE" 2>&1
 as_madcamp "pnpm install --frozen-lockfile" >>"$LOG_FILE" 2>&1
+as_madcamp "rm -rf .next" >>"$LOG_FILE" 2>&1
 as_madcamp "pnpm exec tsc --noEmit" >>"$LOG_FILE" 2>&1
 as_madcamp "pnpm exec vitest run tests/unit" >>"$LOG_FILE" 2>&1
 as_madcamp "pnpm build" >>"$LOG_FILE" 2>&1
