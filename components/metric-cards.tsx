@@ -19,15 +19,29 @@ interface Metric {
 }
 
 export function MetricCards({ snapshot }: { snapshot?: AggregatedSnapshot }) {
-  const topTeamEntry = snapshot?.rankings.teams[0]
-  const topTeam = topTeamEntry?.label.replace(/^.*?(w\d+-c\d+-\d+)$/, "$1") ?? summary.topTeam
-  const topTeamMeta = topTeamEntry?.meta
+  // "가장 활발한 팀" is intentionally selected by raw total commits, independent of the
+  // score-based team ranking -- this card answers "who's generating the most activity",
+  // not "who's ranked #1".
+  const mostActiveTeamEntry = snapshot
+    ? [...snapshot.rankings.teams].sort((a, b) => b.commits - a.commits)[0]
+    : undefined
+  const topTeam = mostActiveTeamEntry?.label.replace(/^.*?(w\d+-c\d+-\d+)$/, "$1") ?? summary.topTeam
+  const topTeamMeta = mostActiveTeamEntry?.meta
   const topTeamMembers =
-    topTeamEntry && snapshot
-      ? [...new Set(snapshot.activityFeed.filter((item) => item.repoName === topTeamEntry.label).map((item) => item.label))]
+    mostActiveTeamEntry && snapshot
+      ? [
+          ...new Set(
+            snapshot.activityFeed
+              .filter((item) => item.repoName === mostActiveTeamEntry.label)
+              .map((item) => item.label),
+          ),
+        ]
           .slice(0, 4)
           .join(", ")
       : undefined
+  const topTeamStats = mostActiveTeamEntry
+    ? `${mostActiveTeamEntry.commits} commits · ${(mostActiveTeamEntry.score ?? 0).toFixed(1)}점`
+    : undefined
   const topClass = snapshot?.rankings.classes[0]?.label ?? summary.topClass
   const totalCommits = snapshot?.summary.totalCommits ?? summary.totalCommits
   const weekCommits = totalCommits
@@ -40,6 +54,11 @@ export function MetricCards({ snapshot }: { snapshot?: AggregatedSnapshot }) {
     snapshot && snapshot.summary.activeParticipants > 0
       ? Number((snapshot.summary.mappedCommits / snapshot.summary.activeParticipants).toFixed(1))
       : 0
+  const totalQualifiedCommits =
+    snapshot?.rankings.personal.reduce((sum, entry) => sum + (entry.qualifiedCommits ?? 0), 0) ?? 0
+  const totalPersonalCommits = snapshot?.rankings.personal.reduce((sum, entry) => sum + entry.commits, 0) ?? 0
+  const qualifiedRate =
+    totalPersonalCommits > 0 ? Math.round((totalQualifiedCommits / totalPersonalCommits) * 100) : null
 
   const metrics: Metric[] = [
     {
@@ -51,12 +70,12 @@ export function MetricCards({ snapshot }: { snapshot?: AggregatedSnapshot }) {
     {
       label: "활성 repo",
       value: activeRepos,
-      suffix: totalRepos ? `/${totalRepos}개` : "개",
+      suffix: totalRepos ? `/${totalRepos}개 (${Math.round((activeRepos / totalRepos) * 100)}%)` : "개",
       icon: FolderGit2,
       accent: "text-foreground",
     },
     {
-      label: "활동 참가자",
+      label: "커밋한 참가자",
       value: activeParticipants,
       suffix: totalParticipants ? `/${totalParticipants}명` : "명",
       icon: Users,
@@ -66,7 +85,7 @@ export function MetricCards({ snapshot }: { snapshot?: AggregatedSnapshot }) {
       label: "가장 활발한 팀",
       text: topTeam,
       subtext: topTeamMeta,
-      members: topTeamMembers,
+      members: topTeamMembers ? `${topTeamMembers}${topTeamStats ? ` · ${topTeamStats}` : ""}` : topTeamStats,
       icon: Trophy,
       accent: "text-gold",
     },
@@ -125,13 +144,24 @@ export function MetricCards({ snapshot }: { snapshot?: AggregatedSnapshot }) {
           </span>
           <span className="text-border">·</span>
           <span>
-            활동 참가자{" "}
+            커밋한 참가자{" "}
             <span className="font-semibold text-foreground tabular">{activeParticipants.toLocaleString()}명</span>
           </span>
           <span className="text-border">·</span>
           <span className="inline-flex items-center gap-1">
             <BarChart3 className="h-3.5 w-3.5 text-positive" /> 인당 평균 {averagePerPerson}
           </span>
+          {qualifiedRate !== null ? (
+            <>
+              <span className="text-border">·</span>
+              <span
+                className="cursor-help underline decoration-dotted underline-offset-2"
+                title="좋은 커밋: 적절한 변경량과 명확한 메시지를 가진 커밋 비율입니다. merge·revert·의존성 업데이트·포맷팅 커밋은 낮은 가중치로 반영됩니다."
+              >
+                좋은 커밋 비율 <span className="font-semibold text-foreground tabular">{qualifiedRate}%</span> ⓘ
+              </span>
+            </>
+          ) : null}
           <span className="text-border">·</span>
           <span>
             <span className="font-semibold text-foreground">{topClass}</span> 선두

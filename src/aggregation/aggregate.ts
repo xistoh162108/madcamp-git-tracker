@@ -1,5 +1,7 @@
 import type { Participant } from "../participants/participant-schema"
-import type { CommitRecord, RankedEntry, UnknownUser } from "./types"
+import { commitScore, isQualifiedCommit } from "../scoring/commit-score"
+import { dailyScore, teamScore, weeklyScore } from "../scoring/period-score"
+import type { CommitKind, CommitRecord, RankedEntry, UnknownUser } from "./types"
 
 export interface AggregatedSnapshot {
   generatedAt: string
@@ -31,6 +33,8 @@ export interface AggregatedSnapshot {
     additions?: number
     deletions?: number
     changedFiles?: number
+    commitKind?: CommitKind
+    score?: number
   }>
   heatmap: Array<{ date: string; count: number }>
   unknownUsers: UnknownUser[]
@@ -165,6 +169,58 @@ export function activityStatsForCommits(commits: CommitRecord[], now = new Date(
   }
 }
 
+function scoreStatsForCommits(items: CommitRecord[]): {
+  score: number
+  qualifiedCommits: number
+  avgChangedLines: number
+  avgChangedFiles: number
+  messageFormatRate: number
+} {
+  const byDay = new Map<string, CommitRecord[]>()
+  for (const commit of items) {
+    const key = dayOf(commit.committedAt)
+    byDay.set(key, [...(byDay.get(key) ?? []), commit])
+  }
+  const dailyResults = [...byDay.values()].map((dayCommits) =>
+    dailyScore([...dayCommits].sort((a, b) => Date.parse(a.committedAt) - Date.parse(b.committedAt))),
+  )
+  const weekly = weeklyScore(dailyResults)
+  const qualifiedCommits = items.filter(isQualifiedCommit).length
+  const conventionalCount = items.filter((item) => item.isConventionalMessage).length
+  const changedLinesSum = items.reduce((sum, item) => sum + (item.additions ?? 0) + (item.deletions ?? 0), 0)
+  const changedFilesSum = items.reduce((sum, item) => sum + (item.changedFiles ?? 0), 0)
+  return {
+    score: weekly.score,
+    qualifiedCommits,
+    avgChangedLines: items.length ? changedLinesSum / items.length : 0,
+    avgChangedFiles: items.length ? changedFilesSum / items.length : 0,
+    messageFormatRate: items.length ? conventionalCount / items.length : 0,
+  }
+}
+
+function teamMemberBreakdown(
+  items: CommitRecord[],
+  participantMap: Map<string, Participant>,
+): Array<{ participantId: string; label: string; githubUsername?: string; qualifiedCommits: number; score: number }> {
+  const byParticipant = new Map<string, CommitRecord[]>()
+  for (const commit of items) {
+    for (const participantId of participantIdsForCommit(commit)) {
+      byParticipant.set(participantId, [...(byParticipant.get(participantId) ?? []), commit])
+    }
+  }
+  return [...byParticipant.entries()].map(([participantId, commits]) => {
+    const stats = scoreStatsForCommits(commits)
+    const participant = participantMap.get(participantId)
+    return {
+      participantId,
+      label: participant?.name ?? participantId,
+      githubUsername: participant?.githubUsername,
+      qualifiedCommits: stats.qualifiedCommits,
+      score: stats.score,
+    }
+  })
+}
+
 export function aggregateSnapshot(params: {
   season: string
   currentWeek: number | null
@@ -192,6 +248,7 @@ export function aggregateSnapshot(params: {
 
   const personalEntries = [...grouped.personal.entries()].map(([participantId, items]) => {
     const participant = participantMap.get(participantId)
+    const scoreStats = scoreStatsForCommits(items)
     return {
       id: participantId,
       label: participant?.name ?? participantId,
@@ -203,30 +260,42 @@ export function aggregateSnapshot(params: {
         .at(-1),
       meta: participant?.githubUsername,
       activityStats: activityStatsForCommits(items),
+      ...scoreStats,
     }
   })
 
   const teams = rank(
-    [...grouped.teams.entries()].map(([repoName, items]) => ({
-      id: repoName,
-      label: repoName,
-      commits: items.length,
-      activeDays: new Set(items.map((item) => dayOf(item.committedAt))).size,
-      lastActivityAt: items
-        .map((item) => item.committedAt)
-        .sort()
-        .at(-1),
-      meta: `${items[0]!.class}분반 · ${items[0]!.teamNumber}팀`,
-      averagePerPerson:
-        items.length / Math.max(1, new Set(items.flatMap((item) => participantIdsForCommit(item))).size),
-    })),
-    (entry) => entry.commits,
+    [...grouped.teams.entries()].map(([repoName, items]) => {
+      const memberBreakdown = teamMemberBreakdown(items, participantMap)
+      const teamSize = memberBreakdown.length
+      const { score } = teamScore(
+        memberBreakdown.map((member) => member.score),
+        memberBreakdown.map((member) => member.qualifiedCommits),
+        teamSize,
+      )
+      return {
+        id: repoName,
+        label: repoName,
+        commits: items.length,
+        activeDays: new Set(items.map((item) => dayOf(item.committedAt))).size,
+        lastActivityAt: items
+          .map((item) => item.committedAt)
+          .sort()
+          .at(-1),
+        meta: `${items[0]!.class}분반 · ${items[0]!.teamNumber}팀`,
+        averagePerPerson: items.length / Math.max(1, teamSize),
+        score,
+        memberBreakdown,
+      }
+    }),
+    (entry) => entry.score ?? 0,
     previousRankLookup(params.previousSnapshot, "teams"),
   )
 
   const topTeamParticipantIds = new Set(
     teams[0] ? grouped.teams.get(teams[0].id)!.flatMap((item) => participantIdsForCommit(item)) : [],
   )
+  const maxPersonalScore = Math.max(0, ...personalEntries.map((item) => item.score))
   const personal = rank(
     personalEntries.map((entry) => {
       const titles: Array<{ id: string; label: string; desc: string }> = []
@@ -241,22 +310,35 @@ export function aggregateSnapshot(params: {
           desc: `${params.currentWeek}주차 개인 커밋 수 1위`,
         })
       }
+      if (params.currentWeek && params.weekEnded && entry.score === maxPersonalScore) {
+        titles.push({
+          id: `w${params.currentWeek}-top-score`,
+          label: `${params.currentWeek}주차 최고 기여점수`,
+          desc: `${params.currentWeek}주차 개발 리듬 점수 1위`,
+        })
+      }
       if (params.currentWeek && params.weekEnded && topTeamParticipantIds.has(entry.id)) {
         titles.push({
           id: `w${params.currentWeek}-top-team-member`,
           label: `${params.currentWeek}주차 우승팀`,
-          desc: `${params.currentWeek}주차 팀 커밋 수 1위 팀 멤버`,
+          desc: `${params.currentWeek}주차 팀 점수 1위 팀 멤버`,
         })
       }
       return { ...entry, honorTitles: titles }
     }),
-    (entry) => entry.commits,
+    (entry) => entry.score ?? 0,
     previousRankLookup(params.previousSnapshot, "personal"),
   )
 
+  const personalScoreById = new Map(personalEntries.map((entry) => [entry.id, entry.score]))
   const classes = rank(
     [...grouped.classes.entries()].map(([classNumber, items]) => {
-      const participantCount = params.participants.filter((participant) => participant.class === classNumber).length
+      const classParticipants = params.participants.filter((participant) => participant.class === classNumber)
+      const participantCount = classParticipants.length
+      const totalScore = classParticipants.reduce(
+        (sum, participant) => sum + (personalScoreById.get(participant.participantId) ?? 0),
+        0,
+      )
       return {
         id: String(classNumber),
         label: `${classNumber}분반`,
@@ -268,9 +350,10 @@ export function aggregateSnapshot(params: {
           .at(-1),
         meta: `${participantCount}명`,
         averagePerPerson: items.length / Math.max(1, participantCount),
+        score: totalScore / Math.max(1, participantCount),
       }
     }),
-    (entry) => entry.averagePerPerson!,
+    (entry) => entry.score ?? 0,
     previousRankLookup(params.previousSnapshot, "classes"),
   )
 
@@ -297,11 +380,15 @@ export function aggregateSnapshot(params: {
       .slice(0, 200)
       .map((commit) => {
         const matchedParticipant = participantMap.get(participantIdsForCommit(commit)[0] ?? "")
+        const actorLabel =
+          matchedParticipant?.githubUsername ??
+          (commit.attributionStatus === "bot_only"
+            ? (commit.detectedBots?.[0] ?? commit.authorName ?? "자동화")
+            : (commit.authorGithubUsername ?? commit.authorName ?? "unknown"))
         return {
           id: `${commit.repoName}:${commit.sha}`,
           repoName: commit.repoName,
-          label:
-            matchedParticipant?.githubUsername ?? commit.authorGithubUsername ?? commit.authorName ?? "unknown",
+          label: actorLabel,
           committedAt: commit.committedAt,
           summary: (commit.messageSummary ?? "commit").replace(/[<>]/g, "").slice(0, 100),
           attributionStatus: commit.attributionStatus,
@@ -311,6 +398,8 @@ export function aggregateSnapshot(params: {
           additions: commit.additions,
           deletions: commit.deletions,
           changedFiles: commit.changedFiles,
+          commitKind: commit.commitKind,
+          score: commitScore(commit),
         }
       }),
     heatmap: [...heatmapCounts.entries()]

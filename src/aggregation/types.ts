@@ -1,3 +1,16 @@
+export type CommitKind =
+  | "normal"
+  | "merge"
+  | "empty"
+  | "conflict_resolve"
+  | "revert"
+  | "dependency_update"
+  | "lockfile_only"
+  | "formatting"
+  | "generated_files"
+  | "asset_only"
+  | "rename_only"
+
 export interface CommitRecord {
   sha: string
   repoName: string
@@ -32,6 +45,11 @@ export interface CommitRecord {
   additions?: number
   deletions?: number
   changedFiles?: number
+  commitKind?: CommitKind
+  parentCount?: number
+  isConventionalMessage?: boolean
+  messageLength?: number
+  isVagueMessage?: boolean
 }
 
 export interface RankedEntry {
@@ -53,6 +71,18 @@ export interface RankedEntry {
     longestHourStreak: number
     activeHours: number
   }
+  score?: number
+  qualifiedCommits?: number
+  avgChangedLines?: number
+  avgChangedFiles?: number
+  messageFormatRate?: number
+  memberBreakdown?: Array<{
+    participantId: string
+    label: string
+    githubUsername?: string
+    qualifiedCommits: number
+    score: number
+  }>
 }
 
 export interface UnknownUser {

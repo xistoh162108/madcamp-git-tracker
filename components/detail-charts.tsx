@@ -80,14 +80,19 @@ export function SprintBoard({
   const weekDayLists = activeWeeks.map((week) => daysForWeek(week))
   const columnCount = Math.max(1, ...weekDayLists.map((days) => days.length))
   const longestWeekDays = weekDayLists.find((days) => days.length === columnCount) ?? []
-  const headerLabels = longestWeekDays.map((day) => weekdayLabel(day))
+  const headerLabels = longestWeekDays.map((day) => ({ label: weekdayLabel(day), date: dayLabel(day) }))
   return (
     <div className="space-y-2.5">
       <div className="grid grid-cols-[44px_1fr] items-center gap-2">
         <span />
-        <div className="grid gap-1.5 text-center text-[10px] font-medium text-muted-foreground" style={{ gridTemplateColumns: `repeat(${columnCount}, minmax(0, 1fr))` }}>
-          {headerLabels.map((label, index) => (
-            <span key={index}>{label}</span>
+        <div
+          className="grid gap-1.5 text-center text-[10px] font-medium text-muted-foreground"
+          style={{ gridTemplateColumns: `repeat(${columnCount}, minmax(0, 1fr))` }}
+        >
+          {headerLabels.map((day, index) => (
+            <span key={index} title={day.date}>
+              {day.label}
+            </span>
           ))}
         </div>
       </div>
@@ -152,6 +157,10 @@ export function SprintBoard({
           ))}
         </div>
         <span>높음</span>
+        <span className="ml-2 inline-flex items-center gap-1">
+          <span className="h-2.5 w-2.5 rounded-sm border border-border/50 bg-muted/40 ring-1 ring-gold" />
+          오늘
+        </span>
       </div>
     </div>
   )
@@ -191,7 +200,7 @@ export function HourlyBarChart({
   name?: string
 }) {
   return (
-    <div className="h-48">
+    <div className="h-40">
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={data} margin={{ top: 4, right: 8, left: -16, bottom: 0 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(220 16% 17%)" vertical={false} />

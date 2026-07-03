@@ -4,6 +4,7 @@ import { motion } from "framer-motion"
 import { AlertTriangle, Bot, ExternalLink, GitCommitHorizontal, GitMerge, Users } from "lucide-react"
 import { feed } from "@/lib/data"
 import type { AggregatedSnapshot } from "@/src/aggregation/aggregate"
+import type { CommitKind } from "@/src/aggregation/types"
 
 interface CommitFeedItem {
   id: string
@@ -18,6 +19,8 @@ interface CommitFeedItem {
   additions?: number
   deletions?: number
   changedFiles?: number
+  commitKind?: CommitKind
+  score?: number
 }
 
 interface FeedGroup {
@@ -33,6 +36,7 @@ interface FeedGroup {
   attributionStatus?: CommitFeedItem["attributionStatus"]
   detectedBots: string[]
   branches: string[]
+  commitKind?: CommitKind
 }
 
 function formatTime(iso: string) {
@@ -58,6 +62,8 @@ function feedItems(snapshot?: AggregatedSnapshot): CommitFeedItem[] {
       additions: item.additions,
       deletions: item.deletions,
       changedFiles: item.changedFiles,
+      commitKind: item.commitKind,
+      score: item.score,
     }))
   }
   return feed.slice(0, 10).map((item) => ({
@@ -86,6 +92,7 @@ function groupFeed(items: CommitFeedItem[]): FeedGroup[] {
       latest.detectedBots = [...new Set([...latest.detectedBots, ...(item.detectedBots ?? [])])]
       latest.branches = [...new Set([...latest.branches, ...(item.branches ?? [])])]
       latest.attributionStatus = latest.attributionStatus ?? item.attributionStatus
+      latest.commitKind = latest.commitKind ?? item.commitKind
       continue
     }
     groups.push({
@@ -101,6 +108,7 @@ function groupFeed(items: CommitFeedItem[]): FeedGroup[] {
       attributionStatus: item.attributionStatus,
       detectedBots: item.detectedBots ?? [],
       branches: item.branches ?? [],
+      commitKind: item.commitKind,
     })
   }
   return groups.slice(0, 12)
@@ -111,8 +119,22 @@ function sumOptional(a?: number, b?: number) {
   return (a ?? 0) + (b ?? 0)
 }
 
+function CommitScoreBadge({ score }: { score?: number }) {
+  if (score === undefined) return null
+  const tone = score >= 0.6 ? "text-positive" : "text-muted-foreground"
+  return <span className={`shrink-0 font-mono text-[10px] font-semibold tabular ${tone}`}>{score.toFixed(1)}점</span>
+}
+
+// Merge commit messages are often long and include full URLs (e.g. "Merge branch 'main' of
+// https://github.com/org/repo"), which reads as noise in a compact timeline -- reduce them to
+// just the branch/PR reference.
+function displayMessage(message: string, isMerge: boolean): string {
+  if (!isMerge) return message
+  const branchMatch = message.match(/^Merge (?:branch|pull request #\d+ from) ['"]?([^\s'"]+)/i)
+  return branchMatch ? `${branchMatch[1]} 병합` : "브랜치 병합"
+}
+
 function kindForGroup(group: FeedGroup) {
-  const message = group.items[0]?.message.toLowerCase() ?? ""
   if (group.attributionStatus === "unknown") return { label: "기타", icon: AlertTriangle, cls: "text-destructive" }
   if (group.attributionStatus === "bot_only") {
     return { label: "자동화", icon: Bot, cls: "text-accent" }
@@ -120,7 +142,7 @@ function kindForGroup(group: FeedGroup) {
   if (group.attributionStatus === "multiple_participants" || group.attributionStatus === "bot_with_participant") {
     return { label: "공동", icon: Users, cls: "text-positive" }
   }
-  if (message.startsWith("merge ")) return { label: "병합", icon: GitMerge, cls: "text-gold" }
+  if (group.commitKind === "merge") return { label: "병합", icon: GitMerge, cls: "text-gold" }
   return { label: "commit", icon: GitCommitHorizontal, cls: "text-primary" }
 }
 
@@ -137,14 +159,18 @@ function StatsLine({ group }: { group: FeedGroup }) {
     )
   }
   return (
-    <span className="flex flex-wrap gap-1.5 text-[10px]">
+    <span className="flex flex-wrap items-center gap-1.5 text-[10px]">
       {group.items.length > 1 ? <span className="text-muted-foreground">{group.items.length} commits</span> : null}
-      {group.additions !== undefined ? <span className="text-positive">+{group.additions}</span> : null}
-      {group.deletions !== undefined ? <span className="text-destructive">-{group.deletions}</span> : null}
       {group.changedFiles !== undefined ? (
-        <span className="text-muted-foreground">{group.changedFiles} files changed</span>
+        <span className="text-muted-foreground">{group.changedFiles} files</span>
       ) : null}
       {branchLabel ? <span className="truncate font-mono text-muted-foreground">{branchLabel}</span> : null}
+      {group.additions !== undefined || group.deletions !== undefined ? (
+        <span className="opacity-60">
+          {group.additions !== undefined ? <span className="text-positive">+{group.additions}</span> : null}{" "}
+          {group.deletions !== undefined ? <span className="text-destructive">-{group.deletions}</span> : null}
+        </span>
+      ) : null}
     </span>
   )
 }
@@ -157,23 +183,24 @@ export function ActivityFeed({ snapshot }: { snapshot?: AggregatedSnapshot }) {
       initial={{ opacity: 0, x: 18 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-      className="overflow-hidden rounded-xl border border-border/70 bg-card/70"
+      className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl border border-border/70 bg-card/70"
     >
-      <div className="flex items-center justify-between px-4 pt-4">
+      <div className="flex shrink-0 items-center justify-between px-4 pt-4">
         <h3 className="flex items-center gap-1.5 text-sm font-semibold">
           <GitCommitHorizontal className="h-4 w-4 text-primary" />
           최근 커밋
         </h3>
         <span className="rounded-full border border-border/70 bg-muted/40 px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
-          최근 {groups.reduce((sum, group) => sum + group.items.length, 0)} commits
+          최근 {groups.reduce((sum, group) => sum + group.items.length, 0)}개
         </span>
       </div>
-      <ol className="mt-3 max-h-[420px] overflow-y-auto px-4 pb-4 pr-2">
+      <ol className="mt-3 min-h-0 flex-1 overflow-y-auto px-4 pb-4 pr-2 [scrollbar-color:rgba(56,189,248,0.35)_transparent] [scrollbar-width:thin] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-primary/30 [&::-webkit-scrollbar-track]:bg-transparent">
         {groups.map((group, index) => {
           const kind = kindForGroup(group)
           const Icon = kind.icon
+          const isMerge = kind.label === "병합"
           const primary = group.items[0]
-          const message = primary?.message ?? "commit"
+          const message = displayMessage(primary?.message ?? "commit", isMerge)
           const kindLabel = group.items.length > 1 ? "묶음" : kind.label
           const time =
             group.items.length > 1
@@ -186,9 +213,9 @@ export function ActivityFeed({ snapshot }: { snapshot?: AggregatedSnapshot }) {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.22, delay: index * 0.035 }}
               whileHover={{ x: -2 }}
-              className="group relative border-l border-border/70 py-2.5 pl-3 transition-colors hover:border-primary/50"
+              className="group relative border-l border-border/40 py-2.5 pl-3 transition-colors hover:border-primary/50"
             >
-              <span className="absolute -left-[5px] top-4 h-2.5 w-2.5 rounded-full border border-background bg-primary" />
+              <span className="absolute -left-[4.5px] top-4 h-2 w-2 rounded-full border border-background bg-primary/70" />
               <div className="flex min-w-0 items-start gap-2">
                 <Icon className={`mt-0.5 h-3.5 w-3.5 shrink-0 ${kind.cls}`} />
                 <div className="min-w-0 flex-1">
@@ -207,35 +234,43 @@ export function ActivityFeed({ snapshot }: { snapshot?: AggregatedSnapshot }) {
                       target="_blank"
                       rel="noreferrer"
                       title="GitHub에서 커밋 보기"
-                      className="group/link mt-1 flex max-w-full items-center gap-1 text-xs text-foreground/90 underline-offset-2 hover:text-primary hover:underline"
+                      className="group/link mt-1 flex max-w-full items-start gap-1.5 text-xs text-foreground/90 underline-offset-2 hover:text-primary hover:underline"
                     >
-                      <span className="truncate whitespace-nowrap">{message}</span>
-                      <ExternalLink className="h-3 w-3 shrink-0 opacity-0 transition-opacity group-hover/link:opacity-100" />
+                      <span className="line-clamp-2 min-w-0">{message}</span>
+                      <CommitScoreBadge score={primary.score} />
+                      <ExternalLink className="mt-0.5 h-3 w-3 shrink-0 opacity-0 transition-opacity group-hover/link:opacity-100" />
                     </a>
                   ) : (
-                    <p className="mt-1 max-w-full truncate whitespace-nowrap text-xs text-foreground/90">{message}</p>
+                    <p className="mt-1 flex max-w-full items-start gap-1.5 text-xs text-foreground/90">
+                      <span className="line-clamp-2 min-w-0">{message}</span>
+                      <CommitScoreBadge score={primary?.score} />
+                    </p>
                   )}
                   {group.items.length > 1 ? (
                     <ul className="mt-1 space-y-0.5">
                       {group.items.slice(1, 3).map((item) =>
                         item.href ? (
-                          <li key={item.id} className="max-w-full">
+                          <li key={item.id} className="flex max-w-full items-start gap-1.5">
                             <a
                               href={item.href}
                               target="_blank"
                               rel="noreferrer"
                               title="GitHub에서 커밋 보기"
-                              className="block max-w-full truncate whitespace-nowrap text-[11px] text-muted-foreground hover:text-primary hover:underline"
+                              className="line-clamp-1 min-w-0 text-[11px] text-muted-foreground hover:text-primary hover:underline"
                             >
-                              {item.message}
+                              {displayMessage(item.message, item.commitKind === "merge")}
                             </a>
+                            <CommitScoreBadge score={item.score} />
                           </li>
                         ) : (
                           <li
                             key={item.id}
-                            className="max-w-full truncate whitespace-nowrap text-[11px] text-muted-foreground"
+                            className="flex max-w-full items-start gap-1.5 text-[11px] text-muted-foreground"
                           >
-                            {item.message}
+                            <span className="line-clamp-1 min-w-0">
+                              {displayMessage(item.message, item.commitKind === "merge")}
+                            </span>
+                            <CommitScoreBadge score={item.score} />
                           </li>
                         ),
                       )}

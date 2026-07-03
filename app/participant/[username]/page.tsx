@@ -1,7 +1,16 @@
 import path from "node:path"
 import Link from "next/link"
 import { notFound } from "next/navigation"
-import { ArrowLeft, Github, GitCommitHorizontal, CalendarClock, Hash } from "lucide-react"
+import {
+  ArrowLeft,
+  Github,
+  GitCommitHorizontal,
+  CalendarClock,
+  Hash,
+  Sparkles,
+  FileDiff,
+  MessageSquareText,
+} from "lucide-react"
 import { TopNav } from "@/components/top-nav"
 import { AutoRefresh } from "@/components/auto-refresh"
 import { InitialsAvatar } from "@/components/initials-avatar"
@@ -48,32 +57,58 @@ function repoClass(repo?: string) {
   return repo?.match(/w\d+-c(\d+)-\d+/)?.[1]
 }
 
+// Interpretive labels roughly mirror the scoring system's own size/file bands, so "적정" here
+// lines up with what actually earns a good commit_score.
+function changedLinesHint(avg: number) {
+  if (avg <= 0) return undefined
+  if (avg < 10) return "매우 작음"
+  if (avg <= 300) return "적정"
+  if (avg <= 800) return "다소 큼"
+  return "매우 큼"
+}
+
+function changedFilesHint(avg: number) {
+  if (avg <= 0) return undefined
+  if (avg <= 8) return "적정"
+  if (avg <= 15) return "다소 넓음"
+  return "넓음"
+}
+
+function messageFormatHint(rate: number) {
+  if (rate >= 0.7) return "좋음"
+  if (rate >= 0.4) return "양호"
+  return "개선 필요"
+}
+
 function rankingContext(
   entry: AggregatedSnapshot["rankings"]["personal"][number],
   entries: AggregatedSnapshot["rankings"]["personal"],
 ) {
+  // Score is the leaderboard's primary ranking metric -- this must match, or a participant's own
+  // page would show a different rank than the leaderboard they came from.
+  const scoreOf = (item: AggregatedSnapshot["rankings"]["personal"][number]) => item.score ?? 0
   const sorted = [...entries].sort(
-    (a, b) => b.commits - a.commits || Date.parse(b.lastActivityAt ?? "") - Date.parse(a.lastActivityAt ?? ""),
+    (a, b) => scoreOf(b) - scoreOf(a) || Date.parse(b.lastActivityAt ?? "") - Date.parse(a.lastActivityAt ?? ""),
   )
-  let previousCommits: number | null = null
+  let previousScore: number | null = null
   let previousRank = 0
   const ranked = sorted.map((item, index) => {
-    const rank = previousCommits === item.commits ? previousRank : index + 1
-    previousCommits = item.commits
+    const rank = previousScore === scoreOf(item) ? previousRank : index + 1
+    previousScore = scoreOf(item)
     previousRank = rank
     return { ...item, displayRank: rank }
   })
   const current = ranked.find((item) => item.id === entry.id) ?? { ...entry, displayRank: entry.rank }
-  const sameRank = ranked.filter((item) => item.commits === entry.commits)
-  const nextGroup = ranked.find((item) => item.commits < entry.commits)
+  const sameRank = ranked.filter((item) => scoreOf(item) === scoreOf(entry))
+  const nextGroup = ranked.find((item) => scoreOf(item) < scoreOf(entry))
   const leader = ranked[0]
   const rankLabel = sameRank.length > 1 ? `공동 ${current.displayRank}위` : `${current.displayRank}위`
   const gapLabel =
-    leader?.id === entry.id || entry.commits === leader?.commits
+    leader?.id === entry.id || scoreOf(entry) === (leader ? scoreOf(leader) : undefined)
       ? nextGroup
-        ? `다음 순위와 ${entry.commits - nextGroup.commits}커밋 차이`
+        ? `다음 순위와 ${(scoreOf(entry) - scoreOf(nextGroup)).toFixed(1)}점 차이`
         : "단독 선두"
-      : `선두까지 ${(leader?.commits ?? entry.commits) - entry.commits}커밋`
+      : `선두까지 ${((leader ? scoreOf(leader) : scoreOf(entry)) - scoreOf(entry)).toFixed(1)}점`
   return { rankLabel, gapLabel }
 }
 
@@ -117,6 +152,25 @@ export default async function ParticipantDetailPage({ params }: { params: Promis
       status,
     }
   })
+  const commitKindLabels: Record<string, string> = {
+    normal: "일반",
+    merge: "병합",
+    empty: "빈 커밋",
+    conflict_resolve: "충돌 해결",
+    revert: "되돌리기",
+    dependency_update: "의존성",
+    lockfile_only: "락파일",
+    formatting: "포맷팅",
+    generated_files: "생성 파일",
+    asset_only: "에셋",
+    rename_only: "이름 변경",
+  }
+  const commitKindCounts = new Map<string, number>()
+  for (const item of participantFeed) {
+    const kind = item.commitKind ?? "normal"
+    commitKindCounts.set(kind, (commitKindCounts.get(kind) ?? 0) + 1)
+  }
+  const commitKindBreakdown = [...commitKindCounts.entries()].sort(([, a], [, b]) => b - a).slice(0, 5)
   const participantCounts = new Map<string, number>()
   for (const item of participantFeed) {
     const date = kstDate(item.committedAt)
@@ -163,10 +217,10 @@ export default async function ParticipantDetailPage({ params }: { params: Promis
             <div className="flex items-center gap-4">
               <InitialsAvatar name={p.label} githubUsername={p.meta} size="lg" />
               <div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2.5">
                   <h1 className="text-xl font-bold tracking-tight">{p.label}</h1>
                   <span className="rounded-md border border-gold/40 bg-gold/15 px-1.5 py-0.5 text-[11px] font-bold text-gold">
-                    {position.rankLabel}
+                    전체 {position.rankLabel}
                   </span>
                 </div>
                 <p className="mt-0.5 font-mono text-xs text-muted-foreground">@{p.meta ?? p.id}</p>
@@ -181,42 +235,35 @@ export default async function ParticipantDetailPage({ params }: { params: Promis
                   ) : (
                     <span className="rounded border border-border/70 bg-muted/40 px-1.5 py-0.5 font-mono">-</span>
                   )}
-                  <span className="rounded border border-primary/30 bg-primary/10 px-1.5 py-0.5 text-primary">
-                    {position.gapLabel}
-                  </span>
                 </div>
                 <p className="mt-2 text-xs text-muted-foreground">
                   팀 내 {teamRank}위 / {Math.max(1, teamPeers.length)}명 · 분반 {classRank}위 /{" "}
-                  {Math.max(1, classPeers.length)}명 · 전체 {position.rankLabel}
+                  {Math.max(1, classPeers.length)}명
                 </p>
               </div>
             </div>
-            <a
-              href={`https://github.com/${p.meta ?? p.id}`}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:opacity-90"
-            >
-              <Github className="h-3.5 w-3.5" /> GitHub Profile
-            </a>
+            <div className="flex shrink-0 flex-col items-end gap-2">
+              <a
+                href={`https://github.com/${p.meta ?? p.id}`}
+                className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:opacity-90"
+              >
+                <Github className="h-3.5 w-3.5" /> GitHub Profile
+              </a>
+              <div className="text-right text-[11px] text-muted-foreground">
+                <p className="font-semibold text-gold">{position.gapLabel}</p>
+                <p>최근 활동 {kstDateTime(p.lastActivityAt)}</p>
+              </div>
+            </div>
           </div>
 
           <div className="mt-5 grid grid-cols-2 gap-3 lg:grid-cols-4">
-            <Stat
-              icon={GitCommitHorizontal}
-              label="이번 주 커밋"
-              value={`${p.commits} commits`}
-              accent="text-primary"
-            />
+            <Stat icon={Sparkles} label="점수" value={(p.score ?? 0).toFixed(1)} accent="text-gold" />
             <Stat icon={CalendarClock} label="이번 주 활동일" value={`${p.activeDays}일`} />
             <Stat icon={GitCommitHorizontal} label="최근 커밋" value={kstDateTime(p.lastActivityAt)} />
-            <Stat
-              icon={Hash}
-              label="팀 내 순위"
-              value={`${teamRank}위 / ${Math.max(1, teamPeers.length)}명`}
-              accent="text-gold"
-            />
+            <Stat icon={Hash} label="팀 내 순위" value={`${teamRank}위 / ${Math.max(1, teamPeers.length)}명`} />
           </div>
 
-          <div className="mt-3 flex flex-wrap gap-x-3 gap-y-1 rounded-lg border border-border/60 bg-background/35 px-3 py-2 text-xs text-muted-foreground">
+          <div className="mt-3 flex flex-wrap gap-x-3 gap-y-1 rounded-lg border border-border/40 bg-background/20 px-3 py-2 text-xs text-muted-foreground">
             <span>
               분반 순위{" "}
               <span className="font-semibold text-foreground">
@@ -227,6 +274,11 @@ export default async function ParticipantDetailPage({ params }: { params: Promis
             <span>
               하루 평균 <span className="font-semibold text-foreground">{dailyAverage} commits</span>
             </span>
+            <span className="text-border">·</span>
+            <span>
+              총 커밋 <span className="font-semibold text-foreground">{p.commits}</span> · 좋은 커밋{" "}
+              <span className="font-semibold text-foreground">{p.qualifiedCommits ?? 0}</span>
+            </span>
             {p.activityStats ? (
               <>
                 <span className="text-border">·</span>
@@ -235,6 +287,27 @@ export default async function ParticipantDetailPage({ params }: { params: Promis
                 </span>
               </>
             ) : null}
+          </div>
+
+          <div className="mt-3 grid grid-cols-2 gap-3 lg:grid-cols-3">
+            <Stat
+              icon={FileDiff}
+              label="평균 변경 줄수"
+              value={(p.avgChangedLines ?? 0).toFixed(1)}
+              hint={changedLinesHint(p.avgChangedLines ?? 0)}
+            />
+            <Stat
+              icon={FileDiff}
+              label="평균 변경 파일수"
+              value={(p.avgChangedFiles ?? 0).toFixed(1)}
+              hint={changedFilesHint(p.avgChangedFiles ?? 0)}
+            />
+            <Stat
+              icon={MessageSquareText}
+              label="메시지 형식 사용률"
+              value={`${Math.round((p.messageFormatRate ?? 0) * 100)}%`}
+              hint={messageFormatHint(p.messageFormatRate ?? 0)}
+            />
           </div>
 
           {p.honorTitles?.length ? (
@@ -249,11 +322,11 @@ export default async function ParticipantDetailPage({ params }: { params: Promis
           ) : null}
         </div>
 
-        <div className="mt-4 grid gap-4 lg:grid-cols-[1.25fr_0.75fr]">
+        <div className="mt-4 grid items-start gap-4 lg:grid-cols-[1.8fr_1fr]">
           <section className="rounded-xl border border-border/70 bg-card/70 p-4">
             <h2 className="text-sm font-semibold">최근 커밋</h2>
             <p className="mt-0.5 text-xs text-muted-foreground">KST 기준 · 원본 커밋 메시지</p>
-            <ul className="mt-3 max-h-[520px] space-y-2 overflow-y-auto pr-1">
+            <ul className="mt-3 max-h-[480px] space-y-2 overflow-y-auto pr-1">
               {participantFeed.slice(0, 50).map((item) => {
                 const hasStats =
                   item.additions !== undefined || item.deletions !== undefined || item.changedFiles !== undefined
@@ -307,6 +380,11 @@ export default async function ParticipantDetailPage({ params }: { params: Promis
                       ) : (
                         "변경 정보 없음"
                       )}
+                      {item.score !== undefined ? (
+                        <span className="ml-auto shrink-0 font-mono font-semibold text-gold">
+                          {item.score.toFixed(1)}점
+                        </span>
+                      ) : null}
                     </p>
                   </li>
                 )
@@ -319,54 +397,95 @@ export default async function ParticipantDetailPage({ params }: { params: Promis
             </ul>
           </section>
 
-          <section className="rounded-xl border border-border/70 bg-card/70 p-4">
-            <h2 className="text-sm font-semibold">주차별 활동</h2>
-            <ul className="mt-3 space-y-2">
-              {weekHistory.map((w) => (
-                <li
-                  key={w.week}
-                  className="flex items-center gap-3 rounded-lg border border-border/60 bg-background/40 p-2.5"
-                >
-                  <span className="w-12 text-xs font-semibold">{w.week}</span>
-                  {w.status === "active" && w.team !== "기록 없음" ? (
-                    <Link
-                      href={`/team/${w.team}`}
-                      className="flex-1 truncate font-mono text-xs text-foreground/90 underline-offset-2 hover:text-primary hover:underline"
-                    >
-                      {w.team}
-                    </Link>
-                  ) : (
-                    <span
-                      className={`flex-1 truncate font-mono text-xs ${
-                        w.status === "upcoming" ? "text-muted-foreground" : "text-foreground/90"
-                      }`}
-                    >
-                      {w.team}
-                    </span>
-                  )}
-                  {w.status === "active" && (
-                    <span className="rounded-full bg-positive/15 px-1.5 text-[9px] font-medium text-positive">
-                      진행 중
-                    </span>
-                  )}
-                  {w.status === "ended" && <span className="text-sm font-bold tabular">{w.commits}</span>}
-                  {w.status === "active" && <span className="text-sm font-bold tabular text-primary">{w.commits}</span>}
-                  {w.status === "upcoming" && (
-                    <span className="text-sm font-bold tabular text-muted-foreground">-</span>
-                  )}
-                </li>
-              ))}
-            </ul>
-          </section>
+          <div className="flex flex-col gap-4">
+            <section className="rounded-xl border border-border/70 bg-card/70 p-4">
+              <h2 className="text-sm font-semibold">주차별 활동</h2>
+              <ul className="mt-3 space-y-2">
+                {weekHistory.map((w) => (
+                  <li
+                    key={w.week}
+                    className="flex items-center gap-3 rounded-lg border border-border/60 bg-background/40 p-2.5"
+                  >
+                    <span className="w-12 text-xs font-semibold">{w.week}</span>
+                    {w.status === "active" && w.team !== "기록 없음" ? (
+                      <Link
+                        href={`/team/${w.team}`}
+                        className="flex-1 truncate font-mono text-xs text-foreground/90 underline-offset-2 hover:text-primary hover:underline"
+                      >
+                        {w.team}
+                      </Link>
+                    ) : (
+                      <span
+                        className={`flex-1 truncate font-mono text-xs ${
+                          w.status === "upcoming" ? "text-muted-foreground" : "text-foreground/90"
+                        }`}
+                      >
+                        {w.team}
+                      </span>
+                    )}
+                    {w.status === "active" && (
+                      <span className="rounded-full bg-positive/15 px-1.5 text-[9px] font-medium text-positive">
+                        진행 중
+                      </span>
+                    )}
+                    {w.status === "ended" && <span className="text-sm font-bold tabular">{w.commits}</span>}
+                    {w.status === "active" && (
+                      <span className="text-sm font-bold tabular text-primary">{w.commits}</span>
+                    )}
+                    {w.status === "upcoming" && (
+                      <span className="text-sm font-bold tabular text-muted-foreground">-</span>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </section>
+
+            {commitKindBreakdown.length > 0 ? (
+              <section className="rounded-xl border border-border/70 bg-card/70 p-4">
+                <h2 className="text-sm font-semibold">커밋 유형 분포</h2>
+                <ul className="mt-3 space-y-1.5">
+                  {commitKindBreakdown.map(([kind, count]) => (
+                    <li key={kind} className="flex items-center justify-between text-xs">
+                      <span className="text-muted-foreground">{commitKindLabels[kind] ?? kind}</span>
+                      <span className="font-semibold tabular">{count}</span>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            ) : null}
+          </div>
         </div>
 
         <div className="mt-4 grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
           <section className="rounded-xl border border-border/70 bg-card/70 p-4">
-            <h2 className="text-sm font-semibold">일별 커밋 추이</h2>
-            <p className="mt-0.5 text-xs text-muted-foreground">
-              {trend[0]?.date && trend.at(-1)?.date ? `${trend[0].date} - ${trend.at(-1)!.date}` : "활동 없음"} · 개인
-              활동
-            </p>
+            <div className="flex items-start justify-between gap-2">
+              <div>
+                <h2 className="text-sm font-semibold">일별 커밋 추이</h2>
+                <p className="mt-0.5 text-xs text-muted-foreground">
+                  {trend[0]?.date && trend.at(-1)?.date ? `${trend[0].date} - ${trend.at(-1)!.date}` : "활동 없음"} ·
+                  개인 활동
+                </p>
+              </div>
+              {trend.length > 0 ? (
+                <div className="shrink-0 text-right text-[11px] text-muted-foreground">
+                  <p className="font-semibold text-foreground tabular">
+                    총 {trend.reduce((sum, day) => sum + day.commits, 0).toLocaleString()}
+                  </p>
+                  {trend.length >= 2 ? (
+                    <p
+                      className={
+                        trend[trend.length - 1]!.commits - trend[trend.length - 2]!.commits >= 0
+                          ? "text-positive"
+                          : "text-destructive"
+                      }
+                    >
+                      전일 대비 {trend[trend.length - 1]!.commits - trend[trend.length - 2]!.commits >= 0 ? "+" : ""}
+                      {trend[trend.length - 1]!.commits - trend[trend.length - 2]!.commits}
+                    </p>
+                  ) : null}
+                </div>
+              ) : null}
+            </div>
             <div className="mt-4">
               <DailyLineChart data={trend} compact />
             </div>
@@ -374,7 +493,9 @@ export default async function ParticipantDetailPage({ params }: { params: Promis
 
           <section className="rounded-xl border border-border/70 bg-card/70 p-4">
             <h2 className="text-sm font-semibold">4주 커밋 캘린더</h2>
-            <p className="mt-0.5 text-xs text-muted-foreground">캠프 기간 동안의 개인 활동 밀도</p>
+            <p className="mt-0.5 text-xs text-muted-foreground">
+              각 칸은 하루를 의미하며, 색이 진할수록 커밋이 많습니다.
+            </p>
             <div className="mt-4">
               <SprintBoard heatmap={participantHeatmap} weeks={config.weeks} currentWeek={snapshot.currentWeek} />
             </div>
@@ -382,7 +503,14 @@ export default async function ParticipantDetailPage({ params }: { params: Promis
         </div>
 
         <section className="mt-4 rounded-xl border border-border/70 bg-card/70 p-4">
-          <h2 className="text-sm font-semibold">시간대별 커밋 패턴</h2>
+          <div className="flex items-start justify-between gap-2">
+            <h2 className="text-sm font-semibold">시간대별 커밋 패턴</h2>
+            {showHourlyChart && mostActiveHour.commits > 0 ? (
+              <span className="shrink-0 rounded-full border border-accent/30 bg-accent/10 px-2 py-0.5 text-[11px] font-medium text-accent">
+                피크 {Number(mostActiveHour.hour)}시
+              </span>
+            ) : null}
+          </div>
           {showHourlyChart ? (
             <>
               <p className="mt-0.5 text-xs text-muted-foreground">KST 기준 · 활동일 평균 커밋 수</p>
@@ -411,11 +539,13 @@ function Stat({
   label,
   value,
   accent,
+  hint,
 }: {
   icon: React.ElementType
   label: string
   value: string
   accent?: string
+  hint?: string
 }) {
   return (
     <div className="rounded-lg border border-border/60 bg-background/40 p-3">
@@ -424,6 +554,7 @@ function Stat({
         {label}
       </div>
       <p className={`mt-1 text-lg font-bold tabular ${accent ?? ""}`}>{value}</p>
+      {hint ? <p className="mt-0.5 text-[10px] text-muted-foreground">{hint}</p> : null}
     </div>
   )
 }

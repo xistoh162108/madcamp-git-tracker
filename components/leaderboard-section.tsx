@@ -11,14 +11,23 @@ import { RankChange } from "@/components/rank-change"
 import { InitialsAvatar } from "@/components/initials-avatar"
 import { Notice } from "@/components/notice"
 import { WeekSelector } from "@/components/week-selector"
-import { individuals, teams, classes, config, classNoticeText, repoNoticeText, fmtRepoShort } from "@/lib/data"
+import {
+  individuals,
+  teams,
+  classes,
+  config,
+  classNoticeText,
+  repoNoticeText,
+  scoringNoticeText,
+  fmtRepoShort,
+} from "@/lib/data"
 import { cn } from "@/lib/utils"
 import type { AggregatedSnapshot } from "@/src/aggregation/aggregate"
 import type { WeekConfig } from "@/src/config/schema"
 
 type RankType = "individual" | "team" | "class"
-type ClassMetric = "averagePerPerson" | "total"
-type TeamMetric = "commits" | "averagePerPerson"
+type ClassMetric = "score" | "averagePerPerson" | "total"
+type TeamMetric = "score" | "commits" | "averagePerPerson"
 
 interface PersonalRow {
   rank: number
@@ -30,6 +39,8 @@ interface PersonalRow {
   class?: string
   team?: string
   commits: number
+  score: number
+  qualifiedCommits: number
   activeDays: number
   lastActivity: string
   honorTitles?: AggregatedSnapshot["rankings"]["personal"][number]["honorTitles"]
@@ -47,6 +58,7 @@ interface TeamRow {
   botCount: number
   unknownCount: number
   commits: number
+  score: number
   activeDays: number
   lastActivity: string
   averagePerPerson?: number
@@ -61,6 +73,7 @@ interface ClassRow {
   activeParticipants: number
   activeRepos: number
   totalCommits: number
+  score: number
   averagePerPerson?: number
 }
 
@@ -85,7 +98,15 @@ function repoMetaFromName(repoName?: string) {
 }
 
 function personalRowsFromSnapshot(snapshot?: AggregatedSnapshot): PersonalRow[] {
-  if (!snapshot) return individuals.map((i) => ({ ...i, name: i.name, username: i.username, isNew: false }))
+  if (!snapshot)
+    return individuals.map((i) => ({
+      ...i,
+      name: i.name,
+      username: i.username,
+      isNew: false,
+      score: i.commits,
+      qualifiedCommits: 0,
+    }))
   return snapshot.rankings.personal.map((entry) => {
     const feedItem = snapshot.activityFeed.find((item) => item.label === entry.meta || item.label === entry.id)
     const repoMeta = repoMetaFromName(feedItem?.repoName)
@@ -98,6 +119,8 @@ function personalRowsFromSnapshot(snapshot?: AggregatedSnapshot): PersonalRow[] 
       class: repoMeta.className,
       team: repoMeta.teamName,
       commits: entry.commits,
+      score: entry.score ?? 0,
+      qualifiedCommits: entry.qualifiedCommits ?? 0,
       activeDays: entry.activeDays,
       lastActivity: formatActivity(entry.lastActivityAt),
       honorTitles: entry.honorTitles,
@@ -114,15 +137,16 @@ function teamRowsFromSnapshot(snapshot?: AggregatedSnapshot): TeamRow[] {
       externalCount: 0,
       botCount: 0,
       unknownCount: 0,
+      score: team.commits,
     }))
   const knownParticipants = new Set(
     snapshot.rankings.personal.flatMap((entry) => [entry.id, entry.meta, entry.label].filter(Boolean) as string[]),
   )
   return snapshot.rankings.teams.map((entry) => {
     const repoItems = snapshot.activityFeed.filter((item) => item.repoName === entry.label)
-    const participantMembers = [
-      ...new Set(repoItems.map((item) => item.label).filter((label) => label && knownParticipants.has(label))),
-    ]
+    const participantMembers = entry.memberBreakdown?.length
+      ? [...entry.memberBreakdown].sort((a, b) => b.score - a.score).map((member) => member.label)
+      : [...new Set(repoItems.map((item) => item.label).filter((label) => label && knownParticipants.has(label)))]
     const externalActors = [
       ...new Set(repoItems.map((item) => item.label).filter((label) => label && !knownParticipants.has(label))),
     ]
@@ -137,6 +161,7 @@ function teamRowsFromSnapshot(snapshot?: AggregatedSnapshot): TeamRow[] {
       botCount: repoItems.filter((item) => item.attributionStatus === "bot_only").length,
       unknownCount: repoItems.filter((item) => item.attributionStatus === "unknown").length,
       commits: entry.commits,
+      score: entry.score ?? 0,
       activeDays: entry.activeDays,
       lastActivity: formatActivity(entry.lastActivityAt),
       averagePerPerson: entry.averagePerPerson,
@@ -150,6 +175,7 @@ function classRowsFromSnapshot(snapshot?: AggregatedSnapshot): ClassRow[] {
       ...classRow,
       isNew: false,
       activeParticipants: classRow.participants,
+      score: classRow.totalCommits,
     }))
   return snapshot.rankings.classes.map((entry) => ({
     rank: entry.rank,
@@ -164,6 +190,7 @@ function classRowsFromSnapshot(snapshot?: AggregatedSnapshot): ClassRow[] {
     }).length,
     activeRepos: snapshot.rankings.teams.filter((team) => team.meta?.startsWith(entry.label)).length,
     totalCommits: entry.commits,
+    score: entry.score ?? 0,
     averagePerPerson: entry.averagePerPerson,
   }))
 }
@@ -200,8 +227,8 @@ export function LeaderboardSection({
 }) {
   const [type, setType] = useState<RankType>("individual")
   const [classFilter, setClassFilter] = useState<string>("all")
-  const [teamMetric, setTeamMetric] = useState<TeamMetric>("averagePerPerson")
-  const [classMetric, setClassMetric] = useState<ClassMetric>(config.defaultClassRankingMetric)
+  const [teamMetric, setTeamMetric] = useState<TeamMetric>("score")
+  const [classMetric, setClassMetric] = useState<ClassMetric>("score")
   const personalData = useMemo(() => personalRowsFromSnapshot(snapshot), [snapshot])
   const teamData = useMemo(() => teamRowsFromSnapshot(snapshot), [snapshot])
   const classData = useMemo(() => classRowsFromSnapshot(snapshot), [snapshot])
@@ -215,9 +242,24 @@ export function LeaderboardSection({
     [classFilter, teamData],
   )
 
+  const teamSummary = useMemo(() => {
+    if (filteredTeams.length === 0) return null
+    const totalCommits = filteredTeams.reduce((sum, t) => sum + t.commits, 0)
+    const avgActiveDays = filteredTeams.reduce((sum, t) => sum + t.activeDays, 0) / filteredTeams.length
+    return { teamCount: filteredTeams.length, totalCommits, avgActiveDays }
+  }, [filteredTeams])
+
   const sortedTeams = useMemo(() => {
     const arr = [...filteredTeams]
-    if (teamMetric === "averagePerPerson") {
+    if (teamMetric === "score") {
+      arr.sort(
+        (a, b) =>
+          b.score - a.score ||
+          b.commits - a.commits ||
+          b.lastActivity.localeCompare(a.lastActivity) ||
+          a.repo.localeCompare(b.repo),
+      )
+    } else if (teamMetric === "averagePerPerson") {
       arr.sort(
         (a, b) =>
           (b.averagePerPerson ?? b.commits / Math.max(1, b.members.length)) -
@@ -240,7 +282,9 @@ export function LeaderboardSection({
 
   const sortedClasses = useMemo(() => {
     const arr = [...classData]
-    if (classMetric === "averagePerPerson") {
+    if (classMetric === "score") {
+      arr.sort((a, b) => b.score - a.score || b.totalCommits - a.totalCommits || a.className.localeCompare(b.className))
+    } else if (classMetric === "averagePerPerson") {
       arr.sort(
         (a, b) =>
           (b.averagePerPerson ?? b.totalCommits / Math.max(1, b.participants)) -
@@ -309,6 +353,15 @@ export function LeaderboardSection({
           {type === "team" && (
             <div className="ml-auto inline-flex rounded-lg border border-border bg-muted/40 p-0.5 text-xs">
               <button
+                onClick={() => setTeamMetric("score")}
+                className={cn(
+                  "rounded-md px-2.5 py-1 font-medium transition-colors",
+                  teamMetric === "score" ? "bg-background text-foreground shadow-sm" : "text-muted-foreground",
+                )}
+              >
+                점수
+              </button>
+              <button
                 onClick={() => setTeamMetric("averagePerPerson")}
                 className={cn(
                   "rounded-md px-2.5 py-1 font-medium transition-colors",
@@ -333,6 +386,15 @@ export function LeaderboardSection({
 
           {type === "class" && (
             <div className="ml-auto inline-flex rounded-lg border border-border bg-muted/40 p-0.5 text-xs">
+              <button
+                onClick={() => setClassMetric("score")}
+                className={cn(
+                  "rounded-md px-2.5 py-1 font-medium transition-colors",
+                  classMetric === "score" ? "bg-background text-foreground shadow-sm" : "text-muted-foreground",
+                )}
+              >
+                평균 점수
+              </button>
               <button
                 onClick={() => setClassMetric("averagePerPerson")}
                 className={cn(
@@ -359,17 +421,31 @@ export function LeaderboardSection({
       </div>
 
       {type === "team" ? (
-        <RankingRule>
-          {teamMetric === "commits"
-            ? "총 커밋 기준 정렬 · 동점은 공동 순위로 표시하고 보조 기준은 인당 평균, 최근 활동순입니다."
-            : "인당 평균 기준 정렬 · 동점은 공동 순위로 표시하고 보조 기준은 총 커밋, 최근 활동순입니다."}
-        </RankingRule>
+        <>
+          <RankingRule>
+            {teamMetric === "score"
+              ? "개발 리듬 점수 기준 정렬 · 커밋 크기·메시지 품질·꾸준함을 반영합니다. 동점은 공동 순위로 표시합니다."
+              : teamMetric === "commits"
+                ? "총 커밋 기준 정렬 · 동점은 공동 순위로 표시하고 보조 기준은 인당 평균, 최근 활동순입니다."
+                : "인당 평균 기준 정렬 · 동점은 공동 순위로 표시하고 보조 기준은 총 커밋, 최근 활동순입니다."}
+          </RankingRule>
+          {teamSummary ? (
+            <p className="mt-2 text-[11px] text-muted-foreground">
+              이번 주 총 <span className="font-semibold text-foreground tabular">{teamSummary.teamCount}</span>팀 · 총{" "}
+              <span className="font-semibold text-foreground tabular">{teamSummary.totalCommits.toLocaleString()}</span>
+              커밋 · 평균 활동일{" "}
+              <span className="font-semibold text-foreground tabular">{teamSummary.avgActiveDays.toFixed(1)}</span>일
+            </p>
+          ) : null}
+        </>
       ) : null}
       {type === "class" ? (
         <RankingRule>
-          {classMetric === "averagePerPerson"
-            ? "등록 참가자 수 기준 인당 평균으로 정렬합니다. 동점은 공동 순위로 표시하고 보조 기준은 총 커밋입니다."
-            : "총 커밋 기준 정렬 · 동점은 공동 순위로 표시하고 보조 기준은 인당 평균입니다."}
+          {classMetric === "score"
+            ? "등록 참가자 기준 평균 개발 리듬 점수로 정렬합니다. 동점은 공동 순위로 표시하고 보조 기준은 총 커밋입니다."
+            : classMetric === "averagePerPerson"
+              ? "등록 참가자 수 기준 인당 평균으로 정렬합니다. 동점은 공동 순위로 표시하고 보조 기준은 총 커밋입니다."
+              : "총 커밋 기준 정렬 · 동점은 공동 순위로 표시하고 보조 기준은 인당 평균입니다."}
         </RankingRule>
       ) : null}
 
@@ -389,7 +465,8 @@ export function LeaderboardSection({
         </motion.div>
       </AnimatePresence>
 
-      <div className="mt-4 border-t border-border/60 pt-3">
+      <div className="mt-4 space-y-2 border-t border-border/60 pt-3">
+        <Notice>{scoringNoticeText}</Notice>
         {type === "class" ? <Notice>{classNoticeText}</Notice> : <Notice>{repoNoticeText}</Notice>}
       </div>
     </motion.section>
@@ -429,16 +506,26 @@ function RowShell({ children, href, index = 0 }: { children: React.ReactNode; hr
   )
 }
 
-function RankTierBadge({ rank, rising = false, totalCount }: { rank: number; rising?: boolean; totalCount?: number }) {
+function RankTierBadge({
+  rank,
+  rankDelta = 0,
+  totalCount,
+}: {
+  rank: number
+  /** prevRank - rank; positive means the row moved up. Only a genuinely notable jump earns a badge. */
+  rankDelta?: number
+  totalCount?: number
+}) {
   if (totalCount !== undefined && totalCount < 5 && rank > 1) return null
   const tier =
     rank === 1
       ? { label: "선두 그룹", icon: Crown, cls: "border-gold/25 bg-gold/10 text-gold" }
       : rank <= 3
         ? { label: "상위권", icon: Medal, cls: "border-primary/25 bg-primary/10 text-primary" }
-        : rising
+        : rankDelta >= 3
           ? { label: "상승 중", icon: ArrowUpRight, cls: "border-positive/25 bg-positive/10 text-positive" }
-          : { label: "추격 중", icon: ArrowUpRight, cls: "border-border bg-muted/40 text-muted-foreground" }
+          : null
+  if (!tier) return null
   return (
     <span
       className={cn(
@@ -452,17 +539,17 @@ function RankTierBadge({ rank, rising = false, totalCount }: { rank: number; ris
   )
 }
 
-function commitGapLabel(count: number) {
-  return `선두까지 ${count}커밋`
+function scoreGapLabel(gap: number) {
+  return `선두까지 ${gap.toFixed(1)}점`
 }
 
 function MomentumBar({ value, max, tone = "primary" }: { value: number; max: number; tone?: "primary" | "gold" }) {
   const width = `${Math.max(6, Math.round((value / Math.max(1, max)) * 100))}%`
   return (
-    <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-muted/50">
+    <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-muted/30">
       <motion.div
         className={cn(
-          "progress-glint relative h-full overflow-hidden rounded-full",
+          "progress-glint relative h-full overflow-hidden rounded-full opacity-70",
           tone === "gold" ? "bg-gold" : "bg-primary",
         )}
         initial={{ width: 0 }}
@@ -473,27 +560,25 @@ function MomentumBar({ value, max, tone = "primary" }: { value: number; max: num
   )
 }
 
-function LeaderRatioLabel({ ratio, status, className }: { ratio: number; status: string; className?: string }) {
-  return (
-    <div className={cn("mt-1 flex items-center justify-between text-[10px] text-muted-foreground", className)}>
-      <span>선두 대비 {ratio}%</span>
-      <span>{status}</span>
-    </div>
-  )
+function LeaderGapLabel({ status, className }: { status: string; className?: string }) {
+  return <p className={cn("mt-1 text-[10px] text-muted-foreground", className)}>{status}</p>
 }
 
 function IndividualRows({ data }: { data: PersonalRow[] }) {
-  const maxCommits = Math.max(1, ...data.map((item) => item.commits))
-  const leaderCommits = maxCommits
-  const commitCounts = data.reduce<Map<number, number>>((map, item) => {
-    map.set(item.commits, (map.get(item.commits) ?? 0) + 1)
+  const maxScore = Math.max(1, ...data.map((item) => item.score))
+  const leaderScore = maxScore
+  // scores are floats, so round before using as a tie-detection key to avoid spurious near-miss mismatches
+  const scoreCounts = data.reduce<Map<number, number>>((map, item) => {
+    const key = Math.round(item.score * 100)
+    map.set(key, (map.get(key) ?? 0) + 1)
     return map
   }, new Map())
-  let previousCommits: number | null = null
+  let previousScore: number | null = null
   let previousRank = 0
   const ranked = data.map((item, index) => {
-    const displayRank = previousCommits === item.commits ? previousRank : index + 1
-    previousCommits = item.commits
+    const scoreKey = Math.round(item.score * 100)
+    const displayRank = previousScore === scoreKey ? previousRank : index + 1
+    previousScore = scoreKey
     previousRank = displayRank
     return { ...item, displayRank }
   })
@@ -501,16 +586,29 @@ function IndividualRows({ data }: { data: PersonalRow[] }) {
     <>
       {ranked.map((i, index) => {
         const rank = i.displayRank ?? i.rank
-        const gapToLeader = Math.max(0, leaderCommits - i.commits)
-        const leaderRatio = Math.round((i.commits / Math.max(1, leaderCommits)) * 100)
-        const tied = (commitCounts.get(i.commits) ?? 0) > 1
-        const gapToPrevRank = index > 0 ? ranked[index - 1]!.commits - i.commits : 0
-        const isHotRace = !tied && rank > 1 && gapToPrevRank > 0 && gapToPrevRank <= 2
+        const gapToLeader = Math.max(0, leaderScore - i.score)
+        const tied = (scoreCounts.get(Math.round(i.score * 100)) ?? 0) > 1
+        const gapToPrevRank = index > 0 ? ranked[index - 1]!.score - i.score : 0
+        // Scores cluster tightly in this system, so a flat point threshold flagged nearly every row as
+        // "close". Only call out a race when it's both small in absolute terms and small relative to the
+        // trailing person's own score, and only within the top ranks that are actually worth watching.
+        const isHotRace =
+          !tied && rank > 1 && rank <= 10 && gapToPrevRank > 0 && gapToPrevRank <= Math.max(0.2, i.score * 0.05)
+        const gapLabel = isHotRace
+          ? `🔥 앞순위와 ${gapToPrevRank.toFixed(1)}점 차이`
+          : gapToLeader === 0
+            ? "선두 그룹"
+            : scoreGapLabel(gapToLeader)
+        const streakLabel = i.activityStats
+          ? `${i.activityStats.currentDayStreak}일 연속 · 집중 ${i.activityStats.currentHourStreak}h`
+          : null
         return (
           <RowShell key={i.username} href={`/participant/${i.username}`} index={index}>
             <RankMedal
               rank={rank}
-              className={isHotRace ? "animate-pulse ring-2 ring-orange-400/70 shadow-[0_0_10px_rgba(251,146,60,0.5)]" : undefined}
+              className={
+                isHotRace ? "animate-pulse ring-2 ring-orange-400/70 shadow-[0_0_10px_rgba(251,146,60,0.5)]" : undefined
+              }
             />
             <InitialsAvatar name={i.name} githubUsername={i.username} size="sm" />
             <div className="min-w-0 flex-1">
@@ -525,65 +623,29 @@ function IndividualRows({ data }: { data: PersonalRow[] }) {
                   <motion.span
                     animate={{ opacity: [1, 0.55, 1] }}
                     transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
-                    className="hidden shrink-0 items-center gap-0.5 rounded border border-orange-400/40 bg-orange-400/10 px-1.5 py-0.5 text-[10px] font-bold text-orange-400 sm:flex"
+                    className="hidden shrink-0 items-center rounded border border-orange-400/40 bg-orange-400/10 p-1 text-orange-400 sm:flex"
                   >
                     <Flame className="h-3 w-3" />
-                    접전
                   </motion.span>
                 ) : null}
                 <span className="min-w-0 shrink truncate text-sm font-semibold">{i.name}</span>
                 <span className="hidden min-w-0 shrink truncate font-mono text-xs text-muted-foreground sm:inline">
                   @{i.username}
                 </span>
-                <RankTierBadge rank={rank} rising={i.prevRank > i.rank} />
+                <RankTierBadge rank={rank} rankDelta={i.prevRank - i.rank} />
               </div>
-              <p className="min-w-0 truncate text-[11px] text-muted-foreground sm:hidden">
-                {[
-                  i.class,
-                  i.team ?? (i.class ? null : "GitHub 활동"),
-                  isHotRace
-                    ? `🔥 앞순위와 ${gapToPrevRank}커밋 차이`
-                    : gapToLeader === 0
-                      ? "선두 그룹"
-                      : commitGapLabel(gapToLeader),
-                ]
-                  .filter(Boolean)
-                  .join(" · ")}
+              <p className="mt-0.5 min-w-0 truncate text-[11px] text-muted-foreground">
+                {[i.class, i.team ?? (i.class ? null : "GitHub 활동")].filter(Boolean).join(" · ")}
               </p>
-              <div className="hidden items-center gap-2 text-[11px] text-muted-foreground sm:flex">
-                {i.class ? <span>{i.class}</span> : null}
-                {i.class && i.team ? <span className="text-border">·</span> : null}
-                {i.team ? <span className="font-mono">{i.team}</span> : <span>GitHub 활동</span>}
-                <span className="text-border">·</span>
-                {isHotRace ? (
-                  <span className="font-semibold text-orange-400">🔥 앞순위와 {gapToPrevRank}커밋 차이</span>
-                ) : gapToLeader === 0 ? (
-                  <span className="text-gold">선두 그룹</span>
-                ) : (
-                  <span>{commitGapLabel(gapToLeader)}</span>
-                )}
-                {i.activityStats ? (
-                  <>
-                    <span className="text-border">·</span>
-                    <span className="text-positive">{i.activityStats.currentDayStreak}일 streak</span>
-                    <span className="text-border">·</span>
-                    <span className="text-primary">{i.activityStats.currentHourStreak}h focus</span>
-                  </>
-                ) : null}
-              </div>
-              <LeaderRatioLabel
-                ratio={leaderRatio}
-                status={gapToLeader === 0 ? "1위와 동률" : commitGapLabel(gapToLeader)}
-              />
-              <MomentumBar value={i.commits} max={maxCommits} tone={rank === 1 ? "gold" : "primary"} />
+              <p className="mt-0.5 min-w-0 truncate text-[11px] text-muted-foreground">
+                {[gapLabel, streakLabel].filter(Boolean).join(" · ")}
+              </p>
+              <MomentumBar value={i.score} max={maxScore} tone={rank === 1 ? "gold" : "primary"} />
             </div>
-            <div className="hidden w-24 shrink-0 text-right sm:block">
-              <p className="text-xs font-medium text-foreground">활동 {i.activeDays}일</p>
-              <p className="text-[11px] text-muted-foreground">{i.lastActivity}</p>
-            </div>
-            <div className="w-12 shrink-0 text-right sm:w-16">
-              <p className="text-base font-bold tabular">{i.commits}</p>
-              <p className="text-[10px] text-muted-foreground">commits</p>
+            <div className="w-[68px] shrink-0 text-right sm:w-24">
+              <p className="text-lg font-bold tabular">{i.score.toFixed(1)}</p>
+              <p className="whitespace-nowrap text-[10px] text-muted-foreground">{i.commits} commits</p>
+              <p className="whitespace-nowrap text-[10px] text-muted-foreground">활동 {i.activeDays}일</p>
             </div>
             <RankChange rank={i.rank} prevRank={i.prevRank} isNew={i.isNew} className="w-8 shrink-0 justify-end" />
             <ChevronRight className="hidden h-4 w-4 shrink-0 text-muted-foreground/50 transition-colors group-hover:text-primary sm:block" />
@@ -596,28 +658,32 @@ function IndividualRows({ data }: { data: PersonalRow[] }) {
 
 function TeamRows({ data, metric }: { data: TeamRow[]; metric: TeamMetric }) {
   const ranked = metricRank(data, (item) =>
-    metric === "commits" ? item.commits : (item.averagePerPerson ?? item.commits / Math.max(1, item.members.length)),
+    metric === "score"
+      ? item.score
+      : metric === "commits"
+        ? item.commits
+        : (item.averagePerPerson ?? item.commits / Math.max(1, item.members.length)),
   )
   const maxValue = Math.max(1, ...ranked.map((entry) => entry.value))
-  const leaderCommits = Math.max(0, ...data.map((item) => item.commits))
   return (
     <>
       {ranked.map(({ item: t, value, rank, tied }, index) => {
         const avgValue = t.averagePerPerson ?? t.commits / Math.max(1, t.members.length)
         const avg = avgValue.toFixed(1)
-        const mainValue = metric === "commits" ? t.commits.toLocaleString() : avg
-        const mainLabel = metric === "commits" ? "commits" : "commits/person"
-        const gapToLeader = Math.max(0, leaderCommits - t.commits)
-        const ratio = Math.round((value / Math.max(1, maxValue)) * 100)
+        const mainValue =
+          metric === "score" ? t.score.toFixed(1) : metric === "commits" ? t.commits.toLocaleString() : avg
+        const mainLabel = metric === "score" ? "점수" : metric === "commits" ? "commits" : "commits/person"
         const memberText = t.members.length ? t.members.slice(0, 3).join(", ") : "참가자 활동 없음"
         const status =
-          ratio === 100
+          rank === 1
             ? tied
               ? "공동 선두"
               : "선두"
-            : metric === "commits"
-              ? commitGapLabel(gapToLeader)
-              : `선두 기준까지 ${(maxValue - value).toFixed(1)}`
+            : metric === "score"
+              ? `1위와 ${(maxValue - value).toFixed(1)}점 차이`
+              : metric === "commits"
+                ? `1위와 ${Math.round(maxValue - value)}커밋 차이`
+                : `1위와 ${(maxValue - value).toFixed(1)} 차이`
         return (
           <RowShell key={t.repo} href={`/team/${fmtRepoShort(t.repo)}`} index={index}>
             <RankMedal rank={rank} />
@@ -638,23 +704,13 @@ function TeamRows({ data, metric }: { data: TeamRow[]; metric: TeamMetric }) {
               <div className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] text-muted-foreground">
                 <span className="truncate">{memberText}</span>
                 {t.externalCount > 0 ? <span className="text-accent">기타 활동 {t.externalCount}명</span> : null}
-                {t.botCount > 0 ? <span className="text-primary">자동화 {t.botCount}</span> : null}
+                {t.botCount > 0 ? <span className="text-primary">자동화 커밋 {t.botCount}</span> : null}
                 {t.unknownCount > 0 ? <span className="text-destructive">확인 필요 {t.unknownCount}</span> : null}
               </div>
-              <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] text-muted-foreground">
-                {metric === "commits" ? (
-                  <span>인당 평균 {avg}</span>
-                ) : (
-                  <span>총 {t.commits.toLocaleString()} commits</span>
-                )}
-                <span className="text-border">·</span>
-                <span>활동일 {t.activeDays}일</span>
-                <span className="text-border">·</span>
-                <span>최근 {t.lastActivity}</span>
-                <span className="text-border">·</span>
-                <span>{status}</span>
-              </div>
-              <LeaderRatioLabel ratio={ratio} status={status} />
+              <p className="mt-1 truncate text-[11px] text-muted-foreground">
+                총 {t.commits.toLocaleString()} commits · 인당 평균 {avg} · 활동일 {t.activeDays}일
+              </p>
+              <LeaderGapLabel status={status} />
               <MomentumBar value={value} max={maxValue} tone={rank === 1 ? "gold" : "primary"} />
             </div>
             <div className="w-16 shrink-0 text-right sm:w-24">
@@ -672,9 +728,11 @@ function TeamRows({ data, metric }: { data: TeamRow[]; metric: TeamMetric }) {
 
 function ClassRows({ data, metric }: { data: ClassRow[]; metric: ClassMetric }) {
   const ranked = metricRank(data, (item) =>
-    metric === "averagePerPerson"
-      ? (item.averagePerPerson ?? item.totalCommits / Math.max(1, item.participants))
-      : item.totalCommits,
+    metric === "score"
+      ? item.score
+      : metric === "averagePerPerson"
+        ? (item.averagePerPerson ?? item.totalCommits / Math.max(1, item.participants))
+        : item.totalCommits,
   )
   const maxValue = Math.max(1, ...ranked.map((entry) => entry.value))
   return (
@@ -682,17 +740,25 @@ function ClassRows({ data, metric }: { data: ClassRow[]; metric: ClassMetric }) 
       {ranked.map(({ item: c, value, rank, tied }, index) => {
         const avgValue = c.averagePerPerson ?? c.totalCommits / Math.max(1, c.participants)
         const avg = avgValue.toFixed(1)
-        const mainValue = metric === "averagePerPerson" ? avg : c.totalCommits.toLocaleString()
-        const mainLabel = metric === "averagePerPerson" ? "commits/person" : "총 커밋"
-        const ratio = Math.round((value / Math.max(1, maxValue)) * 100)
+        const mainValue =
+          metric === "score"
+            ? c.score.toFixed(1)
+            : metric === "averagePerPerson"
+              ? avg
+              : c.totalCommits.toLocaleString()
+        const mainLabel =
+          metric === "score" ? "평균 점수" : metric === "averagePerPerson" ? "commits/person" : "총 커밋"
+        const activityRate = Math.round((c.activeParticipants / Math.max(1, c.participants)) * 100)
         const status =
-          ratio === 100
+          rank === 1
             ? tied
               ? "공동 선두"
               : "선두"
-            : metric === "averagePerPerson"
-              ? `선두 기준까지 ${(maxValue - value).toFixed(1)}`
-              : commitGapLabel(Math.max(0, maxValue - value))
+            : metric === "score"
+              ? `1위와 ${(maxValue - value).toFixed(1)}점 차이`
+              : metric === "averagePerPerson"
+                ? `1위와 ${(maxValue - value).toFixed(1)} 차이`
+                : `1위와 ${Math.round(maxValue - value)}커밋 차이`
         return (
           <RowShell key={c.className} index={index}>
             <RankMedal rank={rank} />
@@ -707,15 +773,14 @@ function ClassRows({ data, metric }: { data: ClassRow[]; metric: ClassMetric }) 
                 <span className="text-sm font-semibold">{c.className}</span>
                 <RankTierBadge rank={rank} totalCount={ranked.length} />
               </div>
-              <p className="mt-0.5 text-[11px] text-muted-foreground">
-                참가자 {c.participants}명 · 활동 참가자 {c.activeParticipants}명 · 활성 repo {c.activeRepos}개
+              <p className="mt-0.5 truncate text-[11px] text-muted-foreground">
+                참가자 {c.participants}명 · 활동률 {activityRate}% ({c.activeParticipants}/{c.participants}) · 활성 repo{" "}
+                {c.activeRepos}개
               </p>
-              <p className="mt-1 text-[11px] text-muted-foreground">
-                {metric === "averagePerPerson"
-                  ? `총 ${c.totalCommits.toLocaleString()} commits · 등록 참가자 기준 평균`
-                  : `인당 평균 ${avg} · 등록 참가자 기준`}
+              <p className="mt-1 truncate text-[11px] text-muted-foreground">
+                총 {c.totalCommits.toLocaleString()} commits · 인당 평균 {avg}
               </p>
-              <LeaderRatioLabel ratio={ratio} status={status} />
+              <LeaderGapLabel status={status} />
               <MomentumBar value={value} max={maxValue} tone={rank === 1 ? "gold" : "primary"} />
             </div>
             <div className="w-16 shrink-0 text-right sm:w-28">

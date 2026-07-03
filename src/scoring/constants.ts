@@ -1,0 +1,99 @@
+import type { CommitKind } from "../aggregation/types"
+
+export interface MaxBand {
+  max: number
+  value: number
+}
+
+/** First band whose `max` is >= value wins (bands must be sorted ascending by `max`). */
+export function lookupMaxBand(value: number, bands: MaxBand[]): number {
+  for (const band of bands) {
+    if (value <= band.max) return band.value
+  }
+  return bands[bands.length - 1]!.value
+}
+
+export const SIZE_BANDS: MaxBand[] = [
+  { max: 0, value: 0.0 },
+  { max: 2, value: 0.2 },
+  { max: 9, value: 0.6 },
+  { max: 300, value: 1.0 },
+  { max: 800, value: 0.8 },
+  { max: 1500, value: 0.4 },
+  { max: Infinity, value: 0.15 },
+]
+
+export const FILE_BANDS: MaxBand[] = [
+  { max: 0, value: 0.0 },
+  { max: 8, value: 1.0 },
+  { max: 15, value: 0.8 },
+  { max: 30, value: 0.4 },
+  { max: Infinity, value: 0.15 },
+]
+
+export const MESSAGE_SCORE = {
+  conventional: 1.1,
+  clear: 1.0,
+  long: 0.9,
+  short: 0.5,
+  vague: 0.3,
+}
+
+export const QUALIFIED_MESSAGE_SCORE_CEILING = 0.5
+
+// A commit with any real change (i.e. not classified "empty") always earns at least this much,
+// regardless of how the multiplicative bands above work out -- 0 is reserved for commits with no
+// actual content, not for commits that are merely large or poorly shaped.
+export const MERGE_MIN_SCORE = 0.1
+export const NONEMPTY_MIN_SCORE = 0.2
+
+export const TYPE_FACTORS: Record<CommitKind, number> = {
+  normal: 1.0,
+  merge: 0.0,
+  empty: 0.0,
+  conflict_resolve: 0.4,
+  revert: 0.5,
+  dependency_update: 0.6,
+  lockfile_only: 0.15,
+  formatting: 0.4,
+  generated_files: 0.1,
+  asset_only: 0.4,
+  rename_only: 0.6,
+}
+
+export const QUALIFIED_COMMIT_MIN_SCORE = 0.6
+
+export const DAILY_COMMIT_CAP = 10
+
+export const RHYTHM_BONUS_BANDS: MaxBand[] = [
+  { max: 0, value: 0 },
+  { max: 1, value: 0.3 },
+  { max: 3, value: 0.8 },
+  { max: 6, value: 1.5 },
+  { max: 10, value: 2.0 },
+  { max: 14, value: 1.5 },
+  { max: Infinity, value: 0.8 },
+]
+
+export const SMALL_DIFF_PENALTY = { threshold: 0.5, multiplier: 0.7 }
+export const VAGUE_MESSAGE_PENALTY = { threshold: 0.5, multiplier: 0.8 }
+
+export const ACTIVE_DAY_THRESHOLD = 2.0
+
+export const CONSISTENCY_BONUS_BANDS: MaxBand[] = [
+  { max: 1, value: 0 },
+  { max: 2, value: 1 },
+  { max: 3, value: 2 },
+  { max: 4, value: 3 },
+  { max: 5, value: 4 },
+  { max: Infinity, value: 5 },
+]
+
+export const TEAM_SIZE_EXPONENT = 0.7
+
+export const BALANCE_FACTOR_BANDS: Array<{ min: number; value: number }> = [
+  { min: 0.7, value: 1.0 },
+  { min: 0.5, value: 0.95 },
+  { min: 0.3, value: 0.9 },
+  { min: -Infinity, value: 0.8 },
+]

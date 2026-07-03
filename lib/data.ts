@@ -510,6 +510,8 @@ export const repoNoticeText =
 export const contributionNoticeText =
   "커밋 수는 GitHub 활동량을 보여주는 참고 지표입니다. 전체 커밋과 개인 랭킹 합계는 집계 방식에 따라 다를 수 있습니다."
 export const classNoticeText =
-  "분반 랭킹은 기본적으로 등록 참가자 수 기준 인당 평균으로 표시됩니다. 총합 기준으로도 전환할 수 있습니다."
+  "인당 평균·평균 점수는 등록 참가자 수 기준이며, 활동 참가자 수 기준 평균과는 다를 수 있습니다."
 export const lineNoticeText = "변경 line 수는 자동 생성 파일과 대용량 파일을 제외한 참고 지표입니다."
 export const kstNoticeText = "주차와 날짜는 한국 시간으로 표시됩니다."
+export const scoringNoticeText =
+  "이 점수는 평가가 아니라 재미로 보는 참고 지표예요. 적절한 크기의 커밋을 명확한 메시지로 여러 번 남기고 꾸준히 개발할수록 올라갑니다. 병합이나 큰 커밋처럼 관리성이 강한 커밋은 조금 낮게 반영되지만, 실제 작업이 담긴 커밋은 항상 최소한의 점수를 받아요."

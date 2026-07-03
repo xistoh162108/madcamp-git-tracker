@@ -222,5 +222,11 @@ function dedupeMatches(matches: Array<{ participantId: string; matchSource: Matc
 }
 
 function identityLabel(identity: CommitAuthorInput): string {
-  return identity.login ?? identity.email ?? identity.name!
+  const candidates = [identity.name, identity.email, identity.login].filter(Boolean) as string[]
+  return (
+    candidates.find((candidate) => botPatterns.some((pattern) => pattern.test(candidate))) ??
+    identity.login ??
+    identity.email ??
+    identity.name!
+  )
 }

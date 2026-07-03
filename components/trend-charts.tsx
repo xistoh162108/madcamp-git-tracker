@@ -32,7 +32,7 @@ function SprintHeatmap({
       className="rounded-xl border border-border/70 bg-card/70 p-4"
     >
       <h3 className="text-sm font-semibold">4주 스프린트 보드</h3>
-      <p className="mt-0.5 text-xs text-muted-foreground">캠프 기간 동안의 날짜별 활동 밀도</p>
+      <p className="mt-0.5 text-xs text-muted-foreground">각 칸은 하루를 의미하며, 색이 진할수록 커밋이 많습니다.</p>
       <div className="mt-4">
         <SprintBoard heatmap={normalizedHeatmap(snapshot)} weeks={weeks ?? []} currentWeek={currentWeek ?? null} />
       </div>
@@ -54,7 +54,10 @@ export function TrendCharts({
   const firstDay = trend[0]?.date
   const lastDay = trend.at(-1)?.date
   const trendSubtitle = firstDay && lastDay ? `${firstDay} - ${lastDay} · 전체 팀 합산` : "전체 팀 합산"
+  const trendTotal = trend.reduce((sum, day) => sum + day.commits, 0)
+  const dayOverDay = trend.length >= 2 ? trend[trend.length - 1]!.commits - trend[trend.length - 2]!.commits : null
   const hourly = normalizedHourly(snapshot)
+  const peakHour = hourly.reduce((best, item) => (item.commits > best.commits ? item : best), hourly[0])
 
   return (
     <div className="grid gap-4 lg:grid-cols-2">
@@ -65,8 +68,21 @@ export function TrendCharts({
         transition={{ duration: 0.35 }}
         className="rounded-xl border border-border/70 bg-card/70 p-4"
       >
-        <h3 className="text-sm font-semibold">일별 커밋 추이</h3>
-        <p className="mt-0.5 text-xs text-muted-foreground">{trendSubtitle}</p>
+        <div className="flex items-start justify-between gap-2">
+          <div>
+            <h3 className="text-sm font-semibold">일별 커밋 추이</h3>
+            <p className="mt-0.5 text-xs text-muted-foreground">{trendSubtitle}</p>
+          </div>
+          <div className="shrink-0 text-right text-[11px] text-muted-foreground">
+            <p className="font-semibold text-foreground tabular">총 {trendTotal.toLocaleString()}</p>
+            {dayOverDay !== null ? (
+              <p className={dayOverDay >= 0 ? "text-positive" : "text-destructive"}>
+                전일 대비 {dayOverDay >= 0 ? "+" : ""}
+                {dayOverDay}
+              </p>
+            ) : null}
+          </div>
+        </div>
         <div className="mt-4 h-52">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={trend} margin={{ top: 4, right: 8, left: -16, bottom: 0 }}>
@@ -89,8 +105,19 @@ export function TrendCharts({
         transition={{ duration: 0.35 }}
         className="rounded-xl border border-border/70 bg-card/70 p-4 lg:col-span-2"
       >
-        <h3 className="text-sm font-semibold">시간대별 커밋 분포</h3>
-        <p className="mt-0.5 text-xs text-muted-foreground">KST 기준 · 현재 선택한 기간의 시간대별 평균 커밋 수</p>
+        <div className="flex items-start justify-between gap-2">
+          <div>
+            <h3 className="text-sm font-semibold">시간대별 커밋 분포</h3>
+            <p className="mt-0.5 text-xs text-muted-foreground">
+              시간대 패턴 분석 · KST 기준 · 현재 선택한 기간의 시간대별 평균 커밋 수
+            </p>
+          </div>
+          {peakHour && peakHour.commits > 0 ? (
+            <span className="shrink-0 rounded-full border border-accent/30 bg-accent/10 px-2 py-0.5 text-[11px] font-medium text-accent">
+              피크 {Number(peakHour.hour)}시
+            </span>
+          ) : null}
+        </div>
         <div className="mt-4">
           <HourlyBarChart data={hourly} name="평균 커밋 수" />
         </div>

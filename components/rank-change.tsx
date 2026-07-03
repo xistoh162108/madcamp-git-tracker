@@ -53,7 +53,11 @@ export function RankChange({ rank, prevRank, isNew, className }: RankChangeProps
       )}
       aria-label={up ? `순위 ${delta}단계 상승` : `순위 ${Math.abs(delta)}단계 하락`}
     >
-      {up ? <ArrowUp className={big ? "h-3.5 w-3.5" : "h-3 w-3"} /> : <ArrowDown className={big ? "h-3.5 w-3.5" : "h-3 w-3"} />}
+      {up ? (
+        <ArrowUp className={big ? "h-3.5 w-3.5" : "h-3 w-3"} />
+      ) : (
+        <ArrowDown className={big ? "h-3.5 w-3.5" : "h-3 w-3"} />
+      )}
       {Math.abs(delta)}
     </span>
   )

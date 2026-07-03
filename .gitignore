@@ -24,8 +24,11 @@ yarn-error.log*
 
 # local runtime cache / scratch
 .cache/
+/coverage/
 Proceed with design.zip
 /deploy.log
+/check-hero.mjs
+/image.png
 
 # current token lacks `workflow` scope to push these; add manually via GitHub UI or a scoped token
 .github/workflows/*.yml

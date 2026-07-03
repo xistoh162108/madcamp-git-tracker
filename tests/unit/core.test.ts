@@ -13,11 +13,7 @@ import { normalizeGithubUsername, ParticipantSchema } from "../../src/participan
 import { readSnapshotFallback, writeSnapshotSafely } from "../../src/snapshot/fallback"
 import { analyzeCommitAttribution, mapCommitAuthor, parseCoAuthors } from "../../src/sync/map-commit-author"
 import { readSyncState, writeSyncState } from "../../src/sync/sync-state"
-import {
-  activityStatsForCommits,
-  aggregateSnapshot,
-  dedupeCommits,
-} from "../../src/aggregation/aggregate"
+import { activityStatsForCommits, aggregateSnapshot, dedupeCommits } from "../../src/aggregation/aggregate"
 import type { CommitRecord } from "../../src/aggregation/types"
 import { runGithubSync } from "../../src/sync/sync-runner"
 
@@ -743,10 +739,13 @@ describe("aggregation", () => {
     })
     expect(snapshot.summary.totalCommits).toBe(5)
     expect(snapshot.summary.mappedCommits).toBe(3)
-    expect(snapshot.rankings.personal[0]?.commits).toBe(2)
+    // personal[0] is no longer necessarily the highest raw commit count -- ranking now sorts by
+    // score, so look up 김가온 (p1) directly to confirm the underlying commit count is still correct.
+    expect(snapshot.rankings.personal.find((entry) => entry.label === "김가온")?.commits).toBe(2)
     expect(snapshot.rankings.personal.some((entry) => entry.label === "unknown-participant")).toBe(true)
-    expect(snapshot.rankings.teams[0]?.commits).toBe(4)
-    expect(snapshot.rankings.classes[0]?.averagePerPerson).toBe(4)
+    expect(snapshot.rankings.teams.find((entry) => entry.id === "2026-summer-w2-c3-07")?.commits).toBe(4)
+    // classes now rank by average score too, so look up the specific class rather than assume position 0
+    expect(snapshot.rankings.classes.find((entry) => entry.id === "3")?.averagePerPerson).toBe(4)
     expect(snapshot.activityFeed[0]?.summary).not.toContain("<")
     expect(snapshot.heatmap.map((item) => item.date)).toEqual([...snapshot.heatmap.map((item) => item.date)].sort())
     expect(snapshot.unknownUsers).toHaveLength(1)

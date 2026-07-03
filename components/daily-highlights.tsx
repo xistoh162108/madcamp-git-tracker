@@ -17,7 +17,7 @@ export function DailyHighlights({ snapshot }: { snapshot?: AggregatedSnapshot })
       icon: GitCommitHorizontal,
       label: "오늘 커밋",
       value: `${todayCommits}개`,
-      hint: `최근 ${config.dailyWindowHours}시간 기준`,
+      hint: `최근 ${config.dailyWindowHours}시간`,
       accent: "text-primary",
     },
     {
@@ -29,9 +29,9 @@ export function DailyHighlights({ snapshot }: { snapshot?: AggregatedSnapshot })
     },
     {
       icon: GitCommitHorizontal,
-      label: "최근 반영",
+      label: "이번 주 반영",
       value: `${recentCommits}개`,
-      hint: `마지막 업데이트 ${snapshot?.generatedAtKst ?? "-"}`,
+      hint: snapshot?.generatedAtKst ? `${snapshot.generatedAtKst} 업데이트` : "-",
       accent: "text-accent",
     },
   ]
@@ -46,31 +46,27 @@ export function DailyHighlights({ snapshot }: { snapshot?: AggregatedSnapshot })
       <h3 className="flex items-center gap-1.5 text-sm font-semibold">
         <TrendingUp className="h-4 w-4 text-positive" />
         {config.dailyHighlightsLabel}
-        <span className="ml-1 rounded-full bg-muted/60 px-1.5 py-0.5 text-[10px] font-normal text-muted-foreground">
-          최근 {config.dailyWindowHours}시간
+        <span className="rounded-full border border-border/60 bg-muted/40 px-1.5 py-0.5 text-[10px] font-normal text-muted-foreground">
+          live
         </span>
       </h3>
-      <ul className="mt-3 grid gap-2">
+      <ul className="mt-2.5 space-y-1">
         {items.map((it, index) => (
           <motion.li
             key={it.label}
-            initial={{ opacity: 0, y: 10 }}
+            initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.25, delay: 0.2 + index * 0.06 }}
-            whileHover={{ x: 3, scale: 1.015 }}
-            className="rounded-lg border border-border/60 bg-background/40 p-2.5"
+            transition={{ duration: 0.25, delay: 0.15 + index * 0.05 }}
+            className="flex items-center justify-between gap-2 rounded-lg border border-border/50 bg-background/30 px-2.5 py-1.5"
           >
-            <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
-              <it.icon className={`h-3.5 w-3.5 ${it.accent}`} />
+            <span className="flex min-w-0 items-center gap-1.5 text-[11px] text-muted-foreground">
+              <it.icon className={`h-3.5 w-3.5 shrink-0 ${it.accent}`} />
               {it.label}
-            </div>
-            <div className="mt-1 flex items-end justify-between gap-2">
-              <p className="text-sm font-semibold">{it.value}</p>
-              <span className="rounded-full border border-border/60 bg-muted/40 px-1.5 py-0.5 text-[10px] text-muted-foreground">
-                live
-              </span>
-            </div>
-            <p className="mt-1 truncate text-[10px] text-muted-foreground">{it.hint}</p>
+            </span>
+            <span className="min-w-0 shrink-0 text-right">
+              <p className="truncate text-sm font-semibold">{it.value}</p>
+              <p className="truncate text-[10px] text-muted-foreground">{it.hint}</p>
+            </span>
           </motion.li>
         ))}
       </ul>

@@ -1,7 +1,7 @@
 import path from "node:path"
 import Link from "next/link"
 import { notFound } from "next/navigation"
-import { ArrowLeft, Github, FileText, GitCommitHorizontal, Users, Clock, CalendarClock } from "lucide-react"
+import { ArrowLeft, Github, GitCommitHorizontal, Users, Clock, CalendarClock, Sparkles } from "lucide-react"
 import { TopNav } from "@/components/top-nav"
 import { AutoRefresh } from "@/components/auto-refresh"
 import { InitialsAvatar } from "@/components/initials-avatar"
@@ -105,13 +105,9 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ rep
             </div>
             <div className="flex gap-2">
               <a
-                href="#"
-                className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-transparent px-3 py-1.5 text-xs font-medium hover:bg-muted/40"
-              >
-                <FileText className="h-3.5 w-3.5" /> README
-              </a>
-              <a
-                href="#"
+                href={`https://github.com/${config.githubOrg}/${team.label}`}
+                target="_blank"
+                rel="noreferrer"
                 className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:opacity-90"
               >
                 <Github className="h-3.5 w-3.5" /> Repository
@@ -119,7 +115,8 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ rep
             </div>
           </div>
 
-          <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-5">
+            <Stat icon={Sparkles} label="팀 점수" value={(team.score ?? 0).toFixed(1)} accent="text-gold" />
             <Stat
               icon={GitCommitHorizontal}
               label="팀 총 커밋"
@@ -149,7 +146,9 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ rep
         <div className="mt-4 grid gap-4 lg:grid-cols-2">
           <section className="rounded-xl border border-border/70 bg-card/70 p-4">
             <h2 className="text-sm font-semibold">팀원별 커밋 수</h2>
-            <p className="mt-0.5 text-xs text-muted-foreground">{weekConfig?.label ?? `${weekNumber}주차`} · 한국 시간</p>
+            <p className="mt-0.5 text-xs text-muted-foreground">
+              {weekConfig?.label ?? `${weekNumber}주차`} · 한국 시간
+            </p>
             <div className="mt-4">
               <MemberBarChart data={memberData} />
             </div>
@@ -157,7 +156,9 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ rep
 
           <section className="rounded-xl border border-border/70 bg-card/70 p-4">
             <h2 className="text-sm font-semibold">날짜별 커밋 추이</h2>
-            <p className="mt-0.5 text-xs text-muted-foreground">{weekConfig?.label ?? `${weekNumber}주차`} · 한국 시간</p>
+            <p className="mt-0.5 text-xs text-muted-foreground">
+              {weekConfig?.label ?? `${weekNumber}주차`} · 한국 시간
+            </p>
             <div className="mt-4">
               <DailyLineChart data={weekTrend} />
             </div>
@@ -182,6 +183,31 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ rep
               ))}
           </ul>
         </section>
+
+        {team.memberBreakdown?.length ? (
+          <section className="mt-4 rounded-xl border border-border/70 bg-card/70 p-4">
+            <h2 className="text-sm font-semibold">팀원별 기여 분포</h2>
+            <p className="mt-0.5 text-xs text-muted-foreground">개발 리듬 점수 기준 · 좋은 커밋 수 포함</p>
+            <ul className="mt-3 grid gap-2 sm:grid-cols-2">
+              {[...team.memberBreakdown]
+                .sort((a, b) => b.score - a.score)
+                .map((member) => (
+                  <li
+                    key={member.participantId}
+                    className="flex items-center gap-3 rounded-lg border border-border/60 bg-background/40 p-2.5"
+                  >
+                    <InitialsAvatar name={member.label} githubUsername={member.githubUsername} size="sm" />
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-sm font-medium">{member.label}</p>
+                      <p className="text-[10px] text-muted-foreground">좋은 커밋 {member.qualifiedCommits}</p>
+                    </div>
+                    <span className="text-sm font-bold tabular text-gold">{member.score.toFixed(1)}</span>
+                    <span className="text-[10px] text-muted-foreground">점수</span>
+                  </li>
+                ))}
+            </ul>
+          </section>
+        ) : null}
 
         <div className="mt-5 border-t border-border/60 pt-4">
           <Notice>{repoNoticeText}</Notice>

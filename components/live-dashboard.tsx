@@ -174,7 +174,7 @@ export function LiveDashboard({ initialSnapshot, displayName, weeks, currentWeek
 
   const leader = snapshot.rankings.personal[0]
   const runnerUp = snapshot.rankings.personal[1]
-  const leaderGap = leader && runnerUp ? Math.max(0, leader.commits - runnerUp.commits) : 0
+  const leaderGap = leader && runnerUp ? Math.max(0, (leader.score ?? 0) - (runnerUp.score ?? 0)) : 0
   const timeLeft = selectedWeekNumber ? timeLeftLabel(activeWeek?.endAt) : "-"
   const pushEvents = useCallback((nextEvents: LiveEvent[]) => {
     if (nextEvents.length === 0) return
@@ -270,11 +270,11 @@ export function LiveDashboard({ initialSnapshot, displayName, weeks, currentWeek
               <div className="mt-3 flex flex-wrap gap-2">
                 <span className="inline-flex items-center gap-1 rounded-full border border-positive/25 bg-positive/10 px-2.5 py-1 text-[11px] font-medium text-positive">
                   <Activity className="h-3.5 w-3.5" />
-                  live board
+                  실시간 집계
                 </span>
                 <span className="inline-flex items-center gap-1 rounded-full border border-gold/25 bg-gold/10 px-2.5 py-1 text-[11px] font-medium text-gold">
                   <Trophy className="h-3.5 w-3.5" />
-                  weekly league
+                  주간 리그
                 </span>
                 <span className="inline-flex items-center gap-1 rounded-full border border-primary/25 bg-primary/10 px-2.5 py-1 text-[11px] font-medium text-primary">
                   <Flame className="h-3.5 w-3.5" />
@@ -299,27 +299,23 @@ export function LiveDashboard({ initialSnapshot, displayName, weeks, currentWeek
                     <span className="text-lg font-bold text-foreground">{leader ? leader.label : "-"}</span>
                     {leader ? (
                       <span className="ml-1.5 font-mono text-sm font-semibold text-gold tabular">
-                        {leader.commits} commits
+                        {(leader.score ?? 0).toFixed(1)}점
                       </span>
                     ) : null}
                   </p>
                 </div>
               </div>
 
-              <div className="mt-3 grid grid-cols-3 gap-2 text-left sm:text-right">
-                <div>
-                  <p className="text-[10px] text-muted-foreground">⏳ 남은 시간</p>
-                  <p className="font-semibold text-foreground tabular">{timeLeft}</p>
-                </div>
+              <div className="mt-3 grid grid-cols-2 gap-2 text-left sm:text-right">
                 <div>
                   <p className="text-[10px] text-muted-foreground">2위와 격차</p>
                   <p className="font-semibold text-positive tabular">
-                    {leader && runnerUp ? (leaderGap === 0 ? "공동 1위" : `+${leaderGap} commits`) : "-"}
+                    {leader && runnerUp ? (leaderGap === 0 ? "공동 1위" : `+${leaderGap.toFixed(1)}점`) : "-"}
                   </p>
                 </div>
                 <div>
-                  <p className="text-[10px] text-muted-foreground">이번 주 집계</p>
-                  <p className="font-semibold text-primary tabular">{snapshot.summary.totalCommits} commits</p>
+                  <p className="text-[10px] text-muted-foreground">⏳ 남은 시간</p>
+                  <p className="font-semibold text-foreground tabular">{timeLeft}</p>
                 </div>
               </div>
               <p className="mt-2">마지막 업데이트 {snapshot.generatedAtKst}</p>
@@ -338,7 +334,7 @@ export function LiveDashboard({ initialSnapshot, displayName, weeks, currentWeek
             onWeekSelect={handleWeekSelect}
           />
 
-          <aside className="flex flex-col gap-4">
+          <aside className="flex min-h-0 flex-col gap-4 lg:h-[900px]">
             <DailyHighlights snapshot={snapshot} />
             <ActivityFeed snapshot={snapshot} />
           </aside>

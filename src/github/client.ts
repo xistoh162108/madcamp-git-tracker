@@ -7,6 +7,17 @@ export interface GitHubRateLimit {
   used?: number
 }
 
+export interface GitHubCommitFile {
+  filename: string
+  status: "added" | "removed" | "modified" | "renamed" | "copied" | "changed" | "unchanged"
+  additions?: number
+  deletions?: number
+}
+
+export interface GitHubCommitParent {
+  sha: string
+}
+
 export interface GitHubCommitSummary {
   sha: string
   html_url?: string
@@ -33,7 +44,8 @@ export interface GitHubCommitSummary {
     additions?: number
     deletions?: number
   } | null
-  files?: unknown[]
+  files?: GitHubCommitFile[]
+  parents?: GitHubCommitParent[]
 }
 
 export interface GitHubBranchSummary {

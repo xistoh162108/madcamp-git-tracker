@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils"
 export interface RankingMiniEntry {
   rank: number
   name: string
+  score: number
   commits: number
 }
 
@@ -61,15 +62,15 @@ export function RankingMiniCard({
           entries.map((entry) => (
             <li
               key={entry.rank}
-              className={cn(
-                "flex items-center gap-2 rounded-lg px-2 py-1.5",
-                entry.rank <= 3 ? "bg-muted/30" : "",
-              )}
+              className={cn("flex items-center gap-2 rounded-lg px-2 py-1.5", entry.rank <= 3 ? "bg-muted/30" : "")}
             >
               <RankIcon rank={entry.rank} />
               <span className="min-w-0 flex-1 truncate text-sm font-medium">{entry.name}</span>
-              <span className="shrink-0 font-mono text-xs font-semibold text-primary tabular">
-                {entry.commits} commits
+              <span className="shrink-0 text-right">
+                <span className="block font-mono text-xs font-semibold text-primary tabular">
+                  {entry.score.toFixed(1)}점
+                </span>
+                <span className="block text-[10px] text-muted-foreground tabular">{entry.commits} commits</span>
               </span>
             </li>
           ))

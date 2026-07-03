@@ -774,9 +774,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-02/commit/e7f72d33127027c7e6584858faef8d0ad009b458",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 1,
       "deletions": 1,
       "changedFiles": 2
@@ -790,9 +788,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-04/commit/54eeb83d2ac96b650a5cd4a7879632a92c27b8e8",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 0,
       "deletions": 0,
       "changedFiles": 1
@@ -806,9 +802,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-07/commit/663053f9e9a0e21de237e330fd0615ee281b3777",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 15,
       "deletions": 15,
       "changedFiles": 1
@@ -822,9 +816,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-07/commit/f0c7ca21519798360fb9341a82c31e8ba48dad60",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 15,
       "deletions": 15,
       "changedFiles": 1
@@ -838,9 +830,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-07/commit/f3088d77c16e43e22e2e762aef45805186724016",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 186,
       "deletions": 10,
       "changedFiles": 1
@@ -854,9 +844,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-07/commit/82d7e554b40154371f81da18ae034c1b376cf300",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 10,
       "deletions": 10,
       "changedFiles": 1
@@ -870,9 +858,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-07/commit/08962a2dfd24d0ffb5438df0e957516813c46efd",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 102,
       "deletions": 544,
       "changedFiles": 1
@@ -886,9 +872,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-01/commit/320f3399e3a3e6d2d53d19ec117b38048ecdfc57",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 1,
       "deletions": 2,
       "changedFiles": 1
@@ -900,14 +884,9 @@
       "committedAt": "2026-07-03T04:23:54Z",
       "summary": "Merge remote-tracking branch 'origin/main'",
       "attributionStatus": "bot_only",
-      "detectedBots": [
-        "abiatarprado",
-        "abiatarprado"
-      ],
+      "detectedBots": ["abiatarprado", "abiatarprado"],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-08/commit/f9f04e0078e3f41e0a8f129b5a690ccebae3d0a2",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 0,
       "deletions": 0,
       "changedFiles": 0
@@ -921,9 +900,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-09/commit/4079a9013f3054210959eef6716df137bdaff950",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 10,
       "deletions": 8,
       "changedFiles": 1
@@ -935,14 +912,9 @@
       "committedAt": "2026-07-03T04:20:38Z",
       "summary": "Initial full-stack project setup",
       "attributionStatus": "bot_only",
-      "detectedBots": [
-        "abiatarprado",
-        "abiatarprado"
-      ],
+      "detectedBots": ["abiatarprado", "abiatarprado"],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-08/commit/f6328371e8d0a2de564b30ef3098bd936f0d2080",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 2885,
       "deletions": 0,
       "changedFiles": 31
@@ -956,9 +928,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-01/commit/b9baae769de68eb6e6541a653fbd6d025fbf5d4f",
-      "branches": [
-        "backend"
-      ],
+      "branches": ["backend"],
       "additions": 53,
       "deletions": 0,
       "changedFiles": 8
@@ -972,9 +942,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-01/commit/d3ef0543ccfeff3dcc67f2200b2f241f57d0b562",
-      "branches": [
-        "backend"
-      ],
+      "branches": ["backend"],
       "additions": 8,
       "deletions": 0,
       "changedFiles": 1
@@ -988,9 +956,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-04/commit/9442bc207219dedd51fe9e1e918ccb06579caab3",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 2,
       "deletions": 2,
       "changedFiles": 1
@@ -1004,9 +970,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-04/commit/b19747dc90446f46db709dc9264a021b75743c9b",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 14,
       "deletions": 0,
       "changedFiles": 1
@@ -1018,14 +982,9 @@
       "committedAt": "2026-07-03T04:02:50Z",
       "summary": "Merge branch 'initialization'",
       "attributionStatus": "bot_only",
-      "detectedBots": [
-        "codex@local",
-        "codex@local"
-      ],
+      "detectedBots": ["codex@local", "codex@local"],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-08/commit/2d0b1751f658e06c08488285c58cf96ed980fda2",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 2526,
       "deletions": 0,
       "changedFiles": 19
@@ -1037,14 +996,9 @@
       "committedAt": "2026-07-03T04:01:57Z",
       "summary": "docs: refine item review service draft",
       "attributionStatus": "bot_only",
-      "detectedBots": [
-        "codex@local",
-        "codex@local"
-      ],
+      "detectedBots": ["codex@local", "codex@local"],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-08/commit/42c0bade0c251fc4febef4e8a250a60e20ebdaa0",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 171,
       "deletions": 0,
       "changedFiles": 1
@@ -1058,9 +1012,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-01/commit/9afc98371e780cdf8a53803845b73b05f6af5594",
-      "branches": [
-        "backend"
-      ],
+      "branches": ["backend"],
       "additions": 1,
       "deletions": 1,
       "changedFiles": 1
@@ -1074,9 +1026,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-01/commit/9e7fb443438e874f140c2c46e6fb2bf96a06f60b",
-      "branches": [
-        "backend"
-      ],
+      "branches": ["backend"],
       "additions": 7,
       "deletions": 0,
       "changedFiles": 1
@@ -1090,9 +1040,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-04/commit/1a307af8840c6f425fe225d5a184885d3b5994f3",
-      "branches": [
-        "terry2549"
-      ],
+      "branches": ["terry2549"],
       "additions": 0,
       "deletions": 0,
       "changedFiles": 1
@@ -1106,9 +1054,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-05/commit/fdaef03188ea484854374ce775cacb883715ecba",
-      "branches": [
-        "anjonghwa"
-      ],
+      "branches": ["anjonghwa"],
       "additions": 5695,
       "deletions": 53,
       "changedFiles": 64
@@ -1122,9 +1068,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-04/commit/b817bdd42e2a1b7aceaff2147b3739a69288661d",
-      "branches": [
-        "terry2549"
-      ],
+      "branches": ["terry2549"],
       "additions": 0,
       "deletions": 0,
       "changedFiles": 0
@@ -1138,9 +1082,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-08/commit/5af0374e4780482faccf8cd6fa5811062311bd2a",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 7,
       "deletions": 7,
       "changedFiles": 1
@@ -1154,9 +1096,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-08/commit/625d33c4f5f9ee48c5582b961bbd63437b1970cc",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 7,
       "deletions": 7,
       "changedFiles": 1
@@ -1170,9 +1110,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-08/commit/32b32801a582aa56734578e290462b4007a47905",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 7,
       "deletions": 1,
       "changedFiles": 1
@@ -1186,9 +1124,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-04/commit/e418ee6e3407ada67c9922f722e79898c2ae23b4",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 1,
       "deletions": 1,
       "changedFiles": 1
@@ -1202,9 +1138,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-04/commit/3b66e0fab217ae3cbbacbda2b1b8c9ebb8d1798b",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 30,
       "deletions": 7,
       "changedFiles": 1
@@ -1218,9 +1152,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-04/commit/6139b7b87c33300d05c6cdcf763a2673fba62a35",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 3,
       "deletions": 2,
       "changedFiles": 1
@@ -1234,9 +1166,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-04/commit/eb1c44a7359100dbf81493d73a194938da187def",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 72,
       "deletions": 0,
       "changedFiles": 5
@@ -1250,9 +1180,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-04/commit/2eff01db603879a1343f0227e9214d1c2106968a",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 30,
       "deletions": 7,
       "changedFiles": 1
@@ -1266,9 +1194,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-04/commit/3b24a987874225b14f683b6b7d49cc87e4e1633d",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 2,
       "deletions": 1,
       "changedFiles": 1
@@ -1282,9 +1208,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-07/commit/d497c5a3f68e57471f9ee31f51ebffcf542be7fd",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 238,
       "deletions": 95,
       "changedFiles": 1
@@ -1298,9 +1222,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-01/commit/35baeea240dcbcc46d8ae045bd7f1e58c5505557",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 8,
       "deletions": 3,
       "changedFiles": 1
@@ -1314,9 +1236,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-05/commit/0f11972c4cdc40ee9238bf26bacc77003bbeafaa",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 2,
       "deletions": 2,
       "changedFiles": 1
@@ -1330,9 +1250,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-04/commit/3d18d51138efe63221af3b1ef8e8f6b9ff12e045",
-      "branches": [
-        "terry2549"
-      ],
+      "branches": ["terry2549"],
       "additions": 0,
       "deletions": 0,
       "changedFiles": 1
@@ -1346,9 +1264,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-04/commit/5f1e848fe9913072df6a531c716268d91f82ea57",
-      "branches": [
-        "terry2549"
-      ],
+      "branches": ["terry2549"],
       "additions": 0,
       "deletions": 0,
       "changedFiles": 2
@@ -1362,9 +1278,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-07/commit/28dcd714c5b59aa3434290b0725f21e1e55d0f68",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 480,
       "deletions": 5,
       "changedFiles": 1
@@ -1378,9 +1292,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-01/commit/58d15e60c292db3c5b7bdffc80c2b2d6421fd3a2",
-      "branches": [
-        "backend"
-      ],
+      "branches": ["backend"],
       "additions": 14,
       "deletions": 0,
       "changedFiles": 1
@@ -1394,9 +1306,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-07/commit/10d5757649e7a247f13952de610cb2bd882b8313",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 0,
       "deletions": 26,
       "changedFiles": 1
@@ -1410,9 +1320,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-02/commit/e6c5063067fc924e839f7c1f25fa4928bc6d7c3d",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 5,
       "deletions": 4,
       "changedFiles": 1
@@ -1426,9 +1334,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-01/commit/ce7d50407fd96bf13e5198cd2b782cf9811bd92e",
-      "branches": [
-        "backend"
-      ],
+      "branches": ["backend"],
       "additions": 7,
       "deletions": 1,
       "changedFiles": 1
@@ -1442,9 +1348,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-02/commit/de95216efb25e7f31cb4279a9a8a05cfd9330fc7",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 5,
       "deletions": 2,
       "changedFiles": 1
@@ -1458,9 +1362,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-06/commit/1144424a2ee8e33ef906cf0069390e73e51533db",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 25,
       "deletions": 0,
       "changedFiles": 1
@@ -1474,9 +1376,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-01/commit/c91c2f25dbaa957247701cf32b1171b8995a833a",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 4,
       "deletions": 4,
       "changedFiles": 1
@@ -1490,9 +1390,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-07/commit/2ae40ad2a042c8d3bc22829f7ff47b46d6af0e37",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 0,
       "deletions": 26,
       "changedFiles": 1
@@ -1506,9 +1404,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-07/commit/3f5a29918caa9342b95a8db403c31a58629a269f",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 47,
       "deletions": 12,
       "changedFiles": 1
@@ -1522,9 +1418,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-02/commit/d7cb20a37de65f5c7ff7f148586b6fca8bfadafc",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 3,
       "deletions": 3,
       "changedFiles": 1
@@ -1538,9 +1432,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-07/commit/c246ae471307336bbd280849440fe90cc98039a4",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 47,
       "deletions": 12,
       "changedFiles": 1
@@ -1554,9 +1446,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-04/commit/af260557101d00369cbc093b5f8353a056108727",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 58,
       "deletions": 0,
       "changedFiles": 4
@@ -1570,9 +1460,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-05/commit/818891a1fad829b703e5a3a1a6b9051d5bfea5d5",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 1,
       "deletions": 1,
       "changedFiles": 1
@@ -1586,9 +1474,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-01/commit/0285109bcced2dd674540cb82ac61e4cb33b457e",
-      "branches": [
-        "frontend"
-      ],
+      "branches": ["frontend"],
       "additions": 12580,
       "deletions": 0,
       "changedFiles": 69
@@ -1600,14 +1486,9 @@
       "committedAt": "2026-07-03T01:55:46Z",
       "summary": "chore: initialize frontend and backend",
       "attributionStatus": "bot_only",
-      "detectedBots": [
-        "codex@local",
-        "codex@local"
-      ],
+      "detectedBots": ["codex@local", "codex@local"],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-08/commit/a017c5101c0ad982de0c824b3034606a6b786956",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 2355,
       "deletions": 0,
       "changedFiles": 18
@@ -1621,9 +1502,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-01/commit/877a9f62ecb10a3fcb1fe99666a3167050c7228b",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 1,
       "deletions": 1,
       "changedFiles": 1
@@ -1637,9 +1516,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-07/commit/32b78977f883a69fc22be13edbf44602d61138c9",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 5,
       "deletions": 5,
       "changedFiles": 1
@@ -1653,9 +1530,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-01/commit/f799c50ea1f38eae40c3b46cda683c14b05de3d0",
-      "branches": [
-        "backend"
-      ],
+      "branches": ["backend"],
       "additions": 8,
       "deletions": 6,
       "changedFiles": 1
@@ -1669,9 +1544,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-02/commit/f7e8a5f0bd997244f1769b46c4bc6633d0307ffb",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 4,
       "deletions": 4,
       "changedFiles": 2
@@ -1685,9 +1558,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-01/commit/a9e15c25f2124edd932ce710cd2f35b208755962",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 1,
       "deletions": 1,
       "changedFiles": 1
@@ -1701,9 +1572,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-01/commit/0cbd55fddd8c5decaab44b6e4f215dc76f9f8756",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 2,
       "deletions": 2,
       "changedFiles": 1
@@ -1717,9 +1586,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-07/commit/3aa5ecc9f2cdcbd2e3a5e59b08e51a95e46f0d1f",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 5,
       "deletions": 5,
       "changedFiles": 1
@@ -1733,9 +1600,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-03/commit/35e76c06fdc06c74c80f9ba779ac33700751f873",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 17,
       "deletions": 7,
       "changedFiles": 1
@@ -1749,9 +1614,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-08/commit/425793edf94e0f77d53ca10fa97fce31287689b6",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 6,
       "deletions": 3,
       "changedFiles": 1
@@ -1765,9 +1628,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-08/commit/ef30f2354549c5da9416e4d9e7821a878885af17",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 0,
       "deletions": 3,
       "changedFiles": 1
@@ -1781,9 +1642,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-08/commit/2c4d5af05cfb90b1883830efcd15699e13a39635",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 3,
       "deletions": 0,
       "changedFiles": 1
@@ -1797,9 +1656,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-08/commit/b0303225d44f3569c2a22e99a0e64e685cd4a0cc",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 7,
       "deletions": 4,
       "changedFiles": 1
@@ -1813,9 +1670,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-04/commit/f8b8c59ecb7980a863b84d19590bd5f1223f935d",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 3316,
       "deletions": 7,
       "changedFiles": 23
@@ -1829,9 +1684,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-04/commit/12aea96c75737c1737065cb93a3b94292fc278c8",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 19,
       "deletions": 3,
       "changedFiles": 2
@@ -1845,9 +1698,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-07/commit/7bf54e29a79c2b43e7a985a723c2115716b03b58",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 22,
       "deletions": 4,
       "changedFiles": 1
@@ -1861,9 +1712,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-07/commit/0a8cad7e9e6935cf50a335132471a14138f31474",
-      "branches": [
-        "backend"
-      ],
+      "branches": ["backend"],
       "additions": 0,
       "deletions": 0,
       "changedFiles": 1
@@ -1877,9 +1726,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-05/commit/f435b107972f8198f96561cb10f0295031ffd223",
-      "branches": [
-        "anjonghwa"
-      ],
+      "branches": ["anjonghwa"],
       "additions": 96,
       "deletions": 7340,
       "changedFiles": 96
@@ -1893,9 +1740,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-05/commit/f1e78d38d2d890c688973f0fefb76c4d44d18723",
-      "branches": [
-        "anjonghwa"
-      ],
+      "branches": ["anjonghwa"],
       "additions": 9493,
       "deletions": 133,
       "changedFiles": 79
@@ -1909,9 +1754,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-04/commit/db817212e96009db8d711e0ba4db5d06a1912ef2",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 0,
       "deletions": 7,
       "changedFiles": 3
@@ -1925,9 +1768,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-04/commit/afacf6f92493a3b1406ba98270493f6d620c917f",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 3316,
       "deletions": 0,
       "changedFiles": 20
@@ -1941,9 +1782,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-06/commit/539ab2a4b528bb450eba2fa8eec087497d6c3e1d",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 21,
       "deletions": 5,
       "changedFiles": 1
@@ -1957,9 +1796,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-03/commit/21f2ce96a26f748b73a11bcc8ec0823418dfb79c",
-      "branches": [
-        "Trial_1"
-      ],
+      "branches": ["Trial_1"],
       "additions": 12,
       "deletions": 9,
       "changedFiles": 1
@@ -1973,9 +1810,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-04/commit/4ab456de4f27e400d02a08d740295c14c0c2d491",
-      "branches": [
-        "omok00"
-      ],
+      "branches": ["omok00"],
       "additions": 28,
       "deletions": 1,
       "changedFiles": 1
@@ -1989,9 +1824,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-06/commit/59d6017ff09e7b419450a92e8f3154e20a043706",
-      "branches": [
-        "api_spec"
-      ],
+      "branches": ["api_spec"],
       "additions": 4,
       "deletions": 1,
       "changedFiles": 1
@@ -2005,9 +1838,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-05/commit/d768e06c6f768c8a3b937df81e780b8cc79d7ea4",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 1,
       "deletions": 1,
       "changedFiles": 1
@@ -2021,9 +1852,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-05/commit/77a468d25f0eb3fb413b7eb5cf5771d1452c41e1",
-      "branches": [
-        "anjonghwa"
-      ],
+      "branches": ["anjonghwa"],
       "additions": 7388,
       "deletions": 23,
       "changedFiles": 19
@@ -2037,9 +1866,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-04/commit/b52a5a9fb488bd17c0d372a4460d70eef2fb0ef7",
-      "branches": [
-        "terry2549"
-      ],
+      "branches": ["terry2549"],
       "additions": 2,
       "deletions": 1,
       "changedFiles": 1
@@ -2053,9 +1880,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-04/commit/015657b6be7198a76f3409192fecc08fc2cbc091",
-      "branches": [
-        "terry2549"
-      ],
+      "branches": ["terry2549"],
       "additions": 5,
       "deletions": 0,
       "changedFiles": 1
@@ -2069,9 +1894,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-06/commit/ea721b40cd4db8fd11383b8cf2bc756c04bd7bfc",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 29,
       "deletions": 25,
       "changedFiles": 1
@@ -2085,9 +1908,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-01/commit/0389f747fb1e6c4772d53c329a86ff93986596d8",
-      "branches": [
-        "backend"
-      ],
+      "branches": ["backend"],
       "additions": 269,
       "deletions": 0,
       "changedFiles": 17
@@ -2101,9 +1922,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-04/commit/42e52755e33a7e0c08f831be3e9925db13108178",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 1,
       "deletions": 1,
       "changedFiles": 1
@@ -2117,9 +1936,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-04/commit/7f2b1117391614a644a892cd48731aee35bcf04e",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 2,
       "deletions": 2,
       "changedFiles": 1
@@ -2133,9 +1950,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-07/commit/4e2b211fa7966458777b933834c98017c8ebec2c",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 12,
       "deletions": 2,
       "changedFiles": 1
@@ -2149,9 +1964,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-04/commit/d8bde197b681c2bb85a5ae4fa69c9b8d531c4ef3",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 1,
       "deletions": 1,
       "changedFiles": 1
@@ -2165,10 +1978,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-04/commit/1de45e8a2420242ec0e991f849929bfb6e3cfbcc",
-      "branches": [
-        "main",
-        "terry2549"
-      ],
+      "branches": ["main", "terry2549"],
       "additions": 0,
       "deletions": 0,
       "changedFiles": 1
@@ -2182,9 +1992,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-06/commit/e2348b33341ca67b8290b9636c717650db573c4c",
-      "branches": [
-        "api_spec"
-      ],
+      "branches": ["api_spec"],
       "additions": 0,
       "deletions": 4,
       "changedFiles": 1
@@ -2198,9 +2006,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-06/commit/c528f350d8a0edae5d38a58f437ccd6b86dc9b64",
-      "branches": [
-        "api_spec"
-      ],
+      "branches": ["api_spec"],
       "additions": 62,
       "deletions": 39,
       "changedFiles": 2
@@ -2214,9 +2020,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-02/commit/4e0a8d68d82f90054c20e2687b8e3d737f2d09d7",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 29,
       "deletions": 8,
       "changedFiles": 8
@@ -2230,9 +2034,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-04/commit/9e43c4d29b55271f854d614d80d5e6a09680df2c",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 1,
       "deletions": 0,
       "changedFiles": 1
@@ -2246,9 +2048,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-07/commit/7ca688a4f51ae507f0e834ac8e91583d565e425c",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 6,
       "deletions": 6,
       "changedFiles": 1
@@ -2262,11 +2062,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-01/commit/16fe71a6a577b8aa9534b5631045d8de0dd18f51",
-      "branches": [
-        "backend",
-        "frontend",
-        "main"
-      ],
+      "branches": ["backend", "frontend", "main"],
       "additions": 2,
       "deletions": 61,
       "changedFiles": 1
@@ -2280,10 +2076,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-04/commit/31e98c0ebceab49a3a6e280bba5916f280074419",
-      "branches": [
-        "main",
-        "terry2549"
-      ],
+      "branches": ["main", "terry2549"],
       "additions": 2,
       "deletions": 1,
       "changedFiles": 2
@@ -2297,9 +2090,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-04/commit/24f3b1de07c5fbc4a96fec2c61498aae9fc821a3",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 5,
       "deletions": 5,
       "changedFiles": 1
@@ -2313,10 +2104,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-04/commit/4e3e8f76ada9205fe116b1e956752235e86ad8de",
-      "branches": [
-        "main",
-        "terry2549"
-      ],
+      "branches": ["main", "terry2549"],
       "additions": 0,
       "deletions": 0,
       "changedFiles": 1
@@ -2330,9 +2118,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-04/commit/dfe2a15c57ee2acbd61983ab39ccce049a1d1cc7",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 2,
       "deletions": 1,
       "changedFiles": 1
@@ -2346,9 +2132,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-04/commit/55768dd8092baae7fd2c919b4e3583cb54c02447",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 3,
       "deletions": 1,
       "changedFiles": 1
@@ -2362,11 +2146,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-01/commit/3833c83aa4c82a7012efe2a745adf8fe8982e588",
-      "branches": [
-        "backend",
-        "frontend",
-        "main"
-      ],
+      "branches": ["backend", "frontend", "main"],
       "additions": 279,
       "deletions": 61,
       "changedFiles": 1
@@ -2380,9 +2160,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-04/commit/d0fefa265c960b90a13699b4b489b5dd5dff344b",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 1,
       "deletions": 0,
       "changedFiles": 1
@@ -2396,9 +2174,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-07/commit/8a181e30162c7b72272d2413181e0e4e4c0d441c",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 10,
       "deletions": 2,
       "changedFiles": 1
@@ -2412,9 +2188,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-01/commit/bfbd45e8b26b9a63c88b0660057cee01dc2a6660",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 14,
       "deletions": 8,
       "changedFiles": 1
@@ -2428,9 +2202,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-04/commit/7d83c8ff34032693bfad293e495a731da6298743",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 1,
       "deletions": 0,
       "changedFiles": 1
@@ -2444,9 +2216,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-04/commit/77743c639c832f06f1681f89e977d50c60a30f94",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 3,
       "deletions": 1,
       "changedFiles": 1
@@ -2460,9 +2230,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-05/commit/590a2d5e7b707fa6dce0e84e3e86d1c342db6554",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 13,
       "deletions": 9,
       "changedFiles": 1
@@ -2476,9 +2244,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-04/commit/4ff1e11aa9b3e351c493f8f77c2b12295dda1e96",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 1,
       "deletions": 0,
       "changedFiles": 1
@@ -2492,9 +2258,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-04/commit/31001a0250f6a9d5f55dab0dc9cca50e98e076f5",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 1,
       "deletions": 0,
       "changedFiles": 1
@@ -2508,9 +2272,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-05/commit/4db2350105637af97723622044038608df970e37",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 1,
       "deletions": 1,
       "changedFiles": 1
@@ -2524,9 +2286,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-05/commit/4610d7f6a84e92fe51e812c5aad87cfa58dd3a6c",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 4,
       "deletions": 4,
       "changedFiles": 1
@@ -2540,10 +2300,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-06/commit/adc4c0180bb19100a205ecdc3202c59828afc689",
-      "branches": [
-        "api_spec",
-        "main"
-      ],
+      "branches": ["api_spec", "main"],
       "additions": 3,
       "deletions": 4,
       "changedFiles": 1
@@ -2557,9 +2314,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-01/commit/a0ac9e525d0e8a12bce89620708ac3c177c940b4",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 20,
       "deletions": 24,
       "changedFiles": 1
@@ -2573,9 +2328,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-01/commit/5987d6fe27dc96df8cdd23e1564464e10ec82480",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 18,
       "deletions": 3,
       "changedFiles": 1
@@ -2589,10 +2342,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-06/commit/7221ac9694254abd6ee63fe9ce7bf9e8df73c0d8",
-      "branches": [
-        "api_spec",
-        "main"
-      ],
+      "branches": ["api_spec", "main"],
       "additions": 125,
       "deletions": 107,
       "changedFiles": 1
@@ -2606,9 +2356,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-04/commit/27c5346623a4ea1d41bca889bf0ce3029aa735e5",
-      "branches": [
-        "omok00"
-      ],
+      "branches": ["omok00"],
       "additions": 3,
       "deletions": 0,
       "changedFiles": 1
@@ -2622,9 +2370,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-02/commit/40b092cd46386aa07c1c3d4cc21fc5116ea74e87",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 18,
       "deletions": 35,
       "changedFiles": 1
@@ -2638,9 +2384,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-02/commit/9bb54f70c0ac5c7c222868cd8bb3ebc2e7853a19",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 12,
       "deletions": 21,
       "changedFiles": 1
@@ -2654,11 +2398,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-01/commit/80ae0691e5b183d62bc0e2c46a1d2f8ee7e5b66b",
-      "branches": [
-        "backend",
-        "frontend",
-        "main"
-      ],
+      "branches": ["backend", "frontend", "main"],
       "additions": 45,
       "deletions": 2,
       "changedFiles": 1
@@ -2672,10 +2412,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-04/commit/980b46c6af33de395a9a2c2ceb25a063c5108d91",
-      "branches": [
-        "main",
-        "terry2549"
-      ],
+      "branches": ["main", "terry2549"],
       "additions": 2,
       "deletions": 6,
       "changedFiles": 1
@@ -2689,9 +2426,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-04/commit/5edca3c8bc62d00d7d0ee3960656b712802e5561",
-      "branches": [
-        "omok00"
-      ],
+      "branches": ["omok00"],
       "additions": 1,
       "deletions": 1,
       "changedFiles": 1
@@ -2705,9 +2440,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-02/commit/f8080895c34a27bc380dce138675cce471c5408e",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 19,
       "deletions": 8,
       "changedFiles": 1
@@ -2721,9 +2454,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-04/commit/1d6a0a14cc94ed5d878fc8949864564f6406049f",
-      "branches": [
-        "omok00"
-      ],
+      "branches": ["omok00"],
       "additions": 1,
       "deletions": 1,
       "changedFiles": 1
@@ -2737,9 +2468,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-02/commit/c2ca8fad35fe94c8feb3731457a4ed20d4ca09ac",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 4,
       "deletions": 0,
       "changedFiles": 1
@@ -2753,10 +2482,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-04/commit/0fd84226702b38550f0f2e9122225400580542be",
-      "branches": [
-        "main",
-        "terry2549"
-      ],
+      "branches": ["main", "terry2549"],
       "additions": 11,
       "deletions": 0,
       "changedFiles": 3
@@ -2770,9 +2496,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-02/commit/f2317cdcf79254dff7468a577d39a610934de665",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 1,
       "deletions": 1,
       "changedFiles": 1
@@ -2786,9 +2510,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-02/commit/4ea7d92dff2c6683fed3dae05ff479e39ab7ce4f",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 3,
       "deletions": 0,
       "changedFiles": 1
@@ -2802,9 +2524,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-02/commit/7ee16591029c9167f666963daafaed31e46d9f98",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 5,
       "deletions": 3,
       "changedFiles": 1
@@ -2818,9 +2538,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-02/commit/cde16dbcfb1216b14b6a4003ac8722605244f1f3",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 0,
       "deletions": 0,
       "changedFiles": 3
@@ -2834,11 +2552,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-04/commit/0ad65a915080e2a5c131cb2c479c1e815db2dd6d",
-      "branches": [
-        "main",
-        "omok00",
-        "terry2549"
-      ],
+      "branches": ["main", "omok00", "terry2549"],
       "additions": 0,
       "deletions": 0,
       "changedFiles": 1
@@ -2852,11 +2566,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-04/commit/e88e4182fa7ba8e3d79928ef4f510c16b12d72f1",
-      "branches": [
-        "main",
-        "omok00",
-        "terry2549"
-      ],
+      "branches": ["main", "omok00", "terry2549"],
       "additions": 6,
       "deletions": 0,
       "changedFiles": 1
@@ -2870,11 +2580,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-04/commit/ebdeb1e6f06d18630fab1b6cb91b7a1570393726",
-      "branches": [
-        "main",
-        "omok00",
-        "terry2549"
-      ],
+      "branches": ["main", "omok00", "terry2549"],
       "additions": 0,
       "deletions": 0,
       "changedFiles": 1
@@ -2888,9 +2594,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-02/commit/63d6ce91b403ae075b03bf611b79ebdce0c0169e",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 124,
       "deletions": 4354,
       "changedFiles": 30
@@ -2904,11 +2608,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-04/commit/a33d76a57fc5a9de93f19807ce9fd712bc03208e",
-      "branches": [
-        "main",
-        "omok00",
-        "terry2549"
-      ],
+      "branches": ["main", "omok00", "terry2549"],
       "additions": 6,
       "deletions": 0,
       "changedFiles": 1
@@ -2922,10 +2622,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-04/commit/f298e6211417fc78be4b01177a7c677a30465546",
-      "branches": [
-        "main",
-        "terry2549"
-      ],
+      "branches": ["main", "terry2549"],
       "additions": 2,
       "deletions": 2,
       "changedFiles": 1
@@ -2939,11 +2636,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c2-01/commit/d92404764d5bf273bafd536415e0fb2b5f710338",
-      "branches": [
-        "backend",
-        "frontend",
-        "main"
-      ],
+      "branches": ["backend", "frontend", "main"],
       "additions": 13,
       "deletions": 8,
       "changedFiles": 1
@@ -2957,9 +2650,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-02/commit/4860817cad40fba142637c6b6f2358655d681991",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 4,
       "deletions": 4,
       "changedFiles": 3
@@ -2973,9 +2664,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-09/commit/a1d19e49b5824f30cb2ad79eba0d9cfdba304bba",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 0,
       "deletions": 2,
       "changedFiles": 1
@@ -2989,9 +2678,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-07/commit/398eea1c0425a9b94872f87f02f42eeb1fabbb3a",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 2,
       "deletions": 2,
       "changedFiles": 1
@@ -3005,11 +2692,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-04/commit/df7ecf5898a9b8384e5e1eef6aff0529dee82811",
-      "branches": [
-        "main",
-        "omok00",
-        "terry2549"
-      ],
+      "branches": ["main", "omok00", "terry2549"],
       "additions": 2,
       "deletions": 2,
       "changedFiles": 1
@@ -3023,9 +2706,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-02/commit/c13a48ef6ea530733988f4c1d9696c5b0980d4b5",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 4354,
       "deletions": 0,
       "changedFiles": 27
@@ -3039,9 +2720,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-09/commit/25e8d721665ccd21e2a8637f16fd902511c14cd5",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 2,
       "deletions": 0,
       "changedFiles": 1
@@ -3055,9 +2734,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-02/commit/f080d0278bbdc5d94a06e8f243de9f2a41fa2589",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 25,
       "deletions": 20,
       "changedFiles": 1
@@ -3071,9 +2748,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-02/commit/b2ea36bbc5160cfeca4322a1723a65f569f4bad7",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 20,
       "deletions": 25,
       "changedFiles": 1
@@ -3087,9 +2762,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-02/commit/444c8e2ccfb572bf0fc1c4bba089ad1fd9657ab3",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 31,
       "deletions": 2,
       "changedFiles": 1
@@ -3103,9 +2776,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-02/commit/c26ce7f14274bf19c708238631f48a72c297b360",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 2,
       "deletions": 0,
       "changedFiles": 1
@@ -3119,9 +2790,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-02/commit/89ff7fe48eb05e28808a8897019ceaad097a886f",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 3,
       "deletions": 3,
       "changedFiles": 1
@@ -3135,9 +2804,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-02/commit/13fb6d4cbcaf8071146996fb04305b50394a8f3f",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 5,
       "deletions": 2,
       "changedFiles": 1
@@ -3151,9 +2818,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-02/commit/2431aa1c1e16d5de2f1a41cb4965e2fd038df172",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 2,
       "deletions": 2,
       "changedFiles": 1
@@ -3167,9 +2832,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-02/commit/8d2fb6099b914155f0eb1686168972b18de4e32e",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 1,
       "deletions": 1,
       "changedFiles": 1
@@ -3183,9 +2846,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-02/commit/ccea0154c13a5a4c638628cbc9040fcb52c03be9",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 2,
       "deletions": 0,
       "changedFiles": 1
@@ -3199,9 +2860,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-02/commit/0e37656be61619e87c1e979133804816eb0c60d7",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 2,
       "deletions": 2,
       "changedFiles": 1
@@ -3215,9 +2874,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-02/commit/8f3237215438df6208a2d096aa25b907ed9b7146",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 3,
       "deletions": 0,
       "changedFiles": 1
@@ -3231,9 +2888,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c3-02/commit/e404f27721ce858c8db3896e3a2f89907b14ecdf",
-      "branches": [
-        "main"
-      ],
+      "branches": ["main"],
       "additions": 17,
       "deletions": 1,
       "changedFiles": 1
@@ -3247,9 +2902,7 @@
       "attributionStatus": "single_participant",
       "detectedBots": [],
       "commitUrl": "https://github.com/madcamp-official/26s-w1-c1-05/commit/dbf4e20ac1299a80c326f463493cf04fefa659fc",
-      "branches": [
-        "anjonghwa"
-      ],
+      "branches": ["anjonghwa"],
       "additions": 2,
       "deletions": 0,
       "changedFiles": 1

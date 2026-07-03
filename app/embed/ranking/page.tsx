@@ -40,9 +40,10 @@ export default async function RankingEmbedPage({
       })
     : snapshot.rankings.personal
 
-  const entries: RankingMiniEntry[] = personal
+  const entries: RankingMiniEntry[] = [...personal]
+    .sort((a, b) => (b.score ?? 0) - (a.score ?? 0))
     .slice(0, limitNumber)
-    .map((entry, index) => ({ rank: index + 1, name: entry.label, commits: entry.commits }))
+    .map((entry, index) => ({ rank: index + 1, name: entry.label, score: entry.score ?? 0, commits: entry.commits }))
 
   const weekLabel = config.weeks.find((w) => w.week === (weekNumber ?? snapshot.currentWeek))?.label ?? "전체 기간"
   const classLabel = classParam ? `${classParam}분반` : undefined

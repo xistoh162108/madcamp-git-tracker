@@ -9,6 +9,7 @@ import { discoverTrackedRepos, type DiscoveryResult, type TrackedRepo } from "..
 import { parseParticipantsCsv } from "../participants/parse-participants"
 import type { Participant } from "../participants/participant-schema"
 import { writeSnapshotSafely } from "../snapshot/fallback"
+import { classifyCommit } from "../scoring/classify-commit"
 import { analyzeCommitAttribution } from "./map-commit-author"
 import { readSyncState, writeSyncState } from "./sync-state"
 
@@ -173,6 +174,7 @@ export async function runGithubSync(options: SyncRunnerOptions = {}): Promise<Sy
     options.ledgerPath ?? path.join(process.cwd(), "data", "commits", `${config.season}-w${currentWeek ?? "all"}.jsonl`)
   const reportPath = options.reportPath ?? path.join(process.cwd(), "data", "sync-reports", "latest.json")
   const uniqueCommits = dedupeCommits(commits)
+  const uniqueUnknownUsers = dedupeUnknownUsers(unknownUsers)
   await enrichCommitStats(client, config.githubOrg, uniqueCommits, readPreviousLedger(ledgerPath))
   writeCommitLedgerSafely(ledgerPath, uniqueCommits)
 
@@ -182,7 +184,7 @@ export async function runGithubSync(options: SyncRunnerOptions = {}): Promise<Sy
     selectedRepos,
     commits,
     uniqueCommits,
-    unknownUsers,
+    unknownUsers: uniqueUnknownUsers,
     failedRepos,
     repoReports,
     discovery,
@@ -198,7 +200,7 @@ export async function runGithubSync(options: SyncRunnerOptions = {}): Promise<Sy
       dryRun: false,
       discovery: { ...discovery, trackedRepos: selectedRepos },
       commitsProcessed: uniqueCommits.length,
-      unknownUsers: unknownUsers.length,
+      unknownUsers: uniqueUnknownUsers.length,
       failedRepos,
       rateLimit: client.getRateLimit(),
       report,
@@ -217,7 +219,7 @@ export async function runGithubSync(options: SyncRunnerOptions = {}): Promise<Sy
     currentWeek,
     participants,
     commits: uniqueCommits,
-    unknownUsers,
+    unknownUsers: uniqueUnknownUsers,
     previousSnapshot: readPreviousSnapshot(snapshotPath),
     weekEnded,
   })
@@ -241,7 +243,7 @@ export async function runGithubSync(options: SyncRunnerOptions = {}): Promise<Sy
     dryRun: false,
     discovery: { ...discovery, trackedRepos: selectedRepos },
     commitsProcessed: uniqueCommits.length,
-    unknownUsers: unknownUsers.length,
+    unknownUsers: uniqueUnknownUsers.length,
     failedRepos,
     rateLimit: client.getRateLimit(),
     report,
@@ -249,6 +251,14 @@ export async function runGithubSync(options: SyncRunnerOptions = {}): Promise<Sy
     reportPath,
     snapshotPath,
   }
+}
+
+function dedupeUnknownUsers(users: UnknownUser[]): UnknownUser[] {
+  const seen = new Map<string, UnknownUser>()
+  for (const user of users) {
+    seen.set(`${user.repoName}:${user.sha}:${user.reason}`, user)
+  }
+  return [...seen.values()]
 }
 
 async function fetchRepoCommits(params: {
@@ -312,10 +322,20 @@ async function enrichCommitStats(
 ): Promise<void> {
   for (const commit of commits) {
     const cached = previousLedger.get(commit.sha)
-    if (cached?.additions !== undefined) {
+    // both additions AND commitKind must already be cached -- a commit written before commit-type
+    // classification shipped would have `additions` set but not `commitKind`, and checking only
+    // `additions` would let it hit this cache-hit path forever, never getting classified. The
+    // one-time backfill script (scripts/backfill-commit-classification.ts) handles commits already
+    // on disk when this check is deployed; this cache guard just prevents new regressions going forward.
+    if (cached?.additions !== undefined && cached.commitKind !== undefined) {
       commit.additions = cached.additions
       commit.deletions = cached.deletions
       commit.changedFiles = cached.changedFiles
+      commit.commitKind = cached.commitKind
+      commit.parentCount = cached.parentCount
+      commit.isConventionalMessage = cached.isConventionalMessage
+      commit.messageLength = cached.messageLength
+      commit.isVagueMessage = cached.isVagueMessage
       continue
     }
     try {
@@ -323,8 +343,21 @@ async function enrichCommitStats(
       commit.additions = detail.stats?.additions ?? 0
       commit.deletions = detail.stats?.deletions ?? 0
       commit.changedFiles = detail.files?.length ?? 0
+      const classification = classifyCommit({
+        message: detail.commit.message?.split("\n")[0] ?? "",
+        additions: commit.additions,
+        deletions: commit.deletions,
+        changedFiles: commit.changedFiles,
+        filePaths: (detail.files ?? []).map((file) => ({ filename: file.filename, status: file.status })),
+        parentCount: detail.parents?.length ?? 0,
+      })
+      commit.commitKind = classification.kind
+      commit.parentCount = classification.parentCount
+      commit.isConventionalMessage = classification.isConventionalMessage
+      commit.messageLength = classification.messageLength
+      commit.isVagueMessage = classification.isVagueMessage
     } catch {
-      // leave stats undefined if the detail fetch fails; not fatal to the sync
+      // leave stats/classification undefined if the detail fetch fails; not fatal to the sync
     }
   }
 }
@@ -410,9 +443,7 @@ function buildSyncReport(params: {
   }
 }
 
-function loadParticipants(
-  participantsPath = path.join(process.cwd(), "src", "participants", "participants.csv"),
-) {
+function loadParticipants(participantsPath = path.join(process.cwd(), "src", "participants", "participants.csv")) {
   return parseParticipantsCsv(fs.readFileSync(participantsPath, "utf8")).participants
 }
 

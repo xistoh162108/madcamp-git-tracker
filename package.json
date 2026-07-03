@@ -17,6 +17,7 @@
     "smoke:test": "node scripts/smoke-test.mjs",
     "sync:github": "tsx scripts/sync-github.ts",
     "snapshot:sample": "tsx scripts/generate-sample-snapshot.ts",
+    "backfill:commit-classification": "tsx scripts/backfill-commit-classification.ts",
     "audit": "pnpm audit --audit-level=high"
   },
   "dependencies": {

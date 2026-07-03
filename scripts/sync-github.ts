@@ -9,7 +9,8 @@ const weekValue = weekArg?.split("=")[1]
 
 // Default to whichever week is active right now, matching the admin UI's "현재 주차 동기화" behavior.
 // `--week=all` opts into the library default of syncing every configured week's repos in one pass.
-const week = weekValue === "all" ? undefined : weekValue ? Number(weekValue) : (resolveCurrentWeek(loadConfig()) ?? undefined)
+const week =
+  weekValue === "all" ? undefined : weekValue ? Number(weekValue) : (resolveCurrentWeek(loadConfig()) ?? undefined)
 
 if (!weekArg && week === undefined) {
   console.log("no camp week is active right now; skipping sync (pass --week=<n> or --week=all to override)")
