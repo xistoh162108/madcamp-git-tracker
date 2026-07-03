@@ -51,42 +51,65 @@ function rankMap(snapshot: AggregatedSnapshot) {
   return new Map(snapshot.rankings.personal.map((entry) => [entry.id, entry]))
 }
 
+function hasPersonalScores(snapshot: AggregatedSnapshot) {
+  return snapshot.rankings.personal.some((entry) => typeof entry.score === "number")
+}
+
 function detectLiveEvents(previous: AggregatedSnapshot, next: AggregatedSnapshot): LiveEvent[] {
   const events: LiveEvent[] = []
+  const canCompareScoreRanks = hasPersonalScores(previous) && hasPersonalScores(next)
   const previousLeader = previous.rankings.personal[0]
   const nextLeader = next.rankings.personal[0]
-  if (previousLeader && nextLeader && previousLeader.id !== nextLeader.id) {
+  if (canCompareScoreRanks && previousLeader && nextLeader && previousLeader.id !== nextLeader.id) {
     events.push({
       id: `leader:${next.generatedAt}:${nextLeader.id}`,
       kind: "leader",
       title: "1위 교체",
-      detail: `${nextLeader.label}님이 개인 랭킹 1위로 올라섰습니다.`,
+      detail: `${nextLeader.label}님이 ${((nextLeader.score ?? 0) - (previousLeader.score ?? 0)).toFixed(1)}점 차이를 만들었습니다.`,
     })
   }
 
-  const oldRanks = rankMap(previous)
-  for (const entry of next.rankings.personal.slice(0, 12)) {
-    const old = oldRanks.get(entry.id)
-    if (!old) continue
-    const diff = old.rank - entry.rank
-    if (diff >= 2) {
-      events.push({
-        id: `surge:${next.generatedAt}:${entry.id}`,
-        kind: "surge",
-        title: "급상승",
-        detail: `${entry.label}님이 ${diff}계단 상승했습니다.`,
-      })
+  if (canCompareScoreRanks) {
+    const oldRanks = rankMap(previous)
+    for (const entry of next.rankings.personal.slice(0, 12)) {
+      const old = oldRanks.get(entry.id)
+      if (!old) continue
+      const diff = old.rank - entry.rank
+      const scoreGain = (entry.score ?? 0) - (old.score ?? 0)
+      if (diff >= 2) {
+        events.push({
+          id: `surge:${next.generatedAt}:${entry.id}`,
+          kind: "surge",
+          title: "점수 랭킹 급상승",
+          detail: `${entry.label}님이 ${diff}계단 상승했습니다.${scoreGain > 0 ? ` +${scoreGain.toFixed(1)}점` : ""}`,
+        })
+      } else if (scoreGain >= 2 && entry.rank <= 10) {
+        events.push({
+          id: `score:${next.generatedAt}:${entry.id}`,
+          kind: "surge",
+          title: "점수 상승",
+          detail: `${entry.label}님이 이번 집계에서 +${scoreGain.toFixed(1)}점을 얻었습니다.`,
+        })
+      }
     }
+  } else if (!hasPersonalScores(previous) && hasPersonalScores(next)) {
+    events.push({
+      id: `score-ready:${next.generatedAt}`,
+      kind: "leader",
+      title: "점수 집계 반영",
+      detail: "새 점수 기준으로 랭킹이 갱신되었습니다.",
+    })
   }
 
   const previousActivities = new Set(previous.activityFeed.map((item) => item.id))
   const newActivities = next.activityFeed.filter((item) => !previousActivities.has(item.id)).slice(0, 3)
   for (const item of newActivities) {
+    const scoreLabel = typeof item.score === "number" ? ` · ${item.score.toFixed(1)}점` : ""
     events.push({
       id: `activity:${next.generatedAt}:${item.id}`,
       kind: "activity",
       title: "새 활동 반영",
-      detail: `${item.label} · ${item.repoName.replace(/^.*?(w\d+-c\d+-\d+)$/, "$1")}`,
+      detail: `${item.label} · ${item.repoName.replace(/^.*?(w\d+-c\d+-\d+)$/, "$1")}${scoreLabel}`,
     })
   }
 
@@ -96,7 +119,7 @@ function detectLiveEvents(previous: AggregatedSnapshot, next: AggregatedSnapshot
     events.push({
       id: `burst:${next.generatedAt}:${nextLatest}`,
       kind: "burst",
-      title: "활동 폭발",
+      title: "활동 증가",
       detail: `최근 집계일 커밋이 ${nextLatest - previousLatest}개 늘었습니다.`,
     })
   }

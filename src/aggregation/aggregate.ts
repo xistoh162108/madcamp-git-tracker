@@ -82,8 +82,12 @@ function formatKstCompact(date: Date): string {
 function previousRankLookup(
   previousSnapshot: AggregatedSnapshot | undefined,
   kind: keyof AggregatedSnapshot["rankings"],
+  requireScore = false,
 ): ((id: string) => number | undefined) | undefined {
   if (!previousSnapshot) return undefined
+  if (requireScore && previousSnapshot.rankings[kind].some((entry) => typeof entry.score !== "number")) {
+    return undefined
+  }
   const map = new Map(previousSnapshot.rankings[kind].map((entry) => [entry.id, entry.rank]))
   return (id: string) => map.get(id)
 }
@@ -289,7 +293,7 @@ export function aggregateSnapshot(params: {
       }
     }),
     (entry) => entry.score ?? 0,
-    previousRankLookup(params.previousSnapshot, "teams"),
+    previousRankLookup(params.previousSnapshot, "teams", true),
   )
 
   const topTeamParticipantIds = new Set(
@@ -327,7 +331,7 @@ export function aggregateSnapshot(params: {
       return { ...entry, honorTitles: titles }
     }),
     (entry) => entry.score ?? 0,
-    previousRankLookup(params.previousSnapshot, "personal"),
+    previousRankLookup(params.previousSnapshot, "personal", true),
   )
 
   const personalScoreById = new Map(personalEntries.map((entry) => [entry.id, entry.score]))
@@ -354,7 +358,7 @@ export function aggregateSnapshot(params: {
       }
     }),
     (entry) => entry.score ?? 0,
-    previousRankLookup(params.previousSnapshot, "classes"),
+    previousRankLookup(params.previousSnapshot, "classes", true),
   )
 
   const heatmapCounts = new Map<string, number>()
