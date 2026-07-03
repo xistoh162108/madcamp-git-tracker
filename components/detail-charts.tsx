@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion"
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from "recharts"
+import type { CSSProperties } from "react"
 import type { WeekConfig } from "@/src/config/schema"
 
 const tooltipStyle = {
@@ -25,10 +26,27 @@ function weekdayLabel(iso: string) {
   return new Intl.DateTimeFormat("ko-KR", { timeZone: "Asia/Seoul", weekday: "short" }).format(new Date(iso))
 }
 
-function intensity(count: number, max: number) {
+function intensityRatio(count: number, max: number) {
   if (count <= 0) return 0
-  if (max <= 1) return 1
-  return Math.max(1, Math.ceil((count / max) * 4))
+  if (max <= 0) return 0
+  return Math.min(1, count / max)
+}
+
+function heatCellStyle(count: number, max: number, disabled: boolean): CSSProperties {
+  if (disabled) return {}
+  const ratio = intensityRatio(count, max)
+  if (ratio === 0) return {}
+  const alpha = 0.14 + ratio * 0.68
+  const borderAlpha = 0.2 + ratio * 0.42
+  const glowAlpha = ratio * 0.22
+  return {
+    background: `linear-gradient(135deg, hsla(188, 92%, 62%, ${alpha}) 0%, hsla(264, 84%, 68%, ${Math.max(
+      0.1,
+      alpha - 0.16,
+    )}) 100%)`,
+    borderColor: `hsla(188, 92%, 62%, ${borderAlpha})`,
+    boxShadow: glowAlpha > 0.04 ? `0 0 ${8 + ratio * 14}px hsla(188, 92%, 62%, ${glowAlpha})` : undefined,
+  }
 }
 
 export function DailyLineChart({
@@ -100,7 +118,7 @@ export function SprintBoard({
         const days = weekDayLists[weekIndex]!.map((key) => {
           const disabled = currentWeek ? week.week > currentWeek : false
           const count = disabled ? 0 : (counts.get(key) ?? 0)
-          return { key, label: dayLabel(key), count, level: intensity(count, max), disabled, today: key === today }
+          return { key, label: dayLabel(key), count, disabled, today: key === today }
         })
         return (
           <div key={week.week} className="grid grid-cols-[44px_1fr] items-center gap-2">
@@ -114,19 +132,14 @@ export function SprintBoard({
                   animate={{ opacity: 1, scale: 1 }}
                   whileHover={!day.disabled ? { scale: 1.16, y: -2 } : undefined}
                   transition={{ duration: 0.18, delay: week.week * 0.04 + index * 0.018 }}
+                  style={heatCellStyle(day.count, max, day.disabled)}
                   className={[
                     "h-8 rounded-md border transition-colors",
                     day.disabled
                       ? "border-border/40 bg-muted/20 opacity-45"
-                      : day.level === 0
+                      : day.count === 0
                         ? "border-border/50 bg-muted/40"
-                        : day.level === 1
-                          ? "border-primary/20 bg-primary/15"
-                          : day.level === 2
-                            ? "border-primary/30 bg-primary/30"
-                            : day.level === 3
-                              ? "border-primary/40 bg-primary/55"
-                              : "border-primary/60 bg-primary/80",
+                        : "bg-primary/40",
                     day.today ? "ring-1 ring-gold" : "",
                   ].join(" ")}
                 />
@@ -138,21 +151,11 @@ export function SprintBoard({
       <div className="flex items-center justify-between text-[10px] text-muted-foreground">
         <span>낮음</span>
         <div className="flex gap-1">
-          {[0, 1, 2, 3, 4].map((level) => (
+          {[0, 0.25, 0.5, 0.75, 1].map((ratio) => (
             <span
-              key={level}
-              className={[
-                "h-2.5 w-5 rounded-sm",
-                level === 0
-                  ? "bg-muted/40"
-                  : level === 1
-                    ? "bg-primary/15"
-                    : level === 2
-                      ? "bg-primary/30"
-                      : level === 3
-                        ? "bg-primary/55"
-                        : "bg-primary/80",
-              ].join(" ")}
+              key={ratio}
+              className="h-2.5 w-5 rounded-sm border border-border/20"
+              style={ratio === 0 ? undefined : heatCellStyle(ratio, 1, false)}
             />
           ))}
         </div>

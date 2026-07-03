@@ -203,7 +203,7 @@ export default async function ParticipantDetailPage({ params }: { params: Promis
     <div className="min-h-screen">
       <AutoRefresh />
       <TopNav />
-      <main className="mx-auto max-w-[1280px] px-4 py-5 sm:px-6 sm:py-6">
+      <main className="mx-auto w-full max-w-[1280px] overflow-x-hidden px-3 py-4 sm:px-6 sm:py-6">
         <Link
           href="/"
           className="mb-4 inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground"
@@ -212,18 +212,18 @@ export default async function ParticipantDetailPage({ params }: { params: Promis
         </Link>
 
         {/* Header */}
-        <div className="rounded-2xl border border-border/70 bg-card/70 p-5">
-          <div className="flex flex-wrap items-start justify-between gap-4">
-            <div className="flex items-center gap-4">
+        <div className="min-w-0 overflow-hidden rounded-2xl border border-border/70 bg-card/70 p-4 sm:p-5">
+          <div className="flex min-w-0 flex-col items-start justify-between gap-4 sm:flex-row">
+            <div className="flex min-w-0 items-center gap-3 sm:gap-4">
               <InitialsAvatar name={p.label} githubUsername={p.meta} size="lg" />
-              <div>
-                <div className="flex items-center gap-2.5">
-                  <h1 className="text-xl font-bold tracking-tight">{p.label}</h1>
+              <div className="min-w-0">
+                <div className="flex min-w-0 flex-wrap items-center gap-2">
+                  <h1 className="min-w-0 truncate text-xl font-bold tracking-tight">{p.label}</h1>
                   <span className="rounded-md border border-gold/40 bg-gold/15 px-1.5 py-0.5 text-[11px] font-bold text-gold">
                     전체 {position.rankLabel}
                   </span>
                 </div>
-                <p className="mt-0.5 font-mono text-xs text-muted-foreground">@{p.meta ?? p.id}</p>
+                <p className="mt-0.5 truncate font-mono text-xs text-muted-foreground">@{p.meta ?? p.id}</p>
                 <div className="mt-1.5 flex flex-wrap items-center gap-1.5 text-[11px]">
                   {activeTeamSlug !== "-" ? (
                     <Link
@@ -242,28 +242,28 @@ export default async function ParticipantDetailPage({ params }: { params: Promis
                 </p>
               </div>
             </div>
-            <div className="flex shrink-0 flex-col items-end gap-2">
+            <div className="flex w-full shrink-0 flex-col items-start gap-2 sm:w-auto sm:items-end">
               <a
                 href={`https://github.com/${p.meta ?? p.id}`}
                 className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:opacity-90"
               >
                 <Github className="h-3.5 w-3.5" /> GitHub Profile
               </a>
-              <div className="text-right text-[11px] text-muted-foreground">
+              <div className="text-left text-[11px] text-muted-foreground sm:text-right">
                 <p className="font-semibold text-gold">{position.gapLabel}</p>
                 <p>최근 활동 {kstDateTime(p.lastActivityAt)}</p>
               </div>
             </div>
           </div>
 
-          <div className="mt-5 grid grid-cols-2 gap-3 lg:grid-cols-4">
+          <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
             <Stat icon={Sparkles} label="점수" value={(p.score ?? 0).toFixed(1)} accent="text-gold" />
             <Stat icon={CalendarClock} label="이번 주 활동일" value={`${p.activeDays}일`} />
             <Stat icon={GitCommitHorizontal} label="최근 커밋" value={kstDateTime(p.lastActivityAt)} />
             <Stat icon={Hash} label="팀 내 순위" value={`${teamRank}위 / ${Math.max(1, teamPeers.length)}명`} />
           </div>
 
-          <div className="mt-3 flex flex-wrap gap-x-3 gap-y-1 rounded-lg border border-border/40 bg-background/20 px-3 py-2 text-xs text-muted-foreground">
+          <div className="mt-3 flex min-w-0 flex-wrap gap-x-3 gap-y-1 rounded-lg border border-border/40 bg-background/20 px-3 py-2 text-xs text-muted-foreground">
             <span>
               분반 순위{" "}
               <span className="font-semibold text-foreground">
@@ -289,7 +289,7 @@ export default async function ParticipantDetailPage({ params }: { params: Promis
             ) : null}
           </div>
 
-          <div className="mt-3 grid grid-cols-2 gap-3 lg:grid-cols-3">
+          <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
             <Stat
               icon={FileDiff}
               label="평균 변경 줄수"
@@ -322,8 +322,8 @@ export default async function ParticipantDetailPage({ params }: { params: Promis
           ) : null}
         </div>
 
-        <div className="mt-4 grid items-start gap-4 lg:grid-cols-[1.8fr_1fr]">
-          <section className="rounded-xl border border-border/70 bg-card/70 p-4">
+        <div className="mt-4 grid min-w-0 items-start gap-4 lg:grid-cols-[1.8fr_1fr]">
+          <section className="min-w-0 overflow-hidden rounded-xl border border-border/70 bg-card/70 p-3 sm:p-4">
             <h2 className="text-sm font-semibold">최근 커밋</h2>
             <p className="mt-0.5 text-xs text-muted-foreground">KST 기준 · 원본 커밋 메시지</p>
             <ul className="mt-3 max-h-[480px] space-y-2 overflow-y-auto pr-1">
@@ -332,8 +332,11 @@ export default async function ParticipantDetailPage({ params }: { params: Promis
                   item.additions !== undefined || item.deletions !== undefined || item.changedFiles !== undefined
                 const branch = item.branches?.[0]
                 return (
-                  <li key={item.id} className="rounded-lg border border-border/60 bg-background/40 p-2.5">
-                    <div className="flex min-w-0 items-center gap-2 text-[11px] text-muted-foreground">
+                  <li
+                    key={item.id}
+                    className="min-w-0 overflow-hidden rounded-lg border border-border/60 bg-background/40 p-2.5"
+                  >
+                    <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 text-[11px] text-muted-foreground">
                       <span>{kstDateTime(item.committedAt)}</span>
                       <span className="text-border">·</span>
                       <Link
@@ -397,8 +400,8 @@ export default async function ParticipantDetailPage({ params }: { params: Promis
             </ul>
           </section>
 
-          <div className="flex flex-col gap-4">
-            <section className="rounded-xl border border-border/70 bg-card/70 p-4">
+          <div className="flex min-w-0 flex-col gap-4">
+            <section className="min-w-0 overflow-hidden rounded-xl border border-border/70 bg-card/70 p-3 sm:p-4">
               <h2 className="text-sm font-semibold">주차별 활동</h2>
               <ul className="mt-3 space-y-2">
                 {weekHistory.map((w) => (
@@ -441,7 +444,7 @@ export default async function ParticipantDetailPage({ params }: { params: Promis
             </section>
 
             {commitKindBreakdown.length > 0 ? (
-              <section className="rounded-xl border border-border/70 bg-card/70 p-4">
+              <section className="min-w-0 overflow-hidden rounded-xl border border-border/70 bg-card/70 p-3 sm:p-4">
                 <h2 className="text-sm font-semibold">커밋 유형 분포</h2>
                 <ul className="mt-3 space-y-1.5">
                   {commitKindBreakdown.map(([kind, count]) => (
@@ -456,8 +459,8 @@ export default async function ParticipantDetailPage({ params }: { params: Promis
           </div>
         </div>
 
-        <div className="mt-4 grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
-          <section className="rounded-xl border border-border/70 bg-card/70 p-4">
+        <div className="mt-4 grid min-w-0 gap-4 lg:grid-cols-[0.9fr_1.1fr]">
+          <section className="min-w-0 overflow-hidden rounded-xl border border-border/70 bg-card/70 p-3 sm:p-4">
             <div className="flex items-start justify-between gap-2">
               <div>
                 <h2 className="text-sm font-semibold">일별 커밋 추이</h2>
@@ -491,7 +494,7 @@ export default async function ParticipantDetailPage({ params }: { params: Promis
             </div>
           </section>
 
-          <section className="rounded-xl border border-border/70 bg-card/70 p-4">
+          <section className="min-w-0 overflow-hidden rounded-xl border border-border/70 bg-card/70 p-3 sm:p-4">
             <h2 className="text-sm font-semibold">4주 커밋 캘린더</h2>
             <p className="mt-0.5 text-xs text-muted-foreground">
               각 칸은 하루를 의미하며, 색이 진할수록 커밋이 많습니다.
@@ -502,7 +505,7 @@ export default async function ParticipantDetailPage({ params }: { params: Promis
           </section>
         </div>
 
-        <section className="mt-4 rounded-xl border border-border/70 bg-card/70 p-4">
+        <section className="mt-4 min-w-0 overflow-hidden rounded-xl border border-border/70 bg-card/70 p-3 sm:p-4">
           <div className="flex items-start justify-between gap-2">
             <h2 className="text-sm font-semibold">시간대별 커밋 패턴</h2>
             {showHourlyChart && mostActiveHour.commits > 0 ? (
@@ -548,12 +551,12 @@ function Stat({
   hint?: string
 }) {
   return (
-    <div className="rounded-lg border border-border/60 bg-background/40 p-3">
+    <div className="min-w-0 overflow-hidden rounded-lg border border-border/60 bg-background/40 p-3">
       <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
         <Icon className={`h-3.5 w-3.5 ${accent ?? "text-muted-foreground"}`} />
         {label}
       </div>
-      <p className={`mt-1 text-lg font-bold tabular ${accent ?? ""}`}>{value}</p>
+      <p className={`mt-1 truncate text-lg font-bold tabular ${accent ?? ""}`}>{value}</p>
       {hint ? <p className="mt-0.5 text-[10px] text-muted-foreground">{hint}</p> : null}
     </div>
   )

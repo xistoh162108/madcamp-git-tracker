@@ -420,34 +420,41 @@ export function LeaderboardSection({
         </div>
       </div>
 
-      {type === "team" ? (
-        <>
+      <div className="mt-3 min-h-[74px]">
+        {type === "individual" ? (
+          <RankingRule>개인 랭킹은 개발 리듬 점수 기준입니다. 동점은 공동 순위로 표시합니다.</RankingRule>
+        ) : null}
+        {type === "team" ? (
+          <>
+            <RankingRule>
+              {teamMetric === "score"
+                ? "개발 리듬 점수 기준 정렬 · 커밋 크기·메시지 품질·꾸준함을 반영합니다. 동점은 공동 순위로 표시합니다."
+                : teamMetric === "commits"
+                  ? "총 커밋 기준 정렬 · 동점은 공동 순위로 표시하고 보조 기준은 인당 평균, 최근 활동순입니다."
+                  : "인당 평균 기준 정렬 · 동점은 공동 순위로 표시하고 보조 기준은 총 커밋, 최근 활동순입니다."}
+            </RankingRule>
+            {teamSummary ? (
+              <p className="mt-2 text-[11px] text-muted-foreground">
+                이번 주 총 <span className="font-semibold text-foreground tabular">{teamSummary.teamCount}</span>팀 · 총{" "}
+                <span className="font-semibold text-foreground tabular">
+                  {teamSummary.totalCommits.toLocaleString()}
+                </span>
+                커밋 · 평균 활동일{" "}
+                <span className="font-semibold text-foreground tabular">{teamSummary.avgActiveDays.toFixed(1)}</span>일
+              </p>
+            ) : null}
+          </>
+        ) : null}
+        {type === "class" ? (
           <RankingRule>
-            {teamMetric === "score"
-              ? "개발 리듬 점수 기준 정렬 · 커밋 크기·메시지 품질·꾸준함을 반영합니다. 동점은 공동 순위로 표시합니다."
-              : teamMetric === "commits"
-                ? "총 커밋 기준 정렬 · 동점은 공동 순위로 표시하고 보조 기준은 인당 평균, 최근 활동순입니다."
-                : "인당 평균 기준 정렬 · 동점은 공동 순위로 표시하고 보조 기준은 총 커밋, 최근 활동순입니다."}
+            {classMetric === "score"
+              ? "등록 참가자 기준 평균 개발 리듬 점수로 정렬합니다. 동점은 공동 순위로 표시하고 보조 기준은 총 커밋입니다."
+              : classMetric === "averagePerPerson"
+                ? "등록 참가자 수 기준 인당 평균으로 정렬합니다. 동점은 공동 순위로 표시하고 보조 기준은 총 커밋입니다."
+                : "총 커밋 기준 정렬 · 동점은 공동 순위로 표시하고 보조 기준은 인당 평균입니다."}
           </RankingRule>
-          {teamSummary ? (
-            <p className="mt-2 text-[11px] text-muted-foreground">
-              이번 주 총 <span className="font-semibold text-foreground tabular">{teamSummary.teamCount}</span>팀 · 총{" "}
-              <span className="font-semibold text-foreground tabular">{teamSummary.totalCommits.toLocaleString()}</span>
-              커밋 · 평균 활동일{" "}
-              <span className="font-semibold text-foreground tabular">{teamSummary.avgActiveDays.toFixed(1)}</span>일
-            </p>
-          ) : null}
-        </>
-      ) : null}
-      {type === "class" ? (
-        <RankingRule>
-          {classMetric === "score"
-            ? "등록 참가자 기준 평균 개발 리듬 점수로 정렬합니다. 동점은 공동 순위로 표시하고 보조 기준은 총 커밋입니다."
-            : classMetric === "averagePerPerson"
-              ? "등록 참가자 수 기준 인당 평균으로 정렬합니다. 동점은 공동 순위로 표시하고 보조 기준은 총 커밋입니다."
-              : "총 커밋 기준 정렬 · 동점은 공동 순위로 표시하고 보조 기준은 인당 평균입니다."}
-        </RankingRule>
-      ) : null}
+        ) : null}
+      </div>
 
       {/* Rows */}
       <AnimatePresence mode="wait">
@@ -457,7 +464,7 @@ export function LeaderboardSection({
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -8 }}
           transition={{ duration: 0.22 }}
-          className="mt-4 max-h-[620px] space-y-1.5 overflow-y-auto pr-1"
+          className="mt-3 h-[560px] space-y-1.5 overflow-y-auto pr-1"
         >
           {type === "individual" && <IndividualRows data={filteredIndividuals.slice(0, 50)} />}
           {type === "team" && <TeamRows data={sortedTeams.slice(0, 50)} metric={teamMetric} />}
