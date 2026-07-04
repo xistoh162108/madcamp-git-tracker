@@ -13,6 +13,22 @@ export function lookupMaxBand(value: number, bands: MaxBand[]): number {
   return bands[bands.length - 1]!.value
 }
 
+/**
+ * Same lookup, but the result never decreases as `value` grows -- some band tables (like the
+ * rhythm bonus) deliberately dip after a "sweet spot" to discourage going further, but a raw dip
+ * means a person's score can drop just from adding one more real commit, which reads as "I did
+ * more work and got penalized" rather than "diminishing returns." This clamps each band's payout
+ * to the running max of every band at or below it, so the bonus plateaus instead of falling.
+ */
+export function lookupMonotonicMaxBand(value: number, bands: MaxBand[]): number {
+  let runningMax = -Infinity
+  for (const band of bands) {
+    runningMax = Math.max(runningMax, band.value)
+    if (value <= band.max) return runningMax
+  }
+  return runningMax
+}
+
 export const SIZE_BANDS: MaxBand[] = [
   { max: 0, value: 0.0 },
   { max: 2, value: 0.2 },

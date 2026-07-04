@@ -33,15 +33,6 @@ function kstDate(iso: string) {
   return new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Seoul" }).format(new Date(iso))
 }
 
-function kstHour(iso: string) {
-  return new Intl.DateTimeFormat("en-US", {
-    timeZone: "Asia/Seoul",
-    hour: "2-digit",
-    hour12: false,
-    hourCycle: "h23",
-  }).format(new Date(iso))
-}
-
 function kstDateTime(iso?: string) {
   if (!iso) return "-"
   return new Intl.DateTimeFormat("ko-KR", {
@@ -182,16 +173,16 @@ export default async function ParticipantDetailPage({ params }: { params: Promis
   const trend = participantHeatmap
     .slice(-7)
     .map((day) => ({ date: day.date.slice(5).replace("-", "."), commits: day.count }))
-  const hourlyCounts = new Map(Array.from({ length: 24 }, (_, hour) => [String(hour).padStart(2, "0"), 0]))
-  for (const item of participantFeed) {
-    const hour = kstHour(item.committedAt)
-    hourlyCounts.set(hour, (hourlyCounts.get(hour) ?? 0) + 1)
-  }
-  const activeDayCount = Math.max(1, participantHeatmap.length)
-  const hourly = [...hourlyCounts.entries()].map(([hour, commits]) => ({
-    hour,
-    commits: Math.round((commits / activeDayCount) * 10) / 10,
-  }))
+  // Sourced from p.hourlyDistribution (computed server-side from this participant's full commit
+  // list), not participantFeed -- participantFeed is filtered from the global activityFeed, which
+  // is capped at 200 most-recent commits and would silently drop this participant's older hours
+  // as total commit volume grows past that cap.
+  const hourly =
+    p.hourlyDistribution ??
+    Array.from({ length: 24 }, (_, hour) => ({
+      hour: String(hour).padStart(2, "0"),
+      commits: 0,
+    }))
   const dailyAverage = p.activeDays > 0 ? (p.commits / p.activeDays).toFixed(1) : "0.0"
   const mostActiveHour = hourly.reduce(
     (best, item) => (item.commits > best.commits ? item : best),

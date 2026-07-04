@@ -3,6 +3,7 @@
 import { motion } from "framer-motion"
 import { BarChart3, CalendarDays, FolderGit2, Trophy, Users } from "lucide-react"
 import { CountUp } from "@/components/count-up"
+import { ScoringExplainerDialog } from "@/components/scoring-explainer"
 import { summary } from "@/lib/data"
 import { cn } from "@/lib/utils"
 import type { AggregatedSnapshot } from "@/src/aggregation/aggregate"
@@ -154,12 +155,17 @@ export function MetricCards({ snapshot }: { snapshot?: AggregatedSnapshot }) {
           {qualifiedRate !== null ? (
             <>
               <span className="text-border">·</span>
-              <span
-                className="cursor-help underline decoration-dotted underline-offset-2"
-                title="좋은 커밋: 적절한 변경량과 명확한 메시지를 가진 커밋 비율입니다. merge·revert·의존성 업데이트·포맷팅 커밋은 낮은 가중치로 반영됩니다."
-              >
-                좋은 커밋 비율 <span className="font-semibold text-foreground tabular">{qualifiedRate}%</span> ⓘ
-              </span>
+              <ScoringExplainerDialog
+                trigger={
+                  <button
+                    type="button"
+                    title="눌러서 점수 계산법 자세히 보기"
+                    className="cursor-pointer underline decoration-dotted underline-offset-2 hover:text-foreground"
+                  >
+                    좋은 커밋 비율 <span className="font-semibold text-foreground tabular">{qualifiedRate}%</span> ⓘ
+                  </button>
+                }
+              />
             </>
           ) : null}
           <span className="text-border">·</span>

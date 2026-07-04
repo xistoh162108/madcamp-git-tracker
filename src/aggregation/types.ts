@@ -83,6 +83,7 @@ export interface RankedEntry {
     qualifiedCommits: number
     score: number
   }>
+  hourlyDistribution?: Array<{ hour: string; commits: number }>
 }
 
 export interface UnknownUser {

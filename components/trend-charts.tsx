@@ -133,31 +133,10 @@ function normalizedHeatmap(snapshot?: AggregatedSnapshot) {
   return snapshot.heatmap
 }
 
-function hourOfKst(iso: string) {
-  return new Intl.DateTimeFormat("en-US", {
-    timeZone: "Asia/Seoul",
-    hour: "2-digit",
-    hour12: false,
-    hourCycle: "h23",
-  }).format(new Date(iso))
-}
-
-function dayOfKst(iso: string) {
-  return new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Seoul" }).format(new Date(iso))
-}
-
+// `snapshot.hourlyDistribution` is computed server-side from the full commit ledger (aggregate.ts),
+// not from `activityFeed` -- activityFeed is capped at 200 most-recent commits for display, which
+// would silently drop older hours from the average as commit volume grows past that cap.
 function normalizedHourly(snapshot?: AggregatedSnapshot) {
-  const counts = new Map(Array.from({ length: 24 }, (_, hour) => [String(hour).padStart(2, "0"), 0]))
-  const source = snapshot?.activityFeed ?? []
-  const activeDays = new Set<string>()
-  for (const item of source) {
-    const hour = hourOfKst(item.committedAt)
-    counts.set(hour, (counts.get(hour) ?? 0) + 1)
-    activeDays.add(dayOfKst(item.committedAt))
-  }
-  const dayCount = Math.max(1, activeDays.size)
-  return [...counts.entries()].map(([hour, commits]) => ({
-    hour,
-    commits: Math.round((commits / dayCount) * 10) / 10,
-  }))
+  if (snapshot?.hourlyDistribution) return snapshot.hourlyDistribution
+  return Array.from({ length: 24 }, (_, hour) => ({ hour: String(hour).padStart(2, "0"), commits: 0 }))
 }

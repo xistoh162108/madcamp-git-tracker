@@ -37,6 +37,7 @@ export interface AggregatedSnapshot {
     score?: number
   }>
   heatmap: Array<{ date: string; count: number }>
+  hourlyDistribution?: Array<{ hour: string; commits: number }>
   unknownUsers: UnknownUser[]
   sync?: {
     status: "ok" | "partial" | "failed"
@@ -173,6 +174,38 @@ export function activityStatsForCommits(commits: CommitRecord[], now = new Date(
   }
 }
 
+function hourOfDayKst(iso: string): string {
+  return new Intl.DateTimeFormat("en-US", {
+    timeZone: "Asia/Seoul",
+    hour: "2-digit",
+    hour12: false,
+    hourCycle: "h23",
+  }).format(new Date(iso))
+}
+
+/**
+ * Average commits per active day, per hour-of-day -- computed from the *full* commit list for
+ * whatever scope is passed in (all commits for the home page, one participant's commits for their
+ * profile page), never from `activityFeed`. `activityFeed` is capped at 200 most-recent items for
+ * display purposes, so deriving hourly stats from it silently drops older hours as commit volume
+ * grows past that cap (e.g. an early-morning commit from days ago quietly vanishes from the
+ * average once 200 newer commits have landed since).
+ */
+function hourlyDistribution(items: CommitRecord[]): Array<{ hour: string; commits: number }> {
+  const counts = new Map(Array.from({ length: 24 }, (_, hour) => [String(hour).padStart(2, "0"), 0]))
+  const activeDays = new Set<string>()
+  for (const item of items) {
+    const hour = hourOfDayKst(item.committedAt)
+    counts.set(hour, (counts.get(hour) ?? 0) + 1)
+    activeDays.add(dayOf(item.committedAt))
+  }
+  const dayCount = Math.max(1, activeDays.size)
+  return [...counts.entries()].map(([hour, commits]) => ({
+    hour,
+    commits: Math.round((commits / dayCount) * 10) / 10,
+  }))
+}
+
 function scoreStatsForCommits(items: CommitRecord[]): {
   score: number
   qualifiedCommits: number
@@ -264,6 +297,7 @@ export function aggregateSnapshot(params: {
         .at(-1),
       meta: participant?.githubUsername,
       activityStats: activityStatsForCommits(items),
+      hourlyDistribution: hourlyDistribution(items),
       ...scoreStats,
     }
   })
@@ -409,6 +443,7 @@ export function aggregateSnapshot(params: {
     heatmap: [...heatmapCounts.entries()]
       .sort(([a], [b]) => a.localeCompare(b))
       .map(([date, count]) => ({ date, count })),
+    hourlyDistribution: hourlyDistribution(commits),
     unknownUsers: params.unknownUsers ?? [],
   }
 }

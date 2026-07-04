@@ -321,8 +321,22 @@ describe("dailyScore / weeklyScore / teamScore", () => {
     const commits = Array.from({ length: 12 }, (_, i) => qualifiedCommit(`c${i}`, `2026-07-02T0${i % 9}:00:00+09:00`))
     const result = dailyScore(commits)
     expect(result.qualifiedCount).toBe(12)
-    // 10 capped commits at commitScore ~1.21 each + rhythm bonus for 12 qualified commits (11-14 band -> +1.5)
-    expect(result.score).toBeCloseTo(10 * (1.0 * 1.0 * 1.1) + 1.5, 1)
+    // 10 capped commits at commitScore 1.1 each + rhythm bonus for 12 qualified commits. The raw
+    // 11-14 band is 1.5 (lower than the 7-10 band's 2.0), but the bonus is monotonic so it stays
+    // at the 2.0 plateau rather than dropping.
+    expect(result.score).toBeCloseTo(10 * (1.0 * 1.0 * 1.1) + 2.0, 1)
+  })
+
+  it("never lets the rhythm bonus itself decrease, even though the raw band table dips at 11 and 15", () => {
+    const bonusFor = (qualifiedCount: number) =>
+      dailyScore(
+        Array.from({ length: qualifiedCount }, (_, i) => qualifiedCommit(`c${i}`, `2026-07-02T0${i % 9}:00:00+09:00`)),
+      ).score -
+      Math.min(qualifiedCount, 10) * (1.0 * 1.0 * 1.1) // subtract the capped commit-score sum to isolate the bonus
+    expect(bonusFor(10)).toBeCloseTo(2.0, 5)
+    expect(bonusFor(11)).toBeCloseTo(2.0, 5) // raw band would be 1.5 here -- must stay at the 7-10 plateau
+    expect(bonusFor(14)).toBeCloseTo(2.0, 5)
+    expect(bonusFor(16)).toBeCloseTo(2.0, 5) // raw band would be 0.8 here -- must still not drop below 2.0
   })
 
   it("applies the small-diff-spam penalty when >=50% of the day's commits are 1-2 line changes", () => {

@@ -750,6 +750,40 @@ describe("aggregation", () => {
     expect(snapshot.heatmap.map((item) => item.date)).toEqual([...snapshot.heatmap.map((item) => item.date)].sort())
     expect(snapshot.unknownUsers).toHaveLength(1)
   })
+
+  it("keeps hourlyDistribution accurate past the 200-commit activityFeed cap", () => {
+    const { participants } = parseParticipantsCsv("participant_id,name,identifier,class\np1,김가온,gaon-kim,3")
+    // 10 old commits at 02:00 KST, followed by 200 newer commits at 10:00 KST -- activityFeed only
+    // keeps the 200 most recent, so the 02:00 commits would be invisible to anything reading it.
+    const oldNightCommits: CommitRecord[] = Array.from({ length: 10 }, (_, i) => ({
+      sha: `night${i}`,
+      repoName: "2026-summer-w2-c3-07",
+      week: 2,
+      class: 3,
+      teamNumber: "07",
+      participantId: "p1",
+      committedAt: `2026-07-0${(i % 9) + 1}T02:00:00+09:00`,
+    }))
+    const recentDayCommits: CommitRecord[] = Array.from({ length: 200 }, (_, i) => ({
+      sha: `day${i}`,
+      repoName: "2026-summer-w2-c3-07",
+      week: 2,
+      class: 3,
+      teamNumber: "07",
+      participantId: "p1",
+      committedAt: `2026-07-2${(i % 9) + 1}T10:00:00+09:00`,
+    }))
+    const snapshot = aggregateSnapshot({
+      season: "2026-summer",
+      currentWeek: 2,
+      participants,
+      commits: [...oldNightCommits, ...recentDayCommits],
+    })
+    const hour02 = snapshot.hourlyDistribution?.find((h) => h.hour === "02")
+    expect(hour02?.commits).toBeGreaterThan(0)
+    const p1 = snapshot.rankings.personal.find((entry) => entry.id === "p1")
+    expect(p1?.hourlyDistribution?.find((h) => h.hour === "02")?.commits).toBeGreaterThan(0)
+  })
 })
 
 describe("admin session and persistence helpers", () => {

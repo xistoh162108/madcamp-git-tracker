@@ -9,6 +9,7 @@ import {
   TEAM_SIZE_EXPONENT,
   VAGUE_MESSAGE_PENALTY,
   lookupMaxBand,
+  lookupMonotonicMaxBand,
 } from "./constants"
 import { commitScore, hasLowQualityMessage, isQualifiedCommit } from "./commit-score"
 
@@ -40,7 +41,9 @@ export function dailyScore(dayCommitsChronological: CommitRecord[]): DailyScoreR
     }
   }
 
-  const rhythmBonus = lookupMaxBand(qualifiedCount, RHYTHM_BONUS_BANDS)
+  // Monotonic on purpose -- see lookupMonotonicMaxBand's doc comment: going past the 7-10 sweet
+  // spot no longer earns more bonus, but it must never earn less than the sweet spot already did.
+  const rhythmBonus = lookupMonotonicMaxBand(qualifiedCount, RHYTHM_BONUS_BANDS)
   return { score: sum + rhythmBonus, qualifiedCount }
 }
 

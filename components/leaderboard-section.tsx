@@ -10,6 +10,7 @@ import { RankMedal } from "@/components/rank-medal"
 import { RankChange } from "@/components/rank-change"
 import { InitialsAvatar } from "@/components/initials-avatar"
 import { Notice } from "@/components/notice"
+import { ScoringExplainerDialog } from "@/components/scoring-explainer"
 import { WeekSelector } from "@/components/week-selector"
 import {
   individuals,
@@ -473,7 +474,10 @@ export function LeaderboardSection({
       </AnimatePresence>
 
       <div className="mt-4 space-y-2 border-t border-border/60 pt-3">
-        <Notice>{scoringNoticeText}</Notice>
+        <div className="flex flex-wrap items-start justify-between gap-2">
+          <Notice className="flex-1">{scoringNoticeText}</Notice>
+          <ScoringExplainerDialog />
+        </div>
         {type === "class" ? <Notice>{classNoticeText}</Notice> : <Notice>{repoNoticeText}</Notice>}
       </div>
     </motion.section>
