@@ -84,6 +84,22 @@ export interface RankedEntry {
     score: number
   }>
   hourlyDistribution?: Array<{ hour: string; commits: number }>
+  heatmap?: Array<{ date: string; count: number }>
+  commitKindBreakdown?: Array<{ kind: string; count: number }>
+  weeklyBreakdown?: Array<{ week: number; repoName: string; commits: number }>
+  recentCommits?: Array<{
+    id: string
+    repoName: string
+    committedAt: string
+    summary: string
+    commitUrl?: string
+    branches?: string[]
+    additions?: number
+    deletions?: number
+    changedFiles?: number
+    commitKind?: CommitKind
+    score?: number
+  }>
 }
 
 export interface UnknownUser {

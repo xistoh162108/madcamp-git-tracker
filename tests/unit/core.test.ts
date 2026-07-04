@@ -784,6 +784,48 @@ describe("aggregation", () => {
     const p1 = snapshot.rankings.personal.find((entry) => entry.id === "p1")
     expect(p1?.hourlyDistribution?.find((h) => h.hour === "02")?.commits).toBeGreaterThan(0)
   })
+
+  it("keeps a participant's heatmap/weeklyBreakdown/commitKindBreakdown accurate past the activityFeed cap", () => {
+    const { participants } = parseParticipantsCsv("participant_id,name,identifier,class\np1,김가온,gaon-kim,3")
+    // 10 week-1 commits old enough to fall outside the 200-item activityFeed cap once combined
+    // with 200 newer week-2 commits -- personal-page stats must still reflect all 210.
+    const week1Commits: CommitRecord[] = Array.from({ length: 10 }, (_, i) => ({
+      sha: `w1-${i}`,
+      repoName: "2026-summer-w1-c3-07",
+      week: 1,
+      class: 3,
+      teamNumber: "07",
+      participantId: "p1",
+      committedAt: `2026-07-0${(i % 9) + 1}T02:00:00+09:00`,
+    }))
+    const week2Commits: CommitRecord[] = Array.from({ length: 200 }, (_, i) => ({
+      sha: `w2-${i}`,
+      repoName: "2026-summer-w2-c3-07",
+      week: 2,
+      class: 3,
+      teamNumber: "07",
+      participantId: "p1",
+      committedAt: `2026-07-2${(i % 9) + 1}T10:00:00+09:00`,
+    }))
+    const snapshot = aggregateSnapshot({
+      season: "2026-summer",
+      currentWeek: 2,
+      participants,
+      commits: [...week1Commits, ...week2Commits],
+    })
+    const p1 = snapshot.rankings.personal.find((entry) => entry.id === "p1")
+    expect(p1?.heatmap?.some((day) => day.date === "2026-07-01")).toBe(true)
+    expect(p1?.weeklyBreakdown).toEqual(
+      expect.arrayContaining([
+        { week: 1, repoName: "2026-summer-w1-c3-07", commits: 10 },
+        { week: 2, repoName: "2026-summer-w2-c3-07", commits: 200 },
+      ]),
+    )
+    const totalKindCount = p1?.commitKindBreakdown?.reduce((sum, entry) => sum + entry.count, 0)
+    expect(totalKindCount).toBe(210)
+    expect(p1?.recentCommits?.length).toBe(50)
+    expect(p1?.recentCommits?.every((c) => c.repoName === "2026-summer-w2-c3-07")).toBe(true)
+  })
 })
 
 describe("admin session and persistence helpers", () => {

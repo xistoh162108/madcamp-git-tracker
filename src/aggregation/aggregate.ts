@@ -206,6 +206,72 @@ function hourlyDistribution(items: CommitRecord[]): Array<{ hour: string; commit
   }))
 }
 
+/**
+ * Per-day commit counts for whatever scope is passed in -- computed from the *full* commit list,
+ * never from `activityFeed`. Same rationale as `hourlyDistribution`: `activityFeed` is capped at
+ * 200 most-recent items across the whole camp, so a participant's older days silently fall out of
+ * their daily trend chart / commit calendar once camp-wide volume passes that cap, even though
+ * that participant's own commits haven't gone anywhere.
+ */
+function dailyHeatmap(items: CommitRecord[]): Array<{ date: string; count: number }> {
+  const counts = new Map<string, number>()
+  for (const item of items) counts.set(dayOf(item.committedAt), (counts.get(dayOf(item.committedAt)) ?? 0) + 1)
+  return [...counts.entries()].sort(([a], [b]) => a.localeCompare(b)).map(([date, count]) => ({ date, count }))
+}
+
+/**
+ * Per-week commit counts (and which repo/team that week was in) for whatever scope is passed in --
+ * same full-data rationale as `dailyHeatmap`. The participant page's week-by-week history and
+ * "current team" lookup used to derive this from the capped `activityFeed`, which could silently
+ * under-count or entirely miss older weeks, or misidentify a barely-active participant's current
+ * team, once camp-wide commit volume passed the 200-item cap.
+ */
+function weeklyBreakdown(items: CommitRecord[]): Array<{ week: number; repoName: string; commits: number }> {
+  const byWeek = new Map<number, CommitRecord[]>()
+  for (const item of items) byWeek.set(item.week, [...(byWeek.get(item.week) ?? []), item])
+  return [...byWeek.entries()]
+    .sort(([a], [b]) => a - b)
+    .map(([week, weekItems]) => ({ week, repoName: weekItems[0]!.repoName, commits: weekItems.length }))
+}
+
+/** Commit-kind counts for the full commit list, same full-data rationale as `dailyHeatmap` above. */
+function commitKindBreakdown(items: CommitRecord[]): Array<{ kind: string; count: number }> {
+  const counts = new Map<string, number>()
+  for (const item of items) {
+    const kind = item.commitKind ?? "normal"
+    counts.set(kind, (counts.get(kind) ?? 0) + 1)
+  }
+  return [...counts.entries()].sort(([, a], [, b]) => b - a).map(([kind, count]) => ({ kind, count }))
+}
+
+/**
+ * A capped, display-ready recent-commit list scoped to one participant's own full commit list --
+ * NOT sliced from the camp-wide `activityFeed`. The participant page used to filter the global
+ * feed (top 200 most-recent commits across everyone) by author, which meant a participant whose
+ * own most recent commit was older than the 200th most-recent commit camp-wide would show "no
+ * commits yet" even though they have real history -- their commits simply aged out of a feed that
+ * was never scoped to them in the first place.
+ */
+function recentCommitsFor(items: CommitRecord[], limit = 50) {
+  return items
+    .slice()
+    .sort((a, b) => Date.parse(b.committedAt) - Date.parse(a.committedAt))
+    .slice(0, limit)
+    .map((commit) => ({
+      id: `${commit.repoName}:${commit.sha}`,
+      repoName: commit.repoName,
+      committedAt: commit.committedAt,
+      summary: (commit.messageSummary ?? "commit").replace(/[<>]/g, "").slice(0, 100),
+      commitUrl: commit.commitUrl,
+      branches: commit.sourceBranches,
+      additions: commit.additions,
+      deletions: commit.deletions,
+      changedFiles: commit.changedFiles,
+      commitKind: commit.commitKind,
+      score: commitScore(commit),
+    }))
+}
+
 function scoreStatsForCommits(items: CommitRecord[]): {
   score: number
   qualifiedCommits: number
@@ -298,6 +364,10 @@ export function aggregateSnapshot(params: {
       meta: participant?.githubUsername,
       activityStats: activityStatsForCommits(items),
       hourlyDistribution: hourlyDistribution(items),
+      heatmap: dailyHeatmap(items),
+      commitKindBreakdown: commitKindBreakdown(items),
+      weeklyBreakdown: weeklyBreakdown(items),
+      recentCommits: recentCommitsFor(items),
       ...scoreStats,
     }
   })

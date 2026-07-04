@@ -29,10 +29,6 @@ function shortRepo(repo: string) {
   return repo.replace(/^.*?(w\d+-c\d+-\d+)$/, "$1")
 }
 
-function kstDate(iso: string) {
-  return new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Seoul" }).format(new Date(iso))
-}
-
 function kstDateTime(iso?: string) {
   if (!iso) return "-"
   return new Intl.DateTimeFormat("ko-KR", {
@@ -46,6 +42,14 @@ function kstDateTime(iso?: string) {
 
 function repoClass(repo?: string) {
   return repo?.match(/w\d+-c(\d+)-\d+/)?.[1]
+}
+
+// Sourced from entry.weeklyBreakdown (computed server-side from that participant's full commit
+// list), not the capped activityFeed -- a participant whose most recent commit falls outside the
+// camp-wide 200-item feed cap would otherwise be silently misattributed to no team (or the wrong
+// one) here.
+function repoForEntry(entry: AggregatedSnapshot["rankings"]["personal"][number], currentWeek: number) {
+  return entry.weeklyBreakdown?.find((w) => w.week === currentWeek)?.repoName ?? entry.weeklyBreakdown?.at(-1)?.repoName
 }
 
 // Interpretive labels roughly mirror the scoring system's own size/file bands, so "적정" here
@@ -113,33 +117,24 @@ export default async function ParticipantDetailPage({ params }: { params: Promis
   const p = snapshot.rankings.personal.find((i) => i.meta === username || i.id === username)
   if (!p) notFound()
 
-  const participantKey = p.meta ?? p.id
-  const participantFeed = snapshot.activityFeed.filter((item) => item.label === participantKey || item.label === p.id)
-  const activeTeam = participantFeed[0]?.repoName ?? snapshot.rankings.teams[0]?.label ?? "-"
+  const currentWeek = snapshot.currentWeek ?? 0
+  const activeTeam = repoForEntry(p, currentWeek) ?? snapshot.rankings.teams[0]?.label ?? "-"
   const activeTeamSlug = shortRepo(activeTeam)
   const activeClass = repoClass(activeTeam)
-  const teamPeers = snapshot.rankings.personal.filter((entry) => {
-    const entryKey = entry.meta ?? entry.id
-    const entryRepo = snapshot.activityFeed.find((item) => item.label === entryKey || item.label === entry.id)?.repoName
-    return entryRepo === activeTeam
-  })
-  const classPeers = snapshot.rankings.personal.filter((entry) => {
-    const entryKey = entry.meta ?? entry.id
-    const entryRepo = snapshot.activityFeed.find((item) => item.label === entryKey || item.label === entry.id)?.repoName
-    return repoClass(entryRepo) === activeClass
-  })
+  const teamPeers = snapshot.rankings.personal.filter((entry) => repoForEntry(entry, currentWeek) === activeTeam)
+  const classPeers = snapshot.rankings.personal.filter(
+    (entry) => repoClass(repoForEntry(entry, currentWeek)) === activeClass,
+  )
   const teamRank = Math.max(1, teamPeers.findIndex((entry) => entry.id === p.id) + 1)
   const classRank = Math.max(1, classPeers.findIndex((entry) => entry.id === p.id) + 1)
-  const currentWeek = snapshot.currentWeek ?? 0
   const position = rankingContext(p, snapshot.rankings.personal)
   const weekHistory = config.weeks.map((week) => {
-    const weekItems = participantFeed.filter((item) => item.repoName.includes(`-w${week.week}-`))
-    const weekTeam = weekItems[0]?.repoName
+    const weekData = p.weeklyBreakdown?.find((w) => w.week === week.week)
     const status = week.week < currentWeek ? "ended" : week.week === currentWeek ? "active" : "upcoming"
     return {
       week: `${week.week}주차`,
-      team: weekTeam ? shortRepo(weekTeam) : status === "upcoming" ? "예정" : "기록 없음",
-      commits: weekItems.length,
+      team: weekData ? shortRepo(weekData.repoName) : status === "upcoming" ? "예정" : "기록 없음",
+      commits: weekData?.commits ?? 0,
       status,
     }
   })
@@ -156,20 +151,14 @@ export default async function ParticipantDetailPage({ params }: { params: Promis
     asset_only: "에셋",
     rename_only: "이름 변경",
   }
-  const commitKindCounts = new Map<string, number>()
-  for (const item of participantFeed) {
-    const kind = item.commitKind ?? "normal"
-    commitKindCounts.set(kind, (commitKindCounts.get(kind) ?? 0) + 1)
-  }
-  const commitKindBreakdown = [...commitKindCounts.entries()].sort(([, a], [, b]) => b - a).slice(0, 5)
-  const participantCounts = new Map<string, number>()
-  for (const item of participantFeed) {
-    const date = kstDate(item.committedAt)
-    participantCounts.set(date, (participantCounts.get(date) ?? 0) + 1)
-  }
-  const participantHeatmap = [...participantCounts.entries()]
-    .sort(([a], [b]) => a.localeCompare(b))
-    .map(([date, count]) => ({ date, count }))
+  // Sourced from p.commitKindBreakdown / p.heatmap (computed server-side from this participant's
+  // full commit list), not participantFeed -- participantFeed is filtered from the global
+  // activityFeed, which is capped at 200 most-recent commits camp-wide and would silently drop
+  // this participant's older commits/days as total commit volume grows past that cap.
+  const commitKindBreakdown = (p.commitKindBreakdown ?? [])
+    .slice(0, 5)
+    .map(({ kind, count }) => [kind, count] as [string, number])
+  const participantHeatmap = p.heatmap ?? []
   const trend = participantHeatmap
     .slice(-7)
     .map((day) => ({ date: day.date.slice(5).replace("-", "."), commits: day.count }))
@@ -318,7 +307,7 @@ export default async function ParticipantDetailPage({ params }: { params: Promis
             <h2 className="text-sm font-semibold">최근 커밋</h2>
             <p className="mt-0.5 text-xs text-muted-foreground">KST 기준 · 원본 커밋 메시지</p>
             <ul className="mt-3 max-h-[480px] space-y-2 overflow-y-auto pr-1">
-              {participantFeed.slice(0, 50).map((item) => {
+              {(p.recentCommits ?? []).map((item) => {
                 const hasStats =
                   item.additions !== undefined || item.deletions !== undefined || item.changedFiles !== undefined
                 const branch = item.branches?.[0]
@@ -383,7 +372,7 @@ export default async function ParticipantDetailPage({ params }: { params: Promis
                   </li>
                 )
               })}
-              {participantFeed.length === 0 ? (
+              {(p.recentCommits ?? []).length === 0 ? (
                 <li className="rounded-lg border border-dashed border-border/70 bg-background/30 p-4 text-sm text-muted-foreground">
                   아직 표시할 커밋이 없습니다.
                 </li>
