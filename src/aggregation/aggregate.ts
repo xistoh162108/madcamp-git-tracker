@@ -1,6 +1,6 @@
 import type { Participant } from "../participants/participant-schema"
 import { commitScore, isQualifiedCommit } from "../scoring/commit-score"
-import { dailyScore, teamScore, weeklyScore, type DailyScoreResult } from "../scoring/period-score"
+import { dailyScore, dailyVolumeWeight, teamScore, weeklyScore, type DailyScoreResult } from "../scoring/period-score"
 import type { CommitKind, CommitRecord, RankedEntry, UnknownUser } from "./types"
 
 export interface AggregatedSnapshot {
@@ -246,19 +246,33 @@ function commitKindBreakdown(items: CommitRecord[]): Array<{ kind: string; count
 
 /** Groups a participant's (or team's) commits by KST day and runs `dailyScore` once per day, so
  *  the per-commit penalty multiplier and the weekly total are always derived from the same pass --
- *  callers must not re-group/re-score independently or the two can silently drift apart. */
-function dailyResultsByDay(items: CommitRecord[]): Map<string, DailyScoreResult> {
-  const byDay = new Map<string, CommitRecord[]>()
+ *  callers must not re-group/re-score independently or the two can silently drift apart. Also
+ *  returns each individual commit's combined effective multiplier (`dailyVolumeWeight(index) *
+ *  penaltyMultiplier`, keyed by `repoName:sha`) so a per-commit display can show exactly what that
+ *  commit contributed, decay curve included. */
+function dailyResultsByDay(items: CommitRecord[]): {
+  byDay: Map<string, DailyScoreResult>
+  effectiveMultiplierByCommitKey: Map<string, number>
+} {
+  const byDayItems = new Map<string, CommitRecord[]>()
   for (const commit of items) {
     const key = dayOf(commit.committedAt)
-    byDay.set(key, [...(byDay.get(key) ?? []), commit])
+    byDayItems.set(key, [...(byDayItems.get(key) ?? []), commit])
   }
-  return new Map(
-    [...byDay.entries()].map(([day, dayCommits]) => [
-      day,
-      dailyScore([...dayCommits].sort((a, b) => Date.parse(a.committedAt) - Date.parse(b.committedAt))),
-    ]),
-  )
+  const byDay = new Map<string, DailyScoreResult>()
+  const effectiveMultiplierByCommitKey = new Map<string, number>()
+  for (const [day, dayCommits] of byDayItems) {
+    const chronological = [...dayCommits].sort((a, b) => Date.parse(a.committedAt) - Date.parse(b.committedAt))
+    const result = dailyScore(chronological)
+    byDay.set(day, result)
+    chronological.forEach((commit, index) => {
+      effectiveMultiplierByCommitKey.set(
+        `${commit.repoName}:${commit.sha}`,
+        dailyVolumeWeight(index) * result.penaltyMultiplier,
+      )
+    })
+  }
+  return { byDay, effectiveMultiplierByCommitKey }
 }
 
 /**
@@ -273,21 +287,22 @@ function dailyResultsByDay(items: CommitRecord[]): Map<string, DailyScoreResult>
  * to the same total shown as the participant's score (see below) -- truncating this list would
  * silently reintroduce the "numbers on the page don't add up" complaint this was built to fix.
  *
- * `score` here is the commit's *effective* contribution -- `commitScore(commit)` multiplied by
- * that day's small-diff/vague-message penalty multiplier -- not the raw per-commit score. Without
- * this, a participant manually summing the scores shown per commit would get a higher number than
- * their displayed total on days a penalty applied, which is exactly the "score doesn't add up"
- * complaint this was built to resolve. (Day-level rhythm/consistency bonuses still aren't part of
- * any single commit's number; the page surfaces those as their own line instead.)
+ * `score` here is the commit's *effective* contribution -- `commitScore(commit)` multiplied by that
+ * commit's combined penalty/volume-decay multiplier -- not the raw per-commit score. Without this,
+ * a participant manually summing the scores shown per commit would get a higher number than their
+ * displayed total on a day a penalty or the volume-decay curve applied, which is exactly the "score
+ * doesn't add up" complaint this was built to resolve. (Day-level rhythm/consistency bonuses still
+ * aren't part of any single commit's number; the page surfaces those as their own line instead.)
  */
-function recentCommitsFor(items: CommitRecord[], dailyResults: Map<string, DailyScoreResult>) {
+function recentCommitsFor(items: CommitRecord[], effectiveMultiplierByCommitKey: Map<string, number>) {
   return items
     .slice()
     .sort((a, b) => Date.parse(b.committedAt) - Date.parse(a.committedAt))
     .map((commit) => {
-      const multiplier = dailyResults.get(dayOf(commit.committedAt))?.penaltyMultiplier ?? 1
+      const key = `${commit.repoName}:${commit.sha}`
+      const multiplier = effectiveMultiplierByCommitKey.get(key) ?? 1
       return {
-        id: `${commit.repoName}:${commit.sha}`,
+        id: key,
         repoName: commit.repoName,
         committedAt: commit.committedAt,
         summary: (commit.messageSummary ?? "commit").replace(/[<>]/g, "").slice(0, 100),
@@ -304,7 +319,7 @@ function recentCommitsFor(items: CommitRecord[], dailyResults: Map<string, Daily
 
 function scoreStatsForCommits(
   items: CommitRecord[],
-  dailyResults: Map<string, DailyScoreResult> = dailyResultsByDay(items),
+  dailyResults: Map<string, DailyScoreResult> = dailyResultsByDay(items).byDay,
 ): {
   score: number
   qualifiedCommits: number
@@ -381,8 +396,8 @@ export function aggregateSnapshot(params: {
 
   const personalEntries = [...grouped.personal.entries()].map(([participantId, items]) => {
     const participant = participantMap.get(participantId)
-    const dailyResults = dailyResultsByDay(items)
-    const scoreStats = scoreStatsForCommits(items, dailyResults)
+    const { byDay, effectiveMultiplierByCommitKey } = dailyResultsByDay(items)
+    const scoreStats = scoreStatsForCommits(items, byDay)
     return {
       id: participantId,
       label: participant?.name ?? participantId,
@@ -398,7 +413,7 @@ export function aggregateSnapshot(params: {
       heatmap: dailyHeatmap(items),
       commitKindBreakdown: commitKindBreakdown(items),
       weeklyBreakdown: weeklyBreakdown(items),
-      recentCommits: recentCommitsFor(items, dailyResults),
+      recentCommits: recentCommitsFor(items, effectiveMultiplierByCommitKey),
       ...scoreStats,
     }
   })

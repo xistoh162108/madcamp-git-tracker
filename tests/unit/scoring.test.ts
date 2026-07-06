@@ -8,7 +8,7 @@ import {
   sizeScore,
   typeFactor,
 } from "../../src/scoring/commit-score"
-import { dailyScore, teamScore, weeklyScore } from "../../src/scoring/period-score"
+import { dailyScore, dailyVolumeWeight, teamScore, weeklyScore } from "../../src/scoring/period-score"
 import type { CommitRecord } from "../../src/aggregation/types"
 import { aggregateSnapshot } from "../../src/aggregation/aggregate"
 import { parseParticipantsCsv } from "../../src/participants/parse-participants"
@@ -317,22 +317,35 @@ describe("dailyScore / weeklyScore / teamScore", () => {
       isConventionalMessage: true,
     })
 
-  it("counts every qualified commit's score in the day sum, with no cutoff for high-volume days", () => {
+  const uncappedSum = (qualifiedCount: number) =>
+    Array.from({ length: qualifiedCount }, (_, i) => dailyVolumeWeight(i) * (1.0 * 1.0 * 1.1)).reduce(
+      (a, b) => a + b,
+      0,
+    )
+
+  it("counts every qualified commit's score in the day sum, with no cutoff for high-volume days, decayed past the full-credit threshold", () => {
     const commits = Array.from({ length: 12 }, (_, i) => qualifiedCommit(`c${i}`, `2026-07-02T0${i % 9}:00:00+09:00`))
     const result = dailyScore(commits)
     expect(result.qualifiedCount).toBe(12)
-    // all 12 commits at commitScore 1.1 each + rhythm bonus for 12 qualified commits. The raw
-    // 11-14 band is 1.5 (lower than the 7-10 band's 2.0), but the bonus is monotonic so it stays
-    // at the 2.0 plateau rather than dropping.
-    expect(result.score).toBeCloseTo(12 * (1.0 * 1.0 * 1.1) + 2.0, 1)
+    // First 10 commits at full commitScore 1.1 each, the 11th/12th decayed by the volume curve --
+    // no commit is ever zeroed, but the marginal contribution shrinks. Plus rhythm bonus for 12
+    // qualified commits: the raw 11-14 band is 1.5 (lower than the 7-10 band's 2.0), but the bonus
+    // is monotonic so it stays at the 2.0 plateau rather than dropping.
+    expect(result.score).toBeCloseTo(uncappedSum(12) + 2.0, 5)
+  })
+
+  it("decays each additional day-commit past the full-credit threshold by the volume decay rate, never to zero", () => {
+    expect(dailyVolumeWeight(9)).toBe(1) // 10th commit (0-indexed 9) is still full credit
+    expect(dailyVolumeWeight(10)).toBeCloseTo(0.95, 5) // 11th commit: first one past the threshold
+    expect(dailyVolumeWeight(11)).toBeCloseTo(0.95 * 0.95, 5)
+    expect(dailyVolumeWeight(59)).toBeGreaterThan(0) // even a 60th commit that day still counts for something
   })
 
   it("never lets the rhythm bonus itself decrease, even though the raw band table dips at 11 and 15", () => {
     const bonusFor = (qualifiedCount: number) =>
       dailyScore(
         Array.from({ length: qualifiedCount }, (_, i) => qualifiedCommit(`c${i}`, `2026-07-02T0${i % 9}:00:00+09:00`)),
-      ).score -
-      qualifiedCount * (1.0 * 1.0 * 1.1) // subtract the (uncapped) commit-score sum to isolate the bonus
+      ).score - uncappedSum(qualifiedCount)
     expect(bonusFor(10)).toBeCloseTo(2.0, 5)
     expect(bonusFor(11)).toBeCloseTo(2.0, 5) // raw band would be 1.5 here -- must stay at the 7-10 plateau
     expect(bonusFor(14)).toBeCloseTo(2.0, 5)

@@ -79,6 +79,15 @@ export const TYPE_FACTORS: Record<CommitKind, number> = {
 
 export const QUALIFIED_COMMIT_MIN_SCORE = 0.6
 
+// The day's first DAILY_FULL_CREDIT_THRESHOLD commits (chronological order) count at full value --
+// matches the rhythm bonus's own 7-10 sweet spot, so a normal productive day is never discounted.
+// Every commit past that counts at DAILY_VOLUME_DECAY_RATE raised to how far past the threshold it
+// is, a smooth curve rather than a cliff: the 11th commit of the day still counts at 95%, the 20th
+// at ~60%, the 50th at ~1% -- so splitting one day's work into ever more, ever-smaller commits keeps
+// yielding *less* additional score, without any single extra commit ever being zeroed outright.
+export const DAILY_FULL_CREDIT_THRESHOLD = 10
+export const DAILY_VOLUME_DECAY_RATE = 0.95
+
 export const RHYTHM_BONUS_BANDS: MaxBand[] = [
   { max: 0, value: 0 },
   { max: 1, value: 0.3 },

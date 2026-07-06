@@ -3,6 +3,8 @@ import {
   ACTIVE_DAY_THRESHOLD,
   BALANCE_FACTOR_BANDS,
   CONSISTENCY_BONUS_BANDS,
+  DAILY_FULL_CREDIT_THRESHOLD,
+  DAILY_VOLUME_DECAY_RATE,
   RHYTHM_BONUS_BANDS,
   SMALL_DIFF_PENALTY,
   TEAM_SIZE_EXPONENT,
@@ -12,12 +14,21 @@ import {
 } from "./constants"
 import { commitScore, hasLowQualityMessage, isQualifiedCommit } from "./commit-score"
 
+/** How much of a single commit's score counts toward its day's sum, based on its chronological
+ *  position (0-indexed) among that day's commits -- see DAILY_FULL_CREDIT_THRESHOLD/
+ *  DAILY_VOLUME_DECAY_RATE's doc comment for why this curve exists. */
+export function dailyVolumeWeight(chronologicalIndex: number): number {
+  if (chronologicalIndex < DAILY_FULL_CREDIT_THRESHOLD) return 1
+  return Math.pow(DAILY_VOLUME_DECAY_RATE, chronologicalIndex - DAILY_FULL_CREDIT_THRESHOLD + 1)
+}
+
 export interface DailyScoreResult {
   score: number
   qualifiedCount: number
   /** Combined small-diff/vague-message penalty multiplier applied to this day's raw commit-score
    *  sum -- exposed so callers can derive each individual commit's true effective contribution
-   *  (`commitScore(commit) * penaltyMultiplier`) instead of displaying the pre-penalty raw score. */
+   *  (`commitScore(commit) * dailyVolumeWeight(index) * penaltyMultiplier`) instead of displaying
+   *  the pre-penalty raw score. */
   penaltyMultiplier: number
   /** This day's flat rhythm bonus, broken out separately since it isn't attributable to any single
    *  commit -- callers that want "sum of displayed commit scores" to reconcile with the total score
@@ -31,10 +42,16 @@ export function dailyScore(dayCommitsChronological: CommitRecord[]): DailyScoreR
   const qualifiedCount = dayCommitsChronological.filter(isQualifiedCommit).length
   const total = dayCommitsChronological.length
 
-  // No cap on how many of the day's commits count -- genuine high-volume output (a hard crunch day)
-  // should be rewarded, not zeroed past an arbitrary cutoff. Spam/salami-slicing is instead deterred
-  // by the qualified-commit quality bar plus the small-diff/vague-message ratio penalties below.
-  const rawSum = dayCommitsChronological.reduce((acc, commit) => acc + commitScore(commit), 0)
+  // Every commit still contributes something -- no commit is ever zeroed outright -- but past the
+  // "full credit" threshold each additional commit that day counts for gradually less, so genuine
+  // high-volume days are rewarded without letting raw commit *count* (as opposed to actual line/file
+  // volume) become the dominant lever for score, i.e. splitting the same work into ever more, ever
+  // smaller commits stops paying off. Quality-based spam is separately deterred by the qualified-
+  // commit bar and the small-diff/vague-message ratio penalties below.
+  const rawSum = dayCommitsChronological.reduce(
+    (acc, commit, index) => acc + commitScore(commit) * dailyVolumeWeight(index),
+    0,
+  )
   let penaltyMultiplier = 1
 
   if (total > 0) {
