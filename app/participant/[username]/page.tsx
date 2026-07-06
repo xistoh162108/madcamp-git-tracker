@@ -62,6 +62,17 @@ function changedLinesHint(avg: number) {
   return "매우 큼"
 }
 
+// A commit deep into a high-volume day's decay curve can round to "0.0" under a flat one-decimal
+// format even though its real contribution is still positive -- that reads as "this commit was
+// worth nothing," which is exactly the trust problem this page was built to avoid. Show more
+// precision once the value would otherwise vanish, instead of ever displaying a real commit as 0.0.
+function formatCommitScore(score: number) {
+  if (score === 0) return "0.0"
+  if (score < 0.05) return score.toFixed(3)
+  if (score < 0.1) return score.toFixed(2)
+  return score.toFixed(1)
+}
+
 function changedFilesHint(avg: number) {
   if (avg <= 0) return undefined
   if (avg <= 8) return "적정"
@@ -374,7 +385,7 @@ export default async function ParticipantDetailPage({ params }: { params: Promis
                       )}
                       {item.score !== undefined ? (
                         <span className="ml-auto shrink-0 font-mono font-semibold text-gold">
-                          {item.score.toFixed(1)}점
+                          {formatCommitScore(item.score)}점
                         </span>
                       ) : null}
                     </p>
