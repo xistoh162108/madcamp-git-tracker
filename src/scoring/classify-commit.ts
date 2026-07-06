@@ -33,7 +33,12 @@ const LOCKFILE_NAMES = new Set([
   "go.sum",
 ])
 
-const GENERATED_PATH_PATTERN = /(^|\/)(dist|build|\.next|out|coverage|generated)\//i
+// Includes vendored-dependency directories (venv/node_modules/site-packages/...), not just build
+// output -- real production data showed two participants each with a single commit touching 300+
+// files and 800k+ changed lines from committing (and later "untracking") a Python venv, which this
+// pattern previously didn't catch, so it was scored as an ordinary "normal" commit.
+const GENERATED_PATH_PATTERN =
+  /(^|\/)(dist|build|\.next|out|coverage|generated|node_modules|vendor|venv|\.venv|site-packages|__pycache__|\.tox|\.mypy_cache)\//i
 const GENERATED_SUFFIX_PATTERN = /\.(min\.js|map)$/i
 
 const ASSET_EXTENSIONS = new Set([
@@ -72,6 +77,11 @@ const DEPENDENCY_MESSAGE_MAX_FILES = 5
 
 const CONVENTIONAL_PREFIX_PATTERN = /^(feat|fix|style|docs|refactor|test|chore|build|ci|perf):/i
 
+// Extended from real camp data: since messages under 10 chars all get the same flat "short" (0.5)
+// discount regardless of content, a genuinely specific short Korean message (e.g. "카메라 연동" --
+// Korean is information-dense, so a short phrase can still name a real feature) would otherwise be
+// scored identically to a truly contentless one (e.g. "수정" -- just the generic verb "edit", or a
+// bare "."). This list singles out the latter for the harsher vague (0.3) penalty instead.
 const VAGUE_MESSAGES = new Set([
   "update",
   "updated",
@@ -80,14 +90,24 @@ const VAGUE_MESSAGES = new Set([
   "wip",
   "final",
   "test",
+  "test2",
   "asdf",
   "real final",
   "final final",
   "temp",
   "tmp",
+  "temp api",
+  "change",
   "changes",
   "misc",
   "stuff",
+  "merge",
+  "schema",
+  "home",
+  "readme",
+  "수정",
+  "링크",
+  ".",
 ])
 
 function basename(filename: string): string {

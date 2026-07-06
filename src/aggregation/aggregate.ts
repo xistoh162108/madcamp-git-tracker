@@ -291,8 +291,9 @@ function dailyResultsByDay(items: CommitRecord[]): {
  * commit's combined penalty/volume-decay multiplier -- not the raw per-commit score. Without this,
  * a participant manually summing the scores shown per commit would get a higher number than their
  * displayed total on a day a penalty or the volume-decay curve applied, which is exactly the "score
- * doesn't add up" complaint this was built to resolve. (Day-level rhythm/consistency bonuses still
- * aren't part of any single commit's number; the page surfaces those as their own line instead.)
+ * doesn't add up" complaint this was built to resolve. There is no day/week bonus layered on top of
+ * this list anywhere else in the system, so summing every entry's `score` always equals the
+ * participant's total `score` exactly -- not approximately, by construction.
  */
 function recentCommitsFor(items: CommitRecord[], effectiveMultiplierByCommitKey: Map<string, number>) {
   return items
@@ -326,23 +327,27 @@ function scoreStatsForCommits(
   avgChangedLines: number
   avgChangedFiles: number
   messageFormatRate: number
-  rhythmBonusTotal: number
-  consistencyBonus: number
 } {
   const results = [...dailyResults.values()]
   const weekly = weeklyScore(results)
   const qualifiedCommits = items.filter(isQualifiedCommit).length
   const conventionalCount = items.filter((item) => item.isConventionalMessage).length
-  const changedLinesSum = items.reduce((sum, item) => sum + (item.additions ?? 0) + (item.deletions ?? 0), 0)
-  const changedFilesSum = items.reduce((sum, item) => sum + (item.changedFiles ?? 0), 0)
+
+  // "Typical commit size" should describe a person's real, hand-written work -- a merge/lockfile/
+  // generated-files/asset-only commit isn't a unit of authored work, and including one (e.g. a
+  // vendored dependency directory accidentally committed, hundreds of thousands of lines) would
+  // massively distort the displayed average even though it barely affects score (already floored
+  // low by the size/file bands). Pre-classification legacy commits (commitKind undefined) are kept
+  // in, matching the neutral-fallback treatment used elsewhere for not-yet-backfilled data.
+  const normalItems = items.filter((item) => item.commitKind === undefined || item.commitKind === "normal")
+  const changedLinesSum = normalItems.reduce((sum, item) => sum + (item.additions ?? 0) + (item.deletions ?? 0), 0)
+  const changedFilesSum = normalItems.reduce((sum, item) => sum + (item.changedFiles ?? 0), 0)
   return {
     score: weekly.score,
     qualifiedCommits,
-    avgChangedLines: items.length ? changedLinesSum / items.length : 0,
-    avgChangedFiles: items.length ? changedFilesSum / items.length : 0,
+    avgChangedLines: normalItems.length ? changedLinesSum / normalItems.length : 0,
+    avgChangedFiles: normalItems.length ? changedFilesSum / normalItems.length : 0,
     messageFormatRate: items.length ? conventionalCount / items.length : 0,
-    rhythmBonusTotal: results.reduce((sum, day) => sum + day.rhythmBonus, 0),
-    consistencyBonus: weekly.consistencyBonus,
   }
 }
 

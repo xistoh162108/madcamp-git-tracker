@@ -13,22 +13,6 @@ export function lookupMaxBand(value: number, bands: MaxBand[]): number {
   return bands[bands.length - 1]!.value
 }
 
-/**
- * Same lookup, but the result never decreases as `value` grows -- some band tables (like the
- * rhythm bonus) deliberately dip after a "sweet spot" to discourage going further, but a raw dip
- * means a person's score can drop just from adding one more real commit, which reads as "I did
- * more work and got penalized" rather than "diminishing returns." This clamps each band's payout
- * to the running max of every band at or below it, so the bonus plateaus instead of falling.
- */
-export function lookupMonotonicMaxBand(value: number, bands: MaxBand[]): number {
-  let runningMax = -Infinity
-  for (const band of bands) {
-    runningMax = Math.max(runningMax, band.value)
-    if (value <= band.max) return runningMax
-  }
-  return runningMax
-}
-
 export const SIZE_BANDS: MaxBand[] = [
   { max: 0, value: 0.0 },
   { max: 2, value: 0.2 },
@@ -79,38 +63,20 @@ export const TYPE_FACTORS: Record<CommitKind, number> = {
 
 export const QUALIFIED_COMMIT_MIN_SCORE = 0.6
 
-// The day's first DAILY_FULL_CREDIT_THRESHOLD commits (chronological order) count at full value --
-// matches the rhythm bonus's own 7-10 sweet spot, so a normal productive day is never discounted.
-// Every commit past that counts at DAILY_VOLUME_DECAY_RATE raised to how far past the threshold it
-// is, a smooth curve rather than a cliff: the 11th commit of the day still counts at 95%, the 20th
-// at ~60%, the 50th at ~1% -- so splitting one day's work into ever more, ever-smaller commits keeps
-// yielding *less* additional score, without any single extra commit ever being zeroed outright.
+// The day's first DAILY_FULL_CREDIT_THRESHOLD commits (chronological order) count at full value,
+// matching real camp data's own p70-75 daily-commit-count percentile -- a normal productive day is
+// never discounted. Every commit past that counts at DAILY_VOLUME_DECAY_RATE raised to how far past
+// the threshold it is, a smooth curve rather than a cliff: the 11th commit of the day still counts
+// at 95%, the 20th at ~60%, the 50th at ~1% -- so splitting one day's work into ever more, ever-
+// smaller commits keeps yielding *less* additional score, without any single extra commit ever being
+// zeroed outright. This is the only volume-based adjustment in the system -- there is deliberately no
+// separate day/week "bonus" layered on top: every point of score must be traceable to a specific
+// commit's own (possibly decayed/penalized) contribution, not to a post-hoc aggregate add-on.
 export const DAILY_FULL_CREDIT_THRESHOLD = 10
 export const DAILY_VOLUME_DECAY_RATE = 0.95
 
-export const RHYTHM_BONUS_BANDS: MaxBand[] = [
-  { max: 0, value: 0 },
-  { max: 1, value: 0.3 },
-  { max: 3, value: 0.8 },
-  { max: 6, value: 1.5 },
-  { max: 10, value: 2.0 },
-  { max: 14, value: 1.5 },
-  { max: Infinity, value: 0.8 },
-]
-
 export const SMALL_DIFF_PENALTY = { threshold: 0.5, multiplier: 0.7 }
 export const VAGUE_MESSAGE_PENALTY = { threshold: 0.5, multiplier: 0.8 }
-
-export const ACTIVE_DAY_THRESHOLD = 2.0
-
-export const CONSISTENCY_BONUS_BANDS: MaxBand[] = [
-  { max: 1, value: 0 },
-  { max: 2, value: 1 },
-  { max: 3, value: 2 },
-  { max: 4, value: 3 },
-  { max: 5, value: 4 },
-  { max: Infinity, value: 5 },
-]
 
 export const TEAM_SIZE_EXPONENT = 0.7
 

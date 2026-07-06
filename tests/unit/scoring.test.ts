@@ -168,6 +168,44 @@ describe("classifyCommit", () => {
     expect(result.kind).toBe("generated_files")
   })
 
+  it("classifies a vendored Python venv dump as generated_files, not normal", () => {
+    // Real camp data: a participant committed (then untracked) a full venv -- 300 files, 800k+
+    // changed lines -- which the old pattern (dist/build/.next/out/coverage/generated only) missed.
+    const result = classifyCommit({
+      message: "Untrack backend venv and add backend/.gitignore",
+      additions: 27,
+      deletions: 872089,
+      changedFiles: 300,
+      filePaths: [
+        { filename: "backend/venv/lib/python3.11/site-packages/flask/__init__.py", status: "removed" },
+        { filename: "backend/venv/bin/activate", status: "removed" },
+        { filename: ".gitignore", status: "modified" },
+      ].concat(
+        Array.from({ length: 297 }, (_, i) => ({
+          filename: `backend/venv/lib/python3.11/site-packages/pkg${i}/__init__.py`,
+          status: "removed",
+        })),
+      ),
+      parentCount: 1,
+    })
+    expect(result.kind).toBe("normal") // mixed with .gitignore -> not *every* file is generated
+  })
+
+  it("classifies a pure venv-only commit as generated_files", () => {
+    const result = classifyCommit({
+      message: "add dependencies",
+      additions: 500,
+      deletions: 0,
+      changedFiles: 2,
+      filePaths: [
+        { filename: "venv/lib/python3.11/site-packages/flask/__init__.py", status: "added" },
+        { filename: "backend/.venv/bin/activate", status: "added" },
+      ],
+      parentCount: 1,
+    })
+    expect(result.kind).toBe("generated_files")
+  })
+
   it("classifies asset-only commits", () => {
     const result = classifyCommit({
       message: "chore: add logo",
@@ -222,6 +260,22 @@ describe("classifyCommit", () => {
         parentCount: 1,
       }).isVagueMessage,
     ).toBe(false)
+  })
+
+  it("flags real camp data's common vague short messages, but not a short-but-specific Korean phrase", () => {
+    const vague = (message: string) =>
+      classifyCommit({ message, additions: 1, deletions: 0, changedFiles: 1, filePaths: [], parentCount: 1 })
+        .isVagueMessage
+    // Found in production data: generic single-word messages that score no differently than a
+    // real one-liner under a flat length-based discount, unless explicitly flagged as vague.
+    expect(vague("수정")).toBe(true) // just "edit", no object
+    expect(vague(".")).toBe(true)
+    expect(vague("schema")).toBe(true)
+    expect(vague("merge")).toBe(true)
+    // Korean is information-dense -- a short phrase can still name a specific feature, so these
+    // must NOT be caught by the vague list even though they're under the 10-char "short" cutoff.
+    expect(vague("카메라 연동")).toBe(false)
+    expect(vague("DB 스키마 설계")).toBe(false)
   })
 })
 
@@ -323,15 +377,14 @@ describe("dailyScore / weeklyScore / teamScore", () => {
       0,
     )
 
-  it("counts every qualified commit's score in the day sum, with no cutoff for high-volume days, decayed past the full-credit threshold", () => {
+  it("counts every qualified commit's score in the day sum, with no cutoff for high-volume days, decayed past the full-credit threshold, and no post-hoc bonus added", () => {
     const commits = Array.from({ length: 12 }, (_, i) => qualifiedCommit(`c${i}`, `2026-07-02T0${i % 9}:00:00+09:00`))
     const result = dailyScore(commits)
     expect(result.qualifiedCount).toBe(12)
     // First 10 commits at full commitScore 1.1 each, the 11th/12th decayed by the volume curve --
-    // no commit is ever zeroed, but the marginal contribution shrinks. Plus rhythm bonus for 12
-    // qualified commits: the raw 11-14 band is 1.5 (lower than the 7-10 band's 2.0), but the bonus
-    // is monotonic so it stays at the 2.0 plateau rather than dropping.
-    expect(result.score).toBeCloseTo(uncappedSum(12) + 2.0, 5)
+    // no commit is ever zeroed, but the marginal contribution shrinks. No bonus on top: the day's
+    // score is exactly the sum of its own (decayed) per-commit contributions.
+    expect(result.score).toBeCloseTo(uncappedSum(12), 5)
   })
 
   it("decays each additional day-commit past the full-credit threshold by the volume decay rate, never to zero", () => {
@@ -341,33 +394,20 @@ describe("dailyScore / weeklyScore / teamScore", () => {
     expect(dailyVolumeWeight(59)).toBeGreaterThan(0) // even a 60th commit that day still counts for something
   })
 
-  it("never lets the rhythm bonus itself decrease, even though the raw band table dips at 11 and 15", () => {
-    const bonusFor = (qualifiedCount: number) =>
-      dailyScore(
-        Array.from({ length: qualifiedCount }, (_, i) => qualifiedCommit(`c${i}`, `2026-07-02T0${i % 9}:00:00+09:00`)),
-      ).score - uncappedSum(qualifiedCount)
-    expect(bonusFor(10)).toBeCloseTo(2.0, 5)
-    expect(bonusFor(11)).toBeCloseTo(2.0, 5) // raw band would be 1.5 here -- must stay at the 7-10 plateau
-    expect(bonusFor(14)).toBeCloseTo(2.0, 5)
-    expect(bonusFor(16)).toBeCloseTo(2.0, 5) // raw band would be 0.8 here -- must still not drop below 2.0
-  })
-
   it("applies the small-diff-spam penalty when >=50% of the day's commits are 1-2 line changes", () => {
     const tiny = () =>
       commit({ sha: `t${Math.random()}`, additions: 1, deletions: 0, changedFiles: 1, commitKind: "normal" })
     const commits = [tiny(), tiny(), qualifiedCommit("q1", "2026-07-02T10:00:00+09:00")]
     const result = dailyScore(commits)
-    // 2/3 commits are tiny (>=50%) -> 0.7x multiplier applied to the summed commitScore before rhythm bonus
+    // 2/3 commits are tiny (>=50%) -> 0.7x multiplier applied to the summed commitScore
     expect(result.qualifiedCount).toBe(1)
   })
 
-  it("computes weekly consistency bonus from active-day count", () => {
-    const active = { score: 2.5, qualifiedCount: 3, penaltyMultiplier: 1, rhythmBonus: 0 }
-    const inactive = { score: 0.5, qualifiedCount: 0, penaltyMultiplier: 1, rhythmBonus: 0 }
+  it("sums daily scores for the week with no consistency bonus -- every point traces to a commit", () => {
+    const active = { score: 2.5, qualifiedCount: 3, penaltyMultiplier: 1 }
+    const inactive = { score: 0.5, qualifiedCount: 0, penaltyMultiplier: 1 }
     const result = weeklyScore([active, active, active, inactive])
-    expect(result.activeDayCount).toBe(3)
-    expect(result.consistencyBonus).toBe(2)
-    expect(result.score).toBeCloseTo(2.5 * 3 + 0.5 + 2, 5) // 3 active days -> +2 consistency bonus
+    expect(result.score).toBeCloseTo(2.5 * 3 + 0.5, 5)
   })
 
   it("normalizes team score by team size and applies the balance factor", () => {
@@ -416,6 +456,44 @@ describe("aggregateSnapshot with classified commits", () => {
     expect(entry?.commits).toBe(2)
     expect(entry?.qualifiedCommits).toBe(1)
     expect(entry?.score).toBeGreaterThan(0)
+  })
+
+  it("excludes a huge accidental vendor-dependency commit from the displayed avg size, without hiding it from the raw commit count", () => {
+    const { participants } = parseParticipantsCsv("participant_id,name,identifier,class\np1,김가온,gaon-kim,1")
+    const commits: CommitRecord[] = [
+      commit({
+        sha: "real1",
+        participantId: "p1",
+        additions: 40,
+        deletions: 10,
+        changedFiles: 3,
+        commitKind: "normal",
+        committedAt: "2026-07-02T10:00:00+09:00",
+      }),
+      commit({
+        sha: "real2",
+        participantId: "p1",
+        additions: 20,
+        deletions: 20,
+        changedFiles: 2,
+        commitKind: "normal",
+        committedAt: "2026-07-02T11:00:00+09:00",
+      }),
+      commit({
+        sha: "venv-dump",
+        participantId: "p1",
+        additions: 27,
+        deletions: 872089,
+        changedFiles: 300,
+        commitKind: "generated_files",
+        committedAt: "2026-07-02T12:00:00+09:00",
+      }),
+    ]
+    const snapshot = aggregateSnapshot({ season: "2026-summer", currentWeek: 1, participants, commits })
+    const entry = snapshot.rankings.personal.find((item) => item.label === "김가온")
+    expect(entry?.commits).toBe(3) // still counted in the raw total
+    expect(entry?.avgChangedLines).toBeCloseTo((50 + 40) / 2, 5) // only the 2 "normal" commits
+    expect(entry?.avgChangedFiles).toBeCloseTo((3 + 2) / 2, 5)
   })
 
   it("defaults to commits-based ranking behavior identically to before this feature when no scoring data present", () => {
@@ -487,8 +565,8 @@ describe("aggregateSnapshot with classified commits", () => {
     expect(real1.score).toBeCloseTo(rawReal1 * 0.7, 5)
     expect(real1.score).toBeLessThan(rawReal1)
 
+    // No bonus term anywhere -- summing every displayed commit score must equal the total exactly.
     const sumOfDisplayedScores = entry.recentCommits!.reduce((sum, c) => sum + (c.score ?? 0), 0)
-    const bonuses = (entry.rhythmBonusTotal ?? 0) + (entry.consistencyBonus ?? 0)
-    expect(sumOfDisplayedScores + bonuses).toBeCloseTo(entry.score ?? 0, 5)
+    expect(sumOfDisplayedScores).toBeCloseTo(entry.score ?? 0, 5)
   })
 })

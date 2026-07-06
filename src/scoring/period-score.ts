@@ -1,16 +1,11 @@
 import type { CommitRecord } from "../aggregation/types"
 import {
-  ACTIVE_DAY_THRESHOLD,
   BALANCE_FACTOR_BANDS,
-  CONSISTENCY_BONUS_BANDS,
   DAILY_FULL_CREDIT_THRESHOLD,
   DAILY_VOLUME_DECAY_RATE,
-  RHYTHM_BONUS_BANDS,
   SMALL_DIFF_PENALTY,
   TEAM_SIZE_EXPONENT,
   VAGUE_MESSAGE_PENALTY,
-  lookupMaxBand,
-  lookupMonotonicMaxBand,
 } from "./constants"
 import { commitScore, hasLowQualityMessage, isQualifiedCommit } from "./commit-score"
 
@@ -30,14 +25,18 @@ export interface DailyScoreResult {
    *  (`commitScore(commit) * dailyVolumeWeight(index) * penaltyMultiplier`) instead of displaying
    *  the pre-penalty raw score. */
   penaltyMultiplier: number
-  /** This day's flat rhythm bonus, broken out separately since it isn't attributable to any single
-   *  commit -- callers that want "sum of displayed commit scores" to reconcile with the total score
-   *  need to surface this (and weeklyScore's consistencyBonus) as its own line, not fold it into
-   *  per-commit numbers. */
-  rhythmBonus: number
 }
 
-/** `dayCommitsChronological` must already be sorted ascending by committedAt. */
+/**
+ * `dayCommitsChronological` must already be sorted ascending by committedAt.
+ *
+ * Deliberately no post-hoc bonus term added here (no "rhythm bonus," no flat per-day add-on): every
+ * point in the returned score is `commitScore(commit) * dailyVolumeWeight(index) * penaltyMultiplier`
+ * for some actual commit in the list, so summing the day's own (adjusted) per-commit scores always
+ * equals this function's result exactly. The incentive a rhythm bonus would have provided -- reward
+ * spreading work across several commits rather than one dump -- already falls out of this for free:
+ * multiple real commits simply sum to more than one commit covering the same total content.
+ */
 export function dailyScore(dayCommitsChronological: CommitRecord[]): DailyScoreResult {
   const qualifiedCount = dayCommitsChronological.filter(isQualifiedCommit).length
   const total = dayCommitsChronological.length
@@ -69,23 +68,21 @@ export function dailyScore(dayCommitsChronological: CommitRecord[]): DailyScoreR
     }
   }
 
-  // Monotonic on purpose -- see lookupMonotonicMaxBand's doc comment: going past the 7-10 sweet
-  // spot no longer earns more bonus, but it must never earn less than the sweet spot already did.
-  const rhythmBonus = lookupMonotonicMaxBand(qualifiedCount, RHYTHM_BONUS_BANDS)
-  return { score: rawSum * penaltyMultiplier + rhythmBonus, qualifiedCount, penaltyMultiplier, rhythmBonus }
+  return { score: rawSum * penaltyMultiplier, qualifiedCount, penaltyMultiplier }
 }
 
 export interface WeeklyScoreResult {
   score: number
-  activeDayCount: number
-  consistencyBonus: number
 }
 
+/**
+ * Plain sum of the week's daily scores -- no consistency bonus. Spreading real activity across
+ * more days already yields more score than cramming it into one (each day's own volume-decay curve
+ * only discounts *that* day's excess, so more days of moderate activity beats one huge day), so the
+ * incentive a flat consistency bonus would add is already present without a separate add-on.
+ */
 export function weeklyScore(dailyResults: DailyScoreResult[]): WeeklyScoreResult {
-  const activeDayCount = dailyResults.filter((day) => day.score >= ACTIVE_DAY_THRESHOLD).length
-  const consistencyBonus = lookupMaxBand(activeDayCount, CONSISTENCY_BONUS_BANDS)
-  const score = dailyResults.reduce((acc, day) => acc + day.score, 0) + consistencyBonus
-  return { score, activeDayCount, consistencyBonus }
+  return { score: dailyResults.reduce((acc, day) => acc + day.score, 0) }
 }
 
 export interface TeamScoreResult {

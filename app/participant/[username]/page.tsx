@@ -318,14 +318,12 @@ export default async function ParticipantDetailPage({ params }: { params: Promis
           <section className="min-w-0 overflow-hidden rounded-xl border border-border/70 bg-card/70 p-3 sm:p-4">
             <h2 className="text-sm font-semibold">최근 커밋</h2>
             <p className="mt-0.5 text-xs text-muted-foreground">
-              KST 기준 · 원본 커밋 메시지 · 점수는 페널티 반영된 실질 점수
+              KST 기준 · 원본 커밋 메시지 · 점수는 페널티/물량 반영된 실질 점수
             </p>
-            {(p.rhythmBonusTotal ?? 0) > 0 || (p.consistencyBonus ?? 0) > 0 ? (
-              <p className="mt-1 text-[11px] text-muted-foreground">
-                커밋 점수 합 {commitScoreSum.toFixed(1)}점 + 리듬 보너스 {(p.rhythmBonusTotal ?? 0).toFixed(1)}점 + 꾸준함
-                보너스 {(p.consistencyBonus ?? 0).toFixed(1)}점 = 총점 {(p.score ?? 0).toFixed(1)}점
-              </p>
-            ) : null}
+            <p className="mt-1 text-[11px] text-muted-foreground">
+              이 목록의 커밋 점수 합계 {commitScoreSum.toFixed(1)}점 = 총점 {(p.score ?? 0).toFixed(1)}점 (별도 보너스 없음,
+              커밋 점수만으로 계산됨)
+            </p>
             <ul className="mt-3 max-h-[480px] space-y-2 overflow-y-auto pr-1">
               {(p.recentCommits ?? []).map((item) => {
                 const hasStats =
