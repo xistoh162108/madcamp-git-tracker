@@ -823,8 +823,11 @@ describe("aggregation", () => {
     )
     const totalKindCount = p1?.commitKindBreakdown?.reduce((sum, entry) => sum + entry.count, 0)
     expect(totalKindCount).toBe(210)
-    expect(p1?.recentCommits?.length).toBe(50)
-    expect(p1?.recentCommits?.every((c) => c.repoName === "2026-summer-w2-c3-07")).toBe(true)
+    // recentCommits is deliberately uncapped -- the participant page sums every entry shown here
+    // and must reconcile exactly with the displayed total score, so nothing can be truncated.
+    expect(p1?.recentCommits?.length).toBe(210)
+    expect(p1?.recentCommits?.some((c) => c.repoName === "2026-summer-w1-c3-07")).toBe(true)
+    expect(p1?.recentCommits?.some((c) => c.repoName === "2026-summer-w2-c3-07")).toBe(true)
   })
 })
 

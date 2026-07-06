@@ -76,6 +76,8 @@ export interface RankedEntry {
   avgChangedLines?: number
   avgChangedFiles?: number
   messageFormatRate?: number
+  rhythmBonusTotal?: number
+  consistencyBonus?: number
   memberBreakdown?: Array<{
     participantId: string
     label: string

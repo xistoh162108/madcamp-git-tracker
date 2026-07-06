@@ -173,6 +173,7 @@ export default async function ParticipantDetailPage({ params }: { params: Promis
       commits: 0,
     }))
   const dailyAverage = p.activeDays > 0 ? (p.commits / p.activeDays).toFixed(1) : "0.0"
+  const commitScoreSum = (p.recentCommits ?? []).reduce((sum, item) => sum + (item.score ?? 0), 0)
   const mostActiveHour = hourly.reduce(
     (best, item) => (item.commits > best.commits ? item : best),
     hourly[0] ?? { hour: "-", commits: 0 },
@@ -305,7 +306,15 @@ export default async function ParticipantDetailPage({ params }: { params: Promis
         <div className="mt-4 grid min-w-0 items-start gap-4 lg:grid-cols-[1.8fr_1fr]">
           <section className="min-w-0 overflow-hidden rounded-xl border border-border/70 bg-card/70 p-3 sm:p-4">
             <h2 className="text-sm font-semibold">최근 커밋</h2>
-            <p className="mt-0.5 text-xs text-muted-foreground">KST 기준 · 원본 커밋 메시지</p>
+            <p className="mt-0.5 text-xs text-muted-foreground">
+              KST 기준 · 원본 커밋 메시지 · 점수는 페널티 반영된 실질 점수
+            </p>
+            {(p.rhythmBonusTotal ?? 0) > 0 || (p.consistencyBonus ?? 0) > 0 ? (
+              <p className="mt-1 text-[11px] text-muted-foreground">
+                커밋 점수 합 {commitScoreSum.toFixed(1)}점 + 리듬 보너스 {(p.rhythmBonusTotal ?? 0).toFixed(1)}점 + 꾸준함
+                보너스 {(p.consistencyBonus ?? 0).toFixed(1)}점 = 총점 {(p.score ?? 0).toFixed(1)}점
+              </p>
+            ) : null}
             <ul className="mt-3 max-h-[480px] space-y-2 overflow-y-auto pr-1">
               {(p.recentCommits ?? []).map((item) => {
                 const hasStats =

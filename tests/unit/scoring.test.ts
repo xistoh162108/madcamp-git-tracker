@@ -317,14 +317,14 @@ describe("dailyScore / weeklyScore / teamScore", () => {
       isConventionalMessage: true,
     })
 
-  it("caps the score contribution at the first 10 commits but keeps counting qualified beyond that", () => {
+  it("counts every qualified commit's score in the day sum, with no cutoff for high-volume days", () => {
     const commits = Array.from({ length: 12 }, (_, i) => qualifiedCommit(`c${i}`, `2026-07-02T0${i % 9}:00:00+09:00`))
     const result = dailyScore(commits)
     expect(result.qualifiedCount).toBe(12)
-    // 10 capped commits at commitScore 1.1 each + rhythm bonus for 12 qualified commits. The raw
+    // all 12 commits at commitScore 1.1 each + rhythm bonus for 12 qualified commits. The raw
     // 11-14 band is 1.5 (lower than the 7-10 band's 2.0), but the bonus is monotonic so it stays
     // at the 2.0 plateau rather than dropping.
-    expect(result.score).toBeCloseTo(10 * (1.0 * 1.0 * 1.1) + 2.0, 1)
+    expect(result.score).toBeCloseTo(12 * (1.0 * 1.0 * 1.1) + 2.0, 1)
   })
 
   it("never lets the rhythm bonus itself decrease, even though the raw band table dips at 11 and 15", () => {
@@ -332,7 +332,7 @@ describe("dailyScore / weeklyScore / teamScore", () => {
       dailyScore(
         Array.from({ length: qualifiedCount }, (_, i) => qualifiedCommit(`c${i}`, `2026-07-02T0${i % 9}:00:00+09:00`)),
       ).score -
-      Math.min(qualifiedCount, 10) * (1.0 * 1.0 * 1.1) // subtract the capped commit-score sum to isolate the bonus
+      qualifiedCount * (1.0 * 1.0 * 1.1) // subtract the (uncapped) commit-score sum to isolate the bonus
     expect(bonusFor(10)).toBeCloseTo(2.0, 5)
     expect(bonusFor(11)).toBeCloseTo(2.0, 5) // raw band would be 1.5 here -- must stay at the 7-10 plateau
     expect(bonusFor(14)).toBeCloseTo(2.0, 5)
@@ -349,10 +349,11 @@ describe("dailyScore / weeklyScore / teamScore", () => {
   })
 
   it("computes weekly consistency bonus from active-day count", () => {
-    const active = { score: 2.5, qualifiedCount: 3 }
-    const inactive = { score: 0.5, qualifiedCount: 0 }
+    const active = { score: 2.5, qualifiedCount: 3, penaltyMultiplier: 1, rhythmBonus: 0 }
+    const inactive = { score: 0.5, qualifiedCount: 0, penaltyMultiplier: 1, rhythmBonus: 0 }
     const result = weeklyScore([active, active, active, inactive])
     expect(result.activeDayCount).toBe(3)
+    expect(result.consistencyBonus).toBe(2)
     expect(result.score).toBeCloseTo(2.5 * 3 + 0.5 + 2, 5) // 3 active days -> +2 consistency bonus
   })
 
@@ -413,5 +414,68 @@ describe("aggregateSnapshot with classified commits", () => {
       commits: [],
     })
     expect(snapshot.rankings.personal).toEqual([])
+  })
+
+  it("shows each recent commit's *effective* (penalty-adjusted) score so the participant page's numbers reconcile with the total", () => {
+    const { participants } = parseParticipantsCsv("participant_id,name,identifier,class\np1,김가온,gaon-kim,1")
+    // Day 1: 2 tiny 1-line commits + 1 real commit -- tiny commits are >=50% of the day, so the
+    // small-diff penalty (0.7x) applies to the whole day's sum, including the real commit.
+    const day1: CommitRecord[] = [
+      commit({
+        sha: "t1",
+        additions: 1,
+        deletions: 0,
+        changedFiles: 1,
+        commitKind: "normal",
+        messageLength: 20,
+        committedAt: "2026-07-02T09:00:00+09:00",
+      }),
+      commit({
+        sha: "t2",
+        additions: 0,
+        deletions: 1,
+        changedFiles: 1,
+        commitKind: "normal",
+        messageLength: 20,
+        committedAt: "2026-07-02T09:05:00+09:00",
+      }),
+      commit({
+        sha: "real1",
+        additions: 40,
+        deletions: 10,
+        changedFiles: 3,
+        commitKind: "normal",
+        isConventionalMessage: true,
+        committedAt: "2026-07-02T10:00:00+09:00",
+      }),
+    ]
+    // Day 2: a clean day with no penalty, to prove the reconciliation isn't coincidental to day 1 alone.
+    const day2: CommitRecord[] = [
+      commit({
+        sha: "real2",
+        additions: 40,
+        deletions: 10,
+        changedFiles: 3,
+        commitKind: "normal",
+        isConventionalMessage: true,
+        committedAt: "2026-07-03T10:00:00+09:00",
+      }),
+    ]
+    const snapshot = aggregateSnapshot({
+      season: "2026-summer",
+      currentWeek: 1,
+      participants,
+      commits: [...day1, ...day2],
+    })
+    const entry = snapshot.rankings.personal.find((item) => item.label === "김가온")!
+    // The real commit on the penalized day must show its *discounted* score, not its raw commitScore.
+    const real1 = entry.recentCommits!.find((c) => c.id.endsWith("real1"))!
+    const rawReal1 = commitScore(day1[2]!)
+    expect(real1.score).toBeCloseTo(rawReal1 * 0.7, 5)
+    expect(real1.score).toBeLessThan(rawReal1)
+
+    const sumOfDisplayedScores = entry.recentCommits!.reduce((sum, c) => sum + (c.score ?? 0), 0)
+    const bonuses = (entry.rhythmBonusTotal ?? 0) + (entry.consistencyBonus ?? 0)
+    expect(sumOfDisplayedScores + bonuses).toBeCloseTo(entry.score ?? 0, 5)
   })
 })

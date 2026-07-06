@@ -1,6 +1,6 @@
 import type { Participant } from "../participants/participant-schema"
 import { commitScore, isQualifiedCommit } from "../scoring/commit-score"
-import { dailyScore, teamScore, weeklyScore } from "../scoring/period-score"
+import { dailyScore, teamScore, weeklyScore, type DailyScoreResult } from "../scoring/period-score"
 import type { CommitKind, CommitRecord, RankedEntry, UnknownUser } from "./types"
 
 export interface AggregatedSnapshot {
@@ -244,50 +244,78 @@ function commitKindBreakdown(items: CommitRecord[]): Array<{ kind: string; count
   return [...counts.entries()].sort(([, a], [, b]) => b - a).map(([kind, count]) => ({ kind, count }))
 }
 
-/**
- * A capped, display-ready recent-commit list scoped to one participant's own full commit list --
- * NOT sliced from the camp-wide `activityFeed`. The participant page used to filter the global
- * feed (top 200 most-recent commits across everyone) by author, which meant a participant whose
- * own most recent commit was older than the 200th most-recent commit camp-wide would show "no
- * commits yet" even though they have real history -- their commits simply aged out of a feed that
- * was never scoped to them in the first place.
- */
-function recentCommitsFor(items: CommitRecord[], limit = 50) {
-  return items
-    .slice()
-    .sort((a, b) => Date.parse(b.committedAt) - Date.parse(a.committedAt))
-    .slice(0, limit)
-    .map((commit) => ({
-      id: `${commit.repoName}:${commit.sha}`,
-      repoName: commit.repoName,
-      committedAt: commit.committedAt,
-      summary: (commit.messageSummary ?? "commit").replace(/[<>]/g, "").slice(0, 100),
-      commitUrl: commit.commitUrl,
-      branches: commit.sourceBranches,
-      additions: commit.additions,
-      deletions: commit.deletions,
-      changedFiles: commit.changedFiles,
-      commitKind: commit.commitKind,
-      score: commitScore(commit),
-    }))
-}
-
-function scoreStatsForCommits(items: CommitRecord[]): {
-  score: number
-  qualifiedCommits: number
-  avgChangedLines: number
-  avgChangedFiles: number
-  messageFormatRate: number
-} {
+/** Groups a participant's (or team's) commits by KST day and runs `dailyScore` once per day, so
+ *  the per-commit penalty multiplier and the weekly total are always derived from the same pass --
+ *  callers must not re-group/re-score independently or the two can silently drift apart. */
+function dailyResultsByDay(items: CommitRecord[]): Map<string, DailyScoreResult> {
   const byDay = new Map<string, CommitRecord[]>()
   for (const commit of items) {
     const key = dayOf(commit.committedAt)
     byDay.set(key, [...(byDay.get(key) ?? []), commit])
   }
-  const dailyResults = [...byDay.values()].map((dayCommits) =>
-    dailyScore([...dayCommits].sort((a, b) => Date.parse(a.committedAt) - Date.parse(b.committedAt))),
+  return new Map(
+    [...byDay.entries()].map(([day, dayCommits]) => [
+      day,
+      dailyScore([...dayCommits].sort((a, b) => Date.parse(a.committedAt) - Date.parse(b.committedAt))),
+    ]),
   )
-  const weekly = weeklyScore(dailyResults)
+}
+
+/**
+ * A display-ready recent-commit list scoped to one participant's own full commit list -- NOT
+ * sliced from the camp-wide `activityFeed`. The participant page used to filter the global feed
+ * (top 200 most-recent commits across everyone) by author, which meant a participant whose own
+ * most recent commit was older than the 200th most-recent commit camp-wide would show "no commits
+ * yet" even though they have real history -- their commits simply aged out of a feed that was
+ * never scoped to them in the first place.
+ *
+ * Deliberately uncapped: every commit is included so the page's per-commit score list always sums
+ * to the same total shown as the participant's score (see below) -- truncating this list would
+ * silently reintroduce the "numbers on the page don't add up" complaint this was built to fix.
+ *
+ * `score` here is the commit's *effective* contribution -- `commitScore(commit)` multiplied by
+ * that day's small-diff/vague-message penalty multiplier -- not the raw per-commit score. Without
+ * this, a participant manually summing the scores shown per commit would get a higher number than
+ * their displayed total on days a penalty applied, which is exactly the "score doesn't add up"
+ * complaint this was built to resolve. (Day-level rhythm/consistency bonuses still aren't part of
+ * any single commit's number; the page surfaces those as their own line instead.)
+ */
+function recentCommitsFor(items: CommitRecord[], dailyResults: Map<string, DailyScoreResult>) {
+  return items
+    .slice()
+    .sort((a, b) => Date.parse(b.committedAt) - Date.parse(a.committedAt))
+    .map((commit) => {
+      const multiplier = dailyResults.get(dayOf(commit.committedAt))?.penaltyMultiplier ?? 1
+      return {
+        id: `${commit.repoName}:${commit.sha}`,
+        repoName: commit.repoName,
+        committedAt: commit.committedAt,
+        summary: (commit.messageSummary ?? "commit").replace(/[<>]/g, "").slice(0, 100),
+        commitUrl: commit.commitUrl,
+        branches: commit.sourceBranches,
+        additions: commit.additions,
+        deletions: commit.deletions,
+        changedFiles: commit.changedFiles,
+        commitKind: commit.commitKind,
+        score: commitScore(commit) * multiplier,
+      }
+    })
+}
+
+function scoreStatsForCommits(
+  items: CommitRecord[],
+  dailyResults: Map<string, DailyScoreResult> = dailyResultsByDay(items),
+): {
+  score: number
+  qualifiedCommits: number
+  avgChangedLines: number
+  avgChangedFiles: number
+  messageFormatRate: number
+  rhythmBonusTotal: number
+  consistencyBonus: number
+} {
+  const results = [...dailyResults.values()]
+  const weekly = weeklyScore(results)
   const qualifiedCommits = items.filter(isQualifiedCommit).length
   const conventionalCount = items.filter((item) => item.isConventionalMessage).length
   const changedLinesSum = items.reduce((sum, item) => sum + (item.additions ?? 0) + (item.deletions ?? 0), 0)
@@ -298,6 +326,8 @@ function scoreStatsForCommits(items: CommitRecord[]): {
     avgChangedLines: items.length ? changedLinesSum / items.length : 0,
     avgChangedFiles: items.length ? changedFilesSum / items.length : 0,
     messageFormatRate: items.length ? conventionalCount / items.length : 0,
+    rhythmBonusTotal: results.reduce((sum, day) => sum + day.rhythmBonus, 0),
+    consistencyBonus: weekly.consistencyBonus,
   }
 }
 
@@ -351,7 +381,8 @@ export function aggregateSnapshot(params: {
 
   const personalEntries = [...grouped.personal.entries()].map(([participantId, items]) => {
     const participant = participantMap.get(participantId)
-    const scoreStats = scoreStatsForCommits(items)
+    const dailyResults = dailyResultsByDay(items)
+    const scoreStats = scoreStatsForCommits(items, dailyResults)
     return {
       id: participantId,
       label: participant?.name ?? participantId,
@@ -367,7 +398,7 @@ export function aggregateSnapshot(params: {
       heatmap: dailyHeatmap(items),
       commitKindBreakdown: commitKindBreakdown(items),
       weeklyBreakdown: weeklyBreakdown(items),
-      recentCommits: recentCommitsFor(items),
+      recentCommits: recentCommitsFor(items, dailyResults),
       ...scoreStats,
     }
   })

@@ -79,8 +79,6 @@ export const TYPE_FACTORS: Record<CommitKind, number> = {
 
 export const QUALIFIED_COMMIT_MIN_SCORE = 0.6
 
-export const DAILY_COMMIT_CAP = 10
-
 export const RHYTHM_BONUS_BANDS: MaxBand[] = [
   { max: 0, value: 0 },
   { max: 1, value: 0.3 },

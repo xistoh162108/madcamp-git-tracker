@@ -3,7 +3,6 @@ import {
   ACTIVE_DAY_THRESHOLD,
   BALANCE_FACTOR_BANDS,
   CONSISTENCY_BONUS_BANDS,
-  DAILY_COMMIT_CAP,
   RHYTHM_BONUS_BANDS,
   SMALL_DIFF_PENALTY,
   TEAM_SIZE_EXPONENT,
@@ -16,6 +15,15 @@ import { commitScore, hasLowQualityMessage, isQualifiedCommit } from "./commit-s
 export interface DailyScoreResult {
   score: number
   qualifiedCount: number
+  /** Combined small-diff/vague-message penalty multiplier applied to this day's raw commit-score
+   *  sum -- exposed so callers can derive each individual commit's true effective contribution
+   *  (`commitScore(commit) * penaltyMultiplier`) instead of displaying the pre-penalty raw score. */
+  penaltyMultiplier: number
+  /** This day's flat rhythm bonus, broken out separately since it isn't attributable to any single
+   *  commit -- callers that want "sum of displayed commit scores" to reconcile with the total score
+   *  need to surface this (and weeklyScore's consistencyBonus) as its own line, not fold it into
+   *  per-commit numbers. */
+  rhythmBonus: number
 }
 
 /** `dayCommitsChronological` must already be sorted ascending by committedAt. */
@@ -23,8 +31,11 @@ export function dailyScore(dayCommitsChronological: CommitRecord[]): DailyScoreR
   const qualifiedCount = dayCommitsChronological.filter(isQualifiedCommit).length
   const total = dayCommitsChronological.length
 
-  const cappedCommits = dayCommitsChronological.slice(0, DAILY_COMMIT_CAP)
-  let sum = cappedCommits.reduce((acc, commit) => acc + commitScore(commit), 0)
+  // No cap on how many of the day's commits count -- genuine high-volume output (a hard crunch day)
+  // should be rewarded, not zeroed past an arbitrary cutoff. Spam/salami-slicing is instead deterred
+  // by the qualified-commit quality bar plus the small-diff/vague-message ratio penalties below.
+  const rawSum = dayCommitsChronological.reduce((acc, commit) => acc + commitScore(commit), 0)
+  let penaltyMultiplier = 1
 
   if (total > 0) {
     const smallDiffCount = dayCommitsChronological.filter((c) => {
@@ -32,31 +43,32 @@ export function dailyScore(dayCommitsChronological: CommitRecord[]): DailyScoreR
       return changedLines >= 1 && changedLines <= 2
     }).length
     if (smallDiffCount / total >= SMALL_DIFF_PENALTY.threshold) {
-      sum *= SMALL_DIFF_PENALTY.multiplier
+      penaltyMultiplier *= SMALL_DIFF_PENALTY.multiplier
     }
 
     const vagueMessageCount = dayCommitsChronological.filter(hasLowQualityMessage).length
     if (vagueMessageCount / total >= VAGUE_MESSAGE_PENALTY.threshold) {
-      sum *= VAGUE_MESSAGE_PENALTY.multiplier
+      penaltyMultiplier *= VAGUE_MESSAGE_PENALTY.multiplier
     }
   }
 
   // Monotonic on purpose -- see lookupMonotonicMaxBand's doc comment: going past the 7-10 sweet
   // spot no longer earns more bonus, but it must never earn less than the sweet spot already did.
   const rhythmBonus = lookupMonotonicMaxBand(qualifiedCount, RHYTHM_BONUS_BANDS)
-  return { score: sum + rhythmBonus, qualifiedCount }
+  return { score: rawSum * penaltyMultiplier + rhythmBonus, qualifiedCount, penaltyMultiplier, rhythmBonus }
 }
 
 export interface WeeklyScoreResult {
   score: number
   activeDayCount: number
+  consistencyBonus: number
 }
 
 export function weeklyScore(dailyResults: DailyScoreResult[]): WeeklyScoreResult {
   const activeDayCount = dailyResults.filter((day) => day.score >= ACTIVE_DAY_THRESHOLD).length
   const consistencyBonus = lookupMaxBand(activeDayCount, CONSISTENCY_BONUS_BANDS)
   const score = dailyResults.reduce((acc, day) => acc + day.score, 0) + consistencyBonus
-  return { score, activeDayCount }
+  return { score, activeDayCount, consistencyBonus }
 }
 
 export interface TeamScoreResult {
