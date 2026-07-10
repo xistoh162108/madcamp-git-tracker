@@ -199,10 +199,16 @@ function LiveEventStack({ events }: { events: LiveEvent[] }) {
 export function LiveDashboard({ initialSnapshot, displayName, weeks, currentWeek }: LiveDashboardProps) {
   const [mounted, setMounted] = useState(false)
   const [snapshot, setSnapshot] = useState(initialSnapshot)
+  // Trend charts (일별 커밋 추이 / 스프린트 보드 / 시간대별 분포) intentionally always show the full-camp,
+  // all-weeks picture regardless of which week is selected for the leaderboard above -- kept in a
+  // separate snapshot/state so switching the week selector never scopes them down to a single week.
+  const [allSnapshot, setAllSnapshot] = useState(initialSnapshot)
   const [selectedWeekKey, setSelectedWeekKey] = useState(currentWeek ? `w${currentWeek}` : "all")
   const [events, setEvents] = useState<LiveEvent[]>([])
   const snapshotRef = useRef(initialSnapshot)
+  const allSnapshotRef = useRef(initialSnapshot)
   const loadingRef = useRef(false)
+  const loadingAllRef = useRef(false)
   const selectedWeekNumber = selectedWeekKey.startsWith("w") ? Number(selectedWeekKey.slice(1)) : null
   const activeWeek = weeks.find((week) => week.week === (selectedWeekNumber ?? currentWeek))
   const selectedWeekStatus =
@@ -263,6 +269,21 @@ export function LiveDashboard({ initialSnapshot, displayName, weeks, currentWeek
     await loadSnapshot(selectedWeekKey, true)
   }, [currentWeek, loadSnapshot, selectedWeekKey])
 
+  const refreshAllSnapshot = useCallback(async () => {
+    if (loadingAllRef.current) return
+    loadingAllRef.current = true
+    try {
+      const response = await fetch(`/api/snapshots/latest?ts=${Date.now()}`, { cache: "no-store" })
+      if (!response.ok) return
+      const next = (await response.json()) as AggregatedSnapshot
+      if (next.generatedAt === allSnapshotRef.current.generatedAt) return
+      allSnapshotRef.current = next
+      setAllSnapshot(next)
+    } finally {
+      loadingAllRef.current = false
+    }
+  }, [])
+
   const handleWeekSelect = useCallback(
     (key: string) => {
       setSelectedWeekKey(key)
@@ -278,18 +299,23 @@ export function LiveDashboard({ initialSnapshot, displayName, weeks, currentWeek
   useEffect(() => {
     if (!mounted) return
     void refreshSnapshot()
+    void refreshAllSnapshot()
     const interval = window.setInterval(() => {
       void refreshSnapshot()
+      void refreshAllSnapshot()
     }, SNAPSHOT_REFRESH_MS)
     const onVisibilityChange = () => {
-      if (document.visibilityState === "visible") void refreshSnapshot()
+      if (document.visibilityState === "visible") {
+        void refreshSnapshot()
+        void refreshAllSnapshot()
+      }
     }
     document.addEventListener("visibilitychange", onVisibilityChange)
     return () => {
       window.clearInterval(interval)
       document.removeEventListener("visibilitychange", onVisibilityChange)
     }
-  }, [mounted, refreshSnapshot])
+  }, [mounted, refreshSnapshot, refreshAllSnapshot])
 
   if (!mounted) {
     return (
@@ -389,7 +415,7 @@ export function LiveDashboard({ initialSnapshot, displayName, weeks, currentWeek
         </div>
 
         <div className="mt-5">
-          <TrendCharts snapshot={snapshot} weeks={weeks} currentWeek={currentWeek} />
+          <TrendCharts snapshot={allSnapshot} weeks={weeks} currentWeek={currentWeek} />
         </div>
 
         <div className="mt-6 space-y-2 border-t border-border/60 pt-5">

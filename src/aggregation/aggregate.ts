@@ -383,7 +383,10 @@ export function aggregateSnapshot(params: {
   previousSnapshot?: AggregatedSnapshot
   weekEnded?: boolean
 }): AggregatedSnapshot {
-  const commits = dedupeCommits(params.commits)
+  // bot_only commits (e.g. the madcamp-staff repo-scaffolding account) have no participant behind them
+  // at all -- exclude them from every count (team/class commit totals, summary, activity feed), not just
+  // from scoring where they were already excluded via participantIdsForCommit returning [].
+  const commits = dedupeCommits(params.commits).filter((commit) => commit.attributionStatus !== "bot_only")
   const participantMap = new Map(params.participants.map((participant) => [participant.participantId, participant]))
   const grouped = {
     personal: new Map<string, CommitRecord[]>(),
