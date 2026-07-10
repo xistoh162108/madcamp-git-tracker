@@ -250,7 +250,7 @@ export default async function ParticipantDetailPage({ params }: { params: Promis
 
           <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
             <Stat icon={Sparkles} label="점수" value={(p.score ?? 0).toFixed(1)} accent="text-gold" />
-            <Stat icon={CalendarClock} label="이번 주 활동일" value={`${p.activeDays}일`} />
+            <Stat icon={CalendarClock} label="활동일" value={`${p.activeDays}일`} />
             <Stat icon={GitCommitHorizontal} label="최근 커밋" value={kstDateTime(p.lastActivityAt)} />
             <Stat icon={Hash} label="팀 내 순위" value={`${teamRank}위 / ${Math.max(1, teamPeers.length)}명`} />
           </div>
