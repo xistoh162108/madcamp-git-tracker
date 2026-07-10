@@ -214,17 +214,35 @@ export async function runGithubSync(options: SyncRunnerOptions = {}): Promise<Sy
     currentWeek && config.weeks.find((week) => week.week === currentWeek && Date.now() > Date.parse(week.endAt)),
   )
 
-  const snapshot = aggregateSnapshot({
+  if (currentWeek) {
+    const weekSnapshotPath = path.join(path.dirname(snapshotPath), `${config.season}-w${currentWeek}.json`)
+    const weekSnapshot = aggregateSnapshot({
+      season: config.season,
+      currentWeek,
+      participants,
+      commits: uniqueCommits,
+      unknownUsers: uniqueUnknownUsers,
+      previousSnapshot: readPreviousSnapshot(weekSnapshotPath),
+      weekEnded,
+    })
+    writeSnapshotSafely(weekSnapshotPath, weekSnapshot)
+  }
+
+  const allCommits = dedupeCommits([
+    ...loadAllLedgerCommits(path.dirname(ledgerPath), config.season),
+    ...uniqueCommits,
+  ])
+  const overallSnapshot = aggregateSnapshot({
     season: config.season,
     currentWeek,
     participants,
-    commits: uniqueCommits,
+    commits: allCommits,
     unknownUsers: uniqueUnknownUsers,
     previousSnapshot: readPreviousSnapshot(snapshotPath),
     weekEnded,
   })
   writeSnapshotSafely(snapshotPath, {
-    ...snapshot,
+    ...overallSnapshot,
     sync: {
       status: failedRepos.length ? "partial" : "ok",
       failedRepos,
@@ -233,9 +251,6 @@ export async function runGithubSync(options: SyncRunnerOptions = {}): Promise<Sy
       commitsProcessed: uniqueCommits.length,
     },
   })
-  if (currentWeek) {
-    writeSnapshotSafely(path.join(path.dirname(snapshotPath), `${config.season}-w${currentWeek}.json`), snapshot)
-  }
   writeSyncState(state)
 
   return {
@@ -360,6 +375,29 @@ async function enrichCommitStats(
       // leave stats/classification undefined if the detail fetch fails; not fatal to the sync
     }
   }
+}
+
+// "전체" (all-weeks) view reads latest.json, so it must be the union of every week's ledger, not just
+// whichever week the cron happened to sync most recently -- a normal sync only touches the active
+// week's repos (see `selectedRepos` filter above), so without this, latest.json would silently drop
+// every prior week's commits the moment a new week starts.
+function loadAllLedgerCommits(ledgerDir: string, season: string): CommitRecord[] {
+  const commits: CommitRecord[] = []
+  let entries: string[] = []
+  try {
+    entries = fs.readdirSync(ledgerDir)
+  } catch {
+    return commits
+  }
+  const pattern = new RegExp(`^${season.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}-w\\d+\\.jsonl$`)
+  for (const entry of entries) {
+    if (!pattern.test(entry)) continue
+    const lines = fs.readFileSync(path.join(ledgerDir, entry), "utf8").split("\n").filter(Boolean)
+    for (const line of lines) {
+      commits.push(JSON.parse(line) as CommitRecord)
+    }
+  }
+  return commits
 }
 
 function readPreviousSnapshot(snapshotPath: string): AggregatedSnapshot | undefined {
