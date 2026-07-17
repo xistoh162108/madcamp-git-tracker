@@ -43,7 +43,14 @@ export interface AggregatedSnapshot {
     status: "ok" | "partial" | "failed"
     failedRepos: Array<{ repoName: string; reason: string }>
     rateLimit: { limit?: number; remaining?: number; reset?: number; used?: number }
+    // Repos scanned *in this snapshot's own scope* -- for the per-week snapshot this is that
+    // week's repo count; for the all-time snapshot it's still just the current sync run's (i.e.
+    // current week's) repo count, kept for backward compatibility with anything already reading it.
     reposScanned: number
+    // Total repos tracked across every enabled week of the whole camp, regardless of scope --
+    // the correct denominator for an all-time "N/total repos" stat (reposScanned alone isn't,
+    // since it's always just the current week's count even on the all-time snapshot).
+    reposTracked: number
     commitsProcessed: number
   }
 }

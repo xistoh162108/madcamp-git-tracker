@@ -225,7 +225,17 @@ export async function runGithubSync(options: SyncRunnerOptions = {}): Promise<Sy
       previousSnapshot: readPreviousSnapshot(weekSnapshotPath),
       weekEnded,
     })
-    writeSnapshotSafely(weekSnapshotPath, weekSnapshot)
+    writeSnapshotSafely(weekSnapshotPath, {
+      ...weekSnapshot,
+      sync: {
+        status: failedRepos.length ? "partial" : "ok",
+        failedRepos,
+        rateLimit: client.getRateLimit(),
+        reposScanned: selectedRepos.length,
+        reposTracked: discovery.trackedRepos.length,
+        commitsProcessed: uniqueCommits.length,
+      },
+    })
   }
 
   const allCommits = dedupeCommits([
@@ -248,6 +258,7 @@ export async function runGithubSync(options: SyncRunnerOptions = {}): Promise<Sy
       failedRepos,
       rateLimit: client.getRateLimit(),
       reposScanned: selectedRepos.length,
+      reposTracked: discovery.trackedRepos.length,
       commitsProcessed: uniqueCommits.length,
     },
   })

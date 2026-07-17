@@ -49,52 +49,114 @@ function timeLeftLabel(endAt?: string) {
   return `${Math.max(1, hours)}시간`
 }
 
-function rankMap(snapshot: AggregatedSnapshot) {
-  return new Map(snapshot.rankings.personal.map((entry) => [entry.id, entry]))
+type RankKind = "personal" | "teams" | "classes"
+
+function rankMap(snapshot: AggregatedSnapshot, kind: RankKind) {
+  return new Map(snapshot.rankings[kind].map((entry) => [entry.id, entry]))
 }
 
-function hasPersonalScores(snapshot: AggregatedSnapshot) {
-  return snapshot.rankings.personal.some((entry) => typeof entry.score === "number")
+function hasScores(snapshot: AggregatedSnapshot, kind: RankKind) {
+  return snapshot.rankings[kind].some((entry) => typeof entry.score === "number")
+}
+
+function shortLabel(kind: RankKind, label: string) {
+  return kind === "teams" ? label.replace(/^.*?(w\d+-c\d+-\d+)$/, "$1") : label
+}
+
+// Shared leader-swap / rank-surge / score-gain detector, reused for personal, team, and class
+// rankings -- teams and classes have far fewer entries than personal, so surgeDiff/topN are tuned
+// per kind (a 2-rank jump is common noise among 3 classes but meaningful among 50 people).
+function rankMovementEvents(
+  previous: AggregatedSnapshot,
+  next: AggregatedSnapshot,
+  kind: RankKind,
+  opts: {
+    suffix: string
+    leaderTitle: string
+    surgeTitle: string
+    scoreTitle: string
+    surgeDiff: number
+    topN: number
+    scoreGainThreshold: number
+  },
+): LiveEvent[] {
+  const events: LiveEvent[] = []
+  if (!hasScores(previous, kind) || !hasScores(next, kind)) return events
+
+  const previousLeader = previous.rankings[kind][0]
+  const nextLeader = next.rankings[kind][0]
+  if (previousLeader && nextLeader && previousLeader.id !== nextLeader.id) {
+    events.push({
+      id: `${kind}-leader:${next.generatedAt}:${nextLeader.id}`,
+      kind: "leader",
+      title: opts.leaderTitle,
+      detail: `${shortLabel(kind, nextLeader.label)}${opts.suffix} ${((nextLeader.score ?? 0) - (previousLeader.score ?? 0)).toFixed(1)}점 차이를 만들었습니다.`,
+    })
+  }
+
+  const oldRanks = rankMap(previous, kind)
+  for (const entry of next.rankings[kind].slice(0, opts.topN)) {
+    const old = oldRanks.get(entry.id)
+    if (!old) continue
+    const diff = old.rank - entry.rank
+    const scoreGain = (entry.score ?? 0) - (old.score ?? 0)
+    if (diff >= opts.surgeDiff) {
+      events.push({
+        id: `${kind}-surge:${next.generatedAt}:${entry.id}`,
+        kind: "surge",
+        title: opts.surgeTitle,
+        detail: `${shortLabel(kind, entry.label)}${opts.suffix} ${diff}계단 상승했습니다.${scoreGain > 0 ? ` +${scoreGain.toFixed(1)}점` : ""}`,
+      })
+    } else if (scoreGain >= opts.scoreGainThreshold && entry.rank <= opts.topN) {
+      events.push({
+        id: `${kind}-score:${next.generatedAt}:${entry.id}`,
+        kind: "surge",
+        title: opts.scoreTitle,
+        detail: `${shortLabel(kind, entry.label)}${opts.suffix} 이번 집계에서 +${scoreGain.toFixed(1)}점을 얻었습니다.`,
+      })
+    }
+  }
+  return events
 }
 
 function detectLiveEvents(previous: AggregatedSnapshot, next: AggregatedSnapshot): LiveEvent[] {
   const events: LiveEvent[] = []
-  const canCompareScoreRanks = hasPersonalScores(previous) && hasPersonalScores(next)
-  const previousLeader = previous.rankings.personal[0]
-  const nextLeader = next.rankings.personal[0]
-  if (canCompareScoreRanks && previousLeader && nextLeader && previousLeader.id !== nextLeader.id) {
-    events.push({
-      id: `leader:${next.generatedAt}:${nextLeader.id}`,
-      kind: "leader",
-      title: "1위 교체",
-      detail: `${nextLeader.label}님이 ${((nextLeader.score ?? 0) - (previousLeader.score ?? 0)).toFixed(1)}점 차이를 만들었습니다.`,
-    })
-  }
 
-  if (canCompareScoreRanks) {
-    const oldRanks = rankMap(previous)
-    for (const entry of next.rankings.personal.slice(0, 12)) {
-      const old = oldRanks.get(entry.id)
-      if (!old) continue
-      const diff = old.rank - entry.rank
-      const scoreGain = (entry.score ?? 0) - (old.score ?? 0)
-      if (diff >= 2) {
-        events.push({
-          id: `surge:${next.generatedAt}:${entry.id}`,
-          kind: "surge",
-          title: "점수 랭킹 급상승",
-          detail: `${entry.label}님이 ${diff}계단 상승했습니다.${scoreGain > 0 ? ` +${scoreGain.toFixed(1)}점` : ""}`,
-        })
-      } else if (scoreGain >= 2 && entry.rank <= 10) {
-        events.push({
-          id: `score:${next.generatedAt}:${entry.id}`,
-          kind: "surge",
-          title: "점수 상승",
-          detail: `${entry.label}님이 이번 집계에서 +${scoreGain.toFixed(1)}점을 얻었습니다.`,
-        })
-      }
-    }
-  } else if (!hasPersonalScores(previous) && hasPersonalScores(next)) {
+  events.push(
+    ...rankMovementEvents(previous, next, "personal", {
+      suffix: "님이",
+      leaderTitle: "1위 교체",
+      surgeTitle: "점수 랭킹 급상승",
+      scoreTitle: "점수 상승",
+      surgeDiff: 2,
+      topN: 12,
+      scoreGainThreshold: 2,
+    }),
+  )
+  events.push(
+    ...rankMovementEvents(previous, next, "teams", {
+      suffix: " 팀이",
+      leaderTitle: "팀 1위 교체",
+      surgeTitle: "팀 랭킹 급상승",
+      scoreTitle: "팀 점수 상승",
+      surgeDiff: 2,
+      topN: 10,
+      scoreGainThreshold: 2,
+    }),
+  )
+  events.push(
+    ...rankMovementEvents(previous, next, "classes", {
+      suffix: "이",
+      leaderTitle: "분반 1위 교체",
+      surgeTitle: "분반 순위 변동",
+      scoreTitle: "분반 점수 상승",
+      surgeDiff: 1,
+      topN: 3,
+      scoreGainThreshold: 1,
+    }),
+  )
+
+  if (!hasScores(previous, "personal") && hasScores(next, "personal")) {
     events.push({
       id: `score-ready:${next.generatedAt}`,
       kind: "leader",
@@ -126,7 +188,7 @@ function detectLiveEvents(previous: AggregatedSnapshot, next: AggregatedSnapshot
     })
   }
 
-  return events.slice(0, 4)
+  return events.slice(0, 6)
 }
 
 function eventIcon(kind: LiveEvent["kind"]) {
@@ -207,8 +269,13 @@ export function LiveDashboard({ initialSnapshot, displayName, weeks, currentWeek
   const [events, setEvents] = useState<LiveEvent[]>([])
   const snapshotRef = useRef(initialSnapshot)
   const allSnapshotRef = useRef(initialSnapshot)
+  // Live "1위 교체" / "점수 상승" / "새 활동 반영" notifications must always reflect the current camp
+  // week's own score movement, never whichever tab happens to be selected -- switching to the "전체"
+  // tab must not start comparing all-time cumulative totals as if they were this week's deltas.
+  const notifySnapshotRef = useRef(initialSnapshot)
   const loadingRef = useRef(false)
   const loadingAllRef = useRef(false)
+  const loadingNotifyRef = useRef(false)
   const selectedWeekNumber = selectedWeekKey.startsWith("w") ? Number(selectedWeekKey.slice(1)) : null
   const activeWeek = weeks.find((week) => week.week === (selectedWeekNumber ?? currentWeek))
   const selectedWeekStatus =
@@ -238,36 +305,30 @@ export function LiveDashboard({ initialSnapshot, displayName, weeks, currentWeek
     }, 8200)
   }, [])
 
-  const loadSnapshot = useCallback(
-    async (key: string, notify = false) => {
-      // Guard against overlapping fetches (e.g. the 1-min interval firing while a
-      // visibilitychange-triggered refresh is still in flight) racing on snapshotRef.
-      if (loadingRef.current) return
-      loadingRef.current = true
-      const previous = snapshotRef.current
-      try {
-        const endpoint =
-          key === "all"
-            ? `/api/snapshots/latest?ts=${Date.now()}`
-            : `/api/snapshots/week/${key.slice(1)}?ts=${Date.now()}`
-        const response = await fetch(endpoint, { cache: "no-store" })
-        if (!response.ok) return
-        const next = (await response.json()) as AggregatedSnapshot
-        if (next.generatedAt === previous.generatedAt) return
-        snapshotRef.current = next
-        setSnapshot(next)
-        if (notify) pushEvents(detectLiveEvents(previous, next))
-      } finally {
-        loadingRef.current = false
-      }
-    },
-    [pushEvents],
-  )
+  const loadSnapshot = useCallback(async (key: string) => {
+    // Guard against overlapping fetches (e.g. the 1-min interval firing while a
+    // visibilitychange-triggered refresh is still in flight) racing on snapshotRef.
+    if (loadingRef.current) return
+    loadingRef.current = true
+    try {
+      const endpoint =
+        key === "all"
+          ? `/api/snapshots/latest?ts=${Date.now()}`
+          : `/api/snapshots/week/${key.slice(1)}?ts=${Date.now()}`
+      const response = await fetch(endpoint, { cache: "no-store" })
+      if (!response.ok) return
+      const next = (await response.json()) as AggregatedSnapshot
+      if (next.generatedAt === snapshotRef.current.generatedAt) return
+      snapshotRef.current = next
+      setSnapshot(next)
+    } finally {
+      loadingRef.current = false
+    }
+  }, [])
 
   const refreshSnapshot = useCallback(async () => {
-    if (selectedWeekKey !== "all" && selectedWeekKey !== `w${currentWeek}`) return
-    await loadSnapshot(selectedWeekKey, true)
-  }, [currentWeek, loadSnapshot, selectedWeekKey])
+    await loadSnapshot(selectedWeekKey)
+  }, [loadSnapshot, selectedWeekKey])
 
   const refreshAllSnapshot = useCallback(async () => {
     if (loadingAllRef.current) return
@@ -284,10 +345,32 @@ export function LiveDashboard({ initialSnapshot, displayName, weeks, currentWeek
     }
   }, [])
 
+  // Dedicated poll for the live-event notifications, deliberately independent of the tab-selected
+  // `snapshot` above -- always diffs the current week's own snapshot so "1위 교체"/"점수 상승" reflect
+  // this week's score movement regardless of which tab (전체/특정 주차) is on screen. Camp-wide "after
+  // the camp ends" ranking is a separate, non-live concern -- once there's no active week, there's
+  // nothing week-scoped left to notify about, so this simply goes idle.
+  const refreshWeekNotifications = useCallback(async () => {
+    if (!currentWeek) return
+    if (loadingNotifyRef.current) return
+    loadingNotifyRef.current = true
+    const previous = notifySnapshotRef.current
+    try {
+      const response = await fetch(`/api/snapshots/week/${currentWeek}?ts=${Date.now()}`, { cache: "no-store" })
+      if (!response.ok) return
+      const next = (await response.json()) as AggregatedSnapshot
+      if (next.generatedAt === previous.generatedAt) return
+      notifySnapshotRef.current = next
+      pushEvents(detectLiveEvents(previous, next))
+    } finally {
+      loadingNotifyRef.current = false
+    }
+  }, [currentWeek, pushEvents])
+
   const handleWeekSelect = useCallback(
     (key: string) => {
       setSelectedWeekKey(key)
-      void loadSnapshot(key, false)
+      void loadSnapshot(key)
     },
     [loadSnapshot],
   )
@@ -300,14 +383,17 @@ export function LiveDashboard({ initialSnapshot, displayName, weeks, currentWeek
     if (!mounted) return
     void refreshSnapshot()
     void refreshAllSnapshot()
+    void refreshWeekNotifications()
     const interval = window.setInterval(() => {
       void refreshSnapshot()
       void refreshAllSnapshot()
+      void refreshWeekNotifications()
     }, SNAPSHOT_REFRESH_MS)
     const onVisibilityChange = () => {
       if (document.visibilityState === "visible") {
         void refreshSnapshot()
         void refreshAllSnapshot()
+        void refreshWeekNotifications()
       }
     }
     document.addEventListener("visibilitychange", onVisibilityChange)
@@ -315,7 +401,7 @@ export function LiveDashboard({ initialSnapshot, displayName, weeks, currentWeek
       window.clearInterval(interval)
       document.removeEventListener("visibilitychange", onVisibilityChange)
     }
-  }, [mounted, refreshSnapshot, refreshAllSnapshot])
+  }, [mounted, refreshSnapshot, refreshAllSnapshot, refreshWeekNotifications])
 
   if (!mounted) {
     return (
@@ -397,7 +483,7 @@ export function LiveDashboard({ initialSnapshot, displayName, weeks, currentWeek
           </div>
         </div>
 
-        <MetricCards snapshot={snapshot} />
+        <MetricCards snapshot={snapshot} scope={selectedWeekKey === "all" ? "all" : "week"} />
 
         <div className="mt-5 grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_400px]">
           <LeaderboardSection

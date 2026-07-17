@@ -19,7 +19,7 @@ interface Metric {
   accent?: string
 }
 
-export function MetricCards({ snapshot }: { snapshot?: AggregatedSnapshot }) {
+export function MetricCards({ snapshot, scope = "week" }: { snapshot?: AggregatedSnapshot; scope?: "week" | "all" }) {
   // "가장 활발한 팀" is intentionally selected by raw total commits, independent of the
   // score-based team ranking -- this card answers "who's generating the most activity",
   // not "who's ranked #1".
@@ -48,8 +48,12 @@ export function MetricCards({ snapshot }: { snapshot?: AggregatedSnapshot }) {
   const weekCommits = totalCommits
   const activeRepos = snapshot?.summary.activeRepos ?? summary.activeRepos
   const activeParticipants = snapshot?.summary.activeParticipants ?? summary.participants
-  const totalRepos = snapshot?.sync?.reposScanned
+  // The all-time snapshot's own `sync.reposScanned` is still just the *current week's* scan count
+  // (a normal sync run only ever scans the active week's repos) -- comparing that against the
+  // all-time `activeRepos` produced nonsense like "53/5개 (1060%)". Use the scope-matched field.
+  const totalRepos = scope === "all" ? snapshot?.sync?.reposTracked : snapshot?.sync?.reposScanned
   const totalParticipants = snapshot?.summary.participants
+  const periodLabel = scope === "all" ? "전체" : "이번 주"
   const allCommits = totalCommits
   const averagePerPerson =
     snapshot && snapshot.summary.activeParticipants > 0
@@ -63,7 +67,7 @@ export function MetricCards({ snapshot }: { snapshot?: AggregatedSnapshot }) {
 
   const metrics: Metric[] = [
     {
-      label: "이번 주 커밋",
+      label: `${periodLabel} 커밋`,
       value: weekCommits,
       icon: CalendarDays,
       accent: "text-primary",
@@ -141,7 +145,8 @@ export function MetricCards({ snapshot }: { snapshot?: AggregatedSnapshot }) {
       >
         <p className="flex flex-wrap items-center gap-x-2 gap-y-1">
           <span>
-            이번 주 <span className="font-semibold text-foreground tabular">{allCommits.toLocaleString()}</span> commits
+            {periodLabel} <span className="font-semibold text-foreground tabular">{allCommits.toLocaleString()}</span>{" "}
+            commits
           </span>
           <span className="text-border">·</span>
           <span>
