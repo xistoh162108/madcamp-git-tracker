@@ -8,7 +8,7 @@ import {
   sizeScore,
   typeFactor,
 } from "../../src/scoring/commit-score"
-import { dailyScore, dailyVolumeWeight, teamScore, weeklyScore } from "../../src/scoring/period-score"
+import { compressDailyRaw, dailyScore, fragmentationPenalty, teamScore, weeklyScore } from "../../src/scoring/period-score"
 import type { CommitRecord } from "../../src/aggregation/types"
 import { aggregateSnapshot } from "../../src/aggregation/aggregate"
 import { parseParticipantsCsv } from "../../src/participants/parse-participants"
@@ -43,6 +43,42 @@ describe("classifyCommit", () => {
     const result = classifyCommit({
       message: "feat: this looks like a normal message",
       additions: 5,
+      deletions: 5,
+      changedFiles: 2,
+      filePaths: [{ filename: "a.ts", status: "modified" }],
+      parentCount: 2,
+    })
+    expect(result.kind).toBe("merge")
+  })
+
+  it("classifies a squash merge by GitHub's default message pattern, not parent count", () => {
+    const result = classifyCommit({
+      message: "feat: add login form (#42)",
+      additions: 500,
+      deletions: 100,
+      changedFiles: 15,
+      filePaths: [{ filename: "src/login.ts", status: "modified" }],
+      parentCount: 1,
+    })
+    expect(result.kind).toBe("squash_merge")
+  })
+
+  it("prioritizes squash-merge detection over file-based checks like lockfile_only", () => {
+    const result = classifyCommit({
+      message: "chore: bump deps (#7)",
+      additions: 20,
+      deletions: 20,
+      changedFiles: 1,
+      filePaths: [{ filename: "pnpm-lock.yaml", status: "modified" }],
+      parentCount: 1,
+    })
+    expect(result.kind).toBe("squash_merge")
+  })
+
+  it("does not misclassify a real multi-parent merge as squash_merge even if the message happens to match", () => {
+    const result = classifyCommit({
+      message: "Merge PR (#3)",
+      additions: 10,
       deletions: 5,
       changedFiles: 2,
       filePaths: [{ filename: "a.ts", status: "modified" }],
@@ -309,10 +345,13 @@ describe("sizeScore / fileScore boundaries", () => {
 
 describe("messageScore", () => {
   it("rewards conventional prefixes regardless of length", () => {
-    expect(messageScore({ isConventionalMessage: true, messageLength: 6 })).toBeCloseTo(1.1)
+    expect(messageScore({ isConventionalMessage: true, messageLength: 6 })).toBeCloseTo(1.05)
   })
   it("penalizes known-vague messages", () => {
-    expect(messageScore({ isVagueMessage: true, messageLength: 2 })).toBeCloseTo(0.3)
+    expect(messageScore({ isVagueMessage: true, messageLength: 2 })).toBeCloseTo(0.35)
+  })
+  it("vague takes priority over the conventional-prefix bonus -- 'feat: update' isn't rescued by its prefix", () => {
+    expect(messageScore({ isVagueMessage: true, isConventionalMessage: true, messageLength: 6 })).toBeCloseTo(0.35)
   })
   it("scores by length when neither conventional nor vague", () => {
     expect(messageScore({ messageLength: 5 })).toBeCloseTo(0.5)
@@ -354,8 +393,138 @@ describe("typeFactor / commitScore / isQualifiedCommit", () => {
       commitKind: "normal",
       isConventionalMessage: true,
     })
-    expect(commitScore(good)).toBeCloseTo(1.0 * 1.0 * 1.1 * 1.0)
+    // sizeScore(50)=1.0, fileScore(3)=1.0 -> sqrt(1.0*1.0)=1.0, times conventional messageScore(1.05), type 1.0
+    expect(commitScore(good)).toBeCloseTo(Math.sqrt(1.0 * 1.0) * 1.05 * 1.0)
     expect(isQualifiedCommit(good)).toBe(true)
+  })
+
+  it("softens the multiplicative penalty for a large-but-normal refactor via sqrt(size*file) instead of size*file", () => {
+    // 900 changed lines -> sizeScore 0.4; 20 files -> fileScore 0.4. Plain product would be 0.16
+    // (crushed to the 0.2 floor); sqrt(0.4*0.4)=0.4 keeps the commit's own shape legible.
+    const bigRefactor = commit({
+      sha: "big1",
+      additions: 800,
+      deletions: 100,
+      changedFiles: 20,
+      commitKind: "normal",
+      isConventionalMessage: true,
+    })
+    const raw = Math.sqrt(sizeScore(900) * fileScore(20)) * 1.05 * 1.0
+    expect(commitScore(bigRefactor)).toBeCloseTo(raw, 5)
+    expect(commitScore(bigRefactor)).toBeGreaterThan(0.2) // above the floor, not crushed to it
+  })
+
+  it("gives squash merges a real but reduced type factor between merge (0) and normal (1)", () => {
+    const squash = commit({
+      sha: "sq1",
+      additions: 400,
+      deletions: 50,
+      changedFiles: 12,
+      commitKind: "squash_merge",
+      isConventionalMessage: true,
+    })
+    expect(typeFactor("squash_merge")).toBe(0.5)
+    expect(commitScore(squash)).toBeGreaterThan(0.1) // above the plain-merge floor
+    expect(commitScore(squash)).toBeLessThan(commitScore({ ...squash, commitKind: "normal" }))
+  })
+})
+
+describe("compressDailyRaw", () => {
+  it("passes raw score through unchanged up to the first bracket (4)", () => {
+    expect(compressDailyRaw(0)).toBeCloseTo(0)
+    expect(compressDailyRaw(3)).toBeCloseTo(3)
+    expect(compressDailyRaw(4)).toBeCloseTo(4)
+  })
+  it("counts the 4-8 span at 50% marginal rate", () => {
+    expect(compressDailyRaw(6)).toBeCloseTo(4 + 0.5 * 2, 5) // = 5
+    expect(compressDailyRaw(8)).toBeCloseTo(4 + 0.5 * 4, 5) // = 6
+  })
+  it("counts the 8-13 span at 20% marginal rate", () => {
+    expect(compressDailyRaw(10)).toBeCloseTo(6 + 0.2 * 2, 5) // = 6.4
+    expect(compressDailyRaw(13)).toBeCloseTo(6 + 0.2 * 5, 5) // = 7
+  })
+  it("hard-caps at 7 past 13 -- no marginal rate is small enough to stay exploitable by volume alone", () => {
+    expect(compressDailyRaw(20)).toBeCloseTo(7, 5)
+    expect(compressDailyRaw(1000)).toBeCloseTo(7, 5)
+  })
+})
+
+describe("fragmentationPenalty", () => {
+  // messageLength: 20 keeps these at the "clear" messageScore tier (1.0) by default -- without an
+  // explicit length, a commit falls back to length 0, which is itself "short" (<=0.5, already
+  // low-quality) and would silently trigger the vague/repeat warning in tests that don't want it.
+  const tiny = (sha: string, at: string) =>
+    commit({ sha, committedAt: at, additions: 1, deletions: 0, changedFiles: 1, commitKind: "normal", messageLength: 20 })
+  const normalCommit = (sha: string, at: string) =>
+    commit({
+      sha,
+      committedAt: at,
+      additions: 40,
+      deletions: 10,
+      changedFiles: 3,
+      commitKind: "normal",
+      isConventionalMessage: true,
+    })
+
+  it("applies no penalty with 0 or 1 warning signals", () => {
+    // Only the tiny-ratio signal fires (2/3 >= 0.5); messages are fine and commits are spaced out.
+    const commits = [
+      tiny("t1", "2026-07-02T09:00:00+09:00"),
+      tiny("t2", "2026-07-02T09:30:00+09:00"),
+      normalCommit("n1", "2026-07-02T10:00:00+09:00"),
+    ]
+    const result = fragmentationPenalty(commits)
+    expect(result.warnings).toBe(1)
+    expect(result.multiplier).toBe(1.0)
+  })
+
+  it("applies a 0.8x penalty at exactly 2 warning signals", () => {
+    // Tiny ratio fires (2/3) and vague/low-quality-message ratio fires (2/3 vague), but commits
+    // are spaced 30 min apart so the interval signal doesn't fire.
+    const commits = [
+      { ...tiny("t1", "2026-07-02T09:00:00+09:00"), isVagueMessage: true },
+      { ...tiny("t2", "2026-07-02T09:30:00+09:00"), isVagueMessage: true },
+      normalCommit("n1", "2026-07-02T10:00:00+09:00"),
+    ]
+    const result = fragmentationPenalty(commits)
+    expect(result.warnings).toBe(2)
+    expect(result.multiplier).toBe(0.8)
+  })
+
+  it("applies a 0.6x penalty at 3 warning signals (tiny + vague + tight interval)", () => {
+    const commits = [
+      { ...tiny("t1", "2026-07-02T09:00:00+09:00"), isVagueMessage: true },
+      { ...tiny("t2", "2026-07-02T09:02:00+09:00"), isVagueMessage: true },
+      { ...normalCommit("n1", "2026-07-02T09:04:00+09:00") },
+    ]
+    const result = fragmentationPenalty(commits)
+    expect(result.warnings).toBe(3)
+    expect(result.multiplier).toBe(0.6)
+  })
+
+  it("does not falsely flag commits with no recorded message as duplicates of each other", () => {
+    // None of these set messageSummary -- they must not collide on an empty-string key.
+    const commits = [
+      normalCommit("n1", "2026-07-02T09:00:00+09:00"),
+      normalCommit("n2", "2026-07-02T11:00:00+09:00"),
+      normalCommit("n3", "2026-07-02T13:00:00+09:00"),
+    ]
+    const result = fragmentationPenalty(commits)
+    expect(result.warnings).toBe(0)
+  })
+
+  it("flags genuinely repeated same-day messages even when each individual message is not vague", () => {
+    const withMessage = (sha: string, at: string) => ({
+      ...normalCommit(sha, at),
+      messageSummary: "update login page styling",
+    })
+    const commits = [
+      withMessage("n1", "2026-07-02T09:00:00+09:00"),
+      withMessage("n2", "2026-07-02T11:00:00+09:00"),
+      withMessage("n3", "2026-07-02T13:00:00+09:00"),
+    ]
+    const result = fragmentationPenalty(commits)
+    expect(result.warnings).toBeGreaterThanOrEqual(1) // vague/repeat ratio signal fires (3/3 repeated)
   })
 })
 
@@ -371,41 +540,37 @@ describe("dailyScore / weeklyScore / teamScore", () => {
       isConventionalMessage: true,
     })
 
-  const uncappedSum = (qualifiedCount: number) =>
-    Array.from({ length: qualifiedCount }, (_, i) => dailyVolumeWeight(i) * (1.0 * 1.0 * 1.1)).reduce(
-      (a, b) => a + b,
-      0,
-    )
-
-  it("counts every qualified commit's score in the day sum, with no cutoff for high-volume days, decayed past the full-credit threshold, and no post-hoc bonus added", () => {
-    const commits = Array.from({ length: 12 }, (_, i) => qualifiedCommit(`c${i}`, `2026-07-02T0${i % 9}:00:00+09:00`))
+  it("sums raw commit scores for the day and compresses the total, with no per-commit position penalty", () => {
+    // Strictly ascending, 30 min apart -- avoids accidentally tripping the median-interval
+    // fragmentation signal (<=5 min), which would make the day's score diverge from a pure
+    // compression of the raw sum and defeat the point of this test.
+    const commits = Array.from({ length: 12 }, (_, i) => {
+      const hour = String(Math.floor((i * 30) / 60)).padStart(2, "0")
+      const minute = String((i * 30) % 60).padStart(2, "0")
+      return qualifiedCommit(`c${i}`, `2026-07-02T${hour}:${minute}:00+09:00`)
+    })
     const result = dailyScore(commits)
     expect(result.qualifiedCount).toBe(12)
-    // First 10 commits at full commitScore 1.1 each, the 11th/12th decayed by the volume curve --
-    // no commit is ever zeroed, but the marginal contribution shrinks. No bonus on top: the day's
-    // score is exactly the sum of its own (decayed) per-commit contributions.
-    expect(result.score).toBeCloseTo(uncappedSum(12), 5)
+    const rawSum = commits.reduce((sum, c) => sum + commitScore(c), 0)
+    expect(result.score).toBeCloseTo(compressDailyRaw(rawSum), 5)
   })
 
-  it("decays each additional day-commit past the full-credit threshold by the volume decay rate, never to zero", () => {
-    expect(dailyVolumeWeight(9)).toBe(1) // 10th commit (0-indexed 9) is still full credit
-    expect(dailyVolumeWeight(10)).toBeCloseTo(0.95, 5) // 11th commit: first one past the threshold
-    expect(dailyVolumeWeight(11)).toBeCloseTo(0.95 * 0.95, 5)
-    expect(dailyVolumeWeight(59)).toBeGreaterThan(0) // even a 60th commit that day still counts for something
-  })
-
-  it("applies the small-diff-spam penalty when >=50% of the day's commits are 1-2 line changes", () => {
-    const tiny = () =>
-      commit({ sha: `t${Math.random()}`, additions: 1, deletions: 0, changedFiles: 1, commitKind: "normal" })
-    const commits = [tiny(), tiny(), qualifiedCommit("q1", "2026-07-02T10:00:00+09:00")]
+  it("exposes effectiveMultiplier so a per-commit display can reconstruct the exact compressed/penalized score", () => {
+    const commits = [qualifiedCommit("q1", "2026-07-02T09:00:00+09:00"), qualifiedCommit("q2", "2026-07-02T15:00:00+09:00")]
     const result = dailyScore(commits)
-    // 2/3 commits are tiny (>=50%) -> 0.7x multiplier applied to the summed commitScore
-    expect(result.qualifiedCount).toBe(1)
+    const rawSum = commits.reduce((sum, c) => sum + commitScore(c), 0)
+    expect(result.effectiveMultiplier).toBeCloseTo(result.score / rawSum, 5)
+  })
+
+  it("returns a zero effectiveMultiplier for an empty day without dividing by zero", () => {
+    const result = dailyScore([])
+    expect(result.score).toBe(0)
+    expect(result.effectiveMultiplier).toBe(0)
   })
 
   it("sums daily scores for the week with no consistency bonus -- every point traces to a commit", () => {
-    const active = { score: 2.5, qualifiedCount: 3, penaltyMultiplier: 1 }
-    const inactive = { score: 0.5, qualifiedCount: 0, penaltyMultiplier: 1 }
+    const active = { score: 2.5, qualifiedCount: 3, effectiveMultiplier: 1 }
+    const inactive = { score: 0.5, qualifiedCount: 0, effectiveMultiplier: 1 }
     const result = weeklyScore([active, active, active, inactive])
     expect(result.score).toBeCloseTo(2.5 * 3 + 0.5, 5)
   })
@@ -509,8 +674,8 @@ describe("aggregateSnapshot with classified commits", () => {
 
   it("shows each recent commit's *effective* (penalty-adjusted) score so the participant page's numbers reconcile with the total", () => {
     const { participants } = parseParticipantsCsv("participant_id,name,identifier,class\np1,김가온,gaon-kim,1")
-    // Day 1: 2 tiny 1-line commits + 1 real commit -- tiny commits are >=50% of the day, so the
-    // small-diff penalty (0.7x) applies to the whole day's sum, including the real commit.
+    // Day 1: 2 tiny vague commits (tiny-ratio + vague-ratio both fire -> 2 warnings -> 0.8x) close
+    // in time to a real commit, which must show its *discounted* effective score, not raw commitScore.
     const day1: CommitRecord[] = [
       commit({
         sha: "t1",
@@ -518,7 +683,7 @@ describe("aggregateSnapshot with classified commits", () => {
         deletions: 0,
         changedFiles: 1,
         commitKind: "normal",
-        messageLength: 20,
+        isVagueMessage: true,
         committedAt: "2026-07-02T09:00:00+09:00",
       }),
       commit({
@@ -527,8 +692,8 @@ describe("aggregateSnapshot with classified commits", () => {
         deletions: 1,
         changedFiles: 1,
         commitKind: "normal",
-        messageLength: 20,
-        committedAt: "2026-07-02T09:05:00+09:00",
+        isVagueMessage: true,
+        committedAt: "2026-07-02T09:30:00+09:00",
       }),
       commit({
         sha: "real1",
@@ -562,8 +727,12 @@ describe("aggregateSnapshot with classified commits", () => {
     // The real commit on the penalized day must show its *discounted* score, not its raw commitScore.
     const real1 = entry.recentCommits!.find((c) => c.id.endsWith("real1"))!
     const rawReal1 = commitScore(day1[2]!)
-    expect(real1.score).toBeCloseTo(rawReal1 * 0.7, 5)
+    expect(real1.score).toBeCloseTo(rawReal1 * 0.8, 5)
     expect(real1.score).toBeLessThan(rawReal1)
+
+    // Day 2's lone commit had no warnings, so it must show its full compressed value (no penalty).
+    const real2 = entry.recentCommits!.find((c) => c.id.endsWith("real2"))!
+    expect(real2.score).toBeCloseTo(commitScore(day2[0]!), 5)
 
     // No bonus term anywhere -- summing every displayed commit score must equal the total exactly.
     const sumOfDisplayedScores = entry.recentCommits!.reduce((sum, c) => sum + (c.score ?? 0), 0)

@@ -142,7 +142,8 @@ function kindForGroup(group: FeedGroup) {
   if (group.attributionStatus === "multiple_participants" || group.attributionStatus === "bot_with_participant") {
     return { label: "공동", icon: Users, cls: "text-positive" }
   }
-  if (group.commitKind === "merge") return { label: "병합", icon: GitMerge, cls: "text-gold" }
+  if (group.commitKind === "merge" || group.commitKind === "squash_merge")
+    return { label: "병합", icon: GitMerge, cls: "text-gold" }
   return { label: "commit", icon: GitCommitHorizontal, cls: "text-primary" }
 }
 

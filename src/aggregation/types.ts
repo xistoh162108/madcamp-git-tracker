@@ -1,6 +1,7 @@
 export type CommitKind =
   | "normal"
   | "merge"
+  | "squash_merge"
   | "empty"
   | "conflict_resolve"
   | "revert"

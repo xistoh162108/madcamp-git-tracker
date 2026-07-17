@@ -19,13 +19,15 @@ export function fileScore(changedFiles: number): number {
   return lookupMaxBand(changedFiles, FILE_BANDS)
 }
 
+// Vague is checked before the conventional-prefix bonus -- a content-free message like
+// "feat: update" shouldn't be rescued by having the right prefix. Clarity beats formatting.
 export function messageScore(input: {
   isConventionalMessage?: boolean
   messageLength?: number
   isVagueMessage?: boolean
 }): number {
-  if (input.isConventionalMessage) return MESSAGE_SCORE.conventional
   if (input.isVagueMessage) return MESSAGE_SCORE.vague
+  if (input.isConventionalMessage) return MESSAGE_SCORE.conventional
   const length = input.messageLength ?? 0
   if (length < 10) return MESSAGE_SCORE.short
   if (length <= 72) return MESSAGE_SCORE.clear
@@ -43,14 +45,20 @@ export function typeFactor(kind: CommitKind | undefined): number {
 /**
  * Only a truly empty commit (no lines, no files changed) scores exactly 0 -- every other commit
  * represents *some* real work, so it gets a small floor rather than being crushed to 0 by the
- * multiplicative bands (e.g. a huge merge would otherwise land at size×file×type ≈ 0). Merge
- * commits get the lowest floor since they're an integration event, not a unit of work; everything
- * else gets a slightly higher floor since it's still an authored change.
+ * bands. Merge commits get the lowest floor since they're an integration event, not a unit of
+ * work; everything else (including squash_merge) gets a slightly higher floor since it's still an
+ * authored change.
+ *
+ * size×file uses sqrt(size×file) rather than a plain product -- a plain product means two only-
+ * moderately-bad factors (e.g. a legitimately large refactor: size=0.4, file=0.4) compound into a
+ * near-zero score (0.16) indistinguishable from genuine junk. The geometric mean still penalizes
+ * being large/sprawling, just not catastrophically from two factors at once.
  */
 export function commitScore(commit: CommitRecord): number {
   const changedLines = (commit.additions ?? 0) + (commit.deletions ?? 0)
   const changedFiles = commit.changedFiles ?? 0
-  const raw = sizeScore(changedLines) * fileScore(changedFiles) * messageScore(commit) * typeFactor(commit.commitKind)
+  const raw =
+    Math.sqrt(sizeScore(changedLines) * fileScore(changedFiles)) * messageScore(commit) * typeFactor(commit.commitKind)
   if (commit.commitKind === "empty") return raw
   const floor = commit.commitKind === "merge" ? MERGE_MIN_SCORE : NONEMPTY_MIN_SCORE
   return Math.max(raw, floor)

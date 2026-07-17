@@ -77,6 +77,12 @@ const DEPENDENCY_MESSAGE_MAX_FILES = 5
 
 const CONVENTIONAL_PREFIX_PATTERN = /^(feat|fix|style|docs|refactor|test|chore|build|ci|perf):/i
 
+// GitHub's default squash-merge commit message is "<PR title> (#<number>)" on the first line.
+// Squash merges have exactly one parent (unlike a real merge commit), so parentCount alone can't
+// tell them apart from an ordinary commit -- this message pattern is the only reliable signal
+// available without calling the GitHub API for associated-PR data.
+const SQUASH_MERGE_MESSAGE_PATTERN = /\(#\d+\)\s*$/
+
 // Extended from real camp data: since messages under 10 chars all get the same flat "short" (0.5)
 // discount regardless of content, a genuinely specific short Korean message (e.g. "카메라 연동" --
 // Korean is information-dense, so a short phrase can still name a real feature) would otherwise be
@@ -137,6 +143,9 @@ function classifyKind(input: ClassifiableCommit, message: string): CommitKind {
   }
   if (input.parentCount > 1) {
     return "merge"
+  }
+  if (input.parentCount === 1 && SQUASH_MERGE_MESSAGE_PATTERN.test(message.split("\n")[0] ?? message)) {
+    return "squash_merge"
   }
   if (files.length > 0 && files.every((f) => isLockfile(f.filename))) {
     return "lockfile_only"

@@ -1,6 +1,6 @@
 import type { Participant } from "../participants/participant-schema"
 import { commitScore, isQualifiedCommit } from "../scoring/commit-score"
-import { dailyScore, dailyVolumeWeight, teamScore, weeklyScore, type DailyScoreResult } from "../scoring/period-score"
+import { dailyScore, teamScore, weeklyScore, type DailyScoreResult } from "../scoring/period-score"
 import type { CommitKind, CommitRecord, RankedEntry, UnknownUser } from "./types"
 
 export interface AggregatedSnapshot {
@@ -252,11 +252,10 @@ function commitKindBreakdown(items: CommitRecord[]): Array<{ kind: string; count
 }
 
 /** Groups a participant's (or team's) commits by KST day and runs `dailyScore` once per day, so
- *  the per-commit penalty multiplier and the weekly total are always derived from the same pass --
- *  callers must not re-group/re-score independently or the two can silently drift apart. Also
- *  returns each individual commit's combined effective multiplier (`dailyVolumeWeight(index) *
- *  penaltyMultiplier`, keyed by `repoName:sha`) so a per-commit display can show exactly what that
- *  commit contributed, decay curve included. */
+ *  the per-commit effective multiplier and the weekly total are always derived from the same pass
+ *  -- callers must not re-group/re-score independently or the two can silently drift apart. Also
+ *  returns each individual commit's day-uniform effective multiplier (keyed by `repoName:sha`) so
+ *  a per-commit display can show exactly what that commit contributed after compression/penalty. */
 function dailyResultsByDay(items: CommitRecord[]): {
   byDay: Map<string, DailyScoreResult>
   effectiveMultiplierByCommitKey: Map<string, number>
@@ -272,12 +271,9 @@ function dailyResultsByDay(items: CommitRecord[]): {
     const chronological = [...dayCommits].sort((a, b) => Date.parse(a.committedAt) - Date.parse(b.committedAt))
     const result = dailyScore(chronological)
     byDay.set(day, result)
-    chronological.forEach((commit, index) => {
-      effectiveMultiplierByCommitKey.set(
-        `${commit.repoName}:${commit.sha}`,
-        dailyVolumeWeight(index) * result.penaltyMultiplier,
-      )
-    })
+    for (const commit of chronological) {
+      effectiveMultiplierByCommitKey.set(`${commit.repoName}:${commit.sha}`, result.effectiveMultiplier)
+    }
   }
   return { byDay, effectiveMultiplierByCommitKey }
 }

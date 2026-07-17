@@ -177,6 +177,7 @@ export default async function ParticipantDetailPage({ params }: { params: Promis
   const commitKindLabels: Record<string, string> = {
     normal: "일반",
     merge: "병합",
+    squash_merge: "스쿼시 병합",
     empty: "빈 커밋",
     conflict_resolve: "충돌 해결",
     revert: "되돌리기",
