@@ -35,8 +35,13 @@ export function discoverTrackedRepos(repos: GitHubRepoSummary[], config: AppConf
   const ignoredRepos: string[] = []
   const warnings: string[] = []
 
+  const overrides = new Map(config.repoOverrides.map((override) => [override.repoName, override]))
+
   for (const repo of repos) {
-    const metadata = parseRepoName(repo.name, config.season)
+    const override = overrides.get(repo.name)
+    const metadata = override
+      ? { season: config.season, week: override.week, class: override.class, teamNumber: override.teamNumber }
+      : parseRepoName(repo.name, config.season)
     if (!metadata) {
       ignoredRepos.push(repo.name)
       continue

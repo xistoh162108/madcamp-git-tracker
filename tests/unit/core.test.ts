@@ -433,6 +433,23 @@ describe("repo discovery", () => {
     expect(result.warnings.join(" ")).toContain("class exceeds")
   })
 
+  it("tracks custom-named repos via repoOverrides", () => {
+    const overrideConfig = AppConfigSchema.parse({
+      ...config,
+      repoOverrides: [{ repoName: "HCIzone", week: 2, class: 1, teamNumber: "02" }],
+    })
+    const result = discoverTrackedRepos(
+      [
+        { id: 1, name: "HCIzone", html_url: "https://github.com/o/hci", private: true, default_branch: "main" },
+        { id: 2, name: "unrelated", html_url: "https://github.com/o/u", private: false, default_branch: "main" },
+      ],
+      overrideConfig,
+    )
+    expect(result.trackedRepos).toHaveLength(1)
+    expect(result.trackedRepos[0]).toMatchObject({ name: "HCIzone", week: 2, class: 1, teamNumber: "02" })
+    expect(result.ignoredRepos).toContain("unrelated")
+  })
+
   it("warns and ignores disabled or unknown weeks", () => {
     const disabledConfig = AppConfigSchema.parse({
       ...config,

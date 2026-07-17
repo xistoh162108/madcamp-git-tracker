@@ -4,6 +4,18 @@
   "timezone": "Asia/Seoul",
   "githubOrg": "madcamp-official",
   "repoNamePattern": "{yy}{semCode}-w{week}-c{class}-{teamNumber}",
+  "repoOverrides": [
+    { "repoName": "HCIzone", "week": 3, "class": 1, "teamNumber": "02" },
+    { "repoName": "spk", "week": 3, "class": 1, "teamNumber": "03" },
+    { "repoName": "VibeCutter", "week": 3, "class": 1, "teamNumber": "04" },
+    { "repoName": "legendary-super-ultra-red-dragon", "week": 3, "class": 2, "teamNumber": "01" },
+    { "repoName": "Yarrr", "week": 3, "class": 2, "teamNumber": "02" },
+    { "repoName": "dododo", "week": 3, "class": 2, "teamNumber": "04" },
+    { "repoName": "legendary-super-ultra-black-dragon", "week": 3, "class": 2, "teamNumber": "05" },
+    { "repoName": "clickme", "week": 3, "class": 3, "teamNumber": "02" },
+    { "repoName": "notegame", "week": 3, "class": 3, "teamNumber": "03" },
+    { "repoName": "Into-the-Deep", "week": 3, "class": 3, "teamNumber": "06" }
+  ],
   "commitScope": "all_branches",
   "classCount": 3,
   "weeks": [

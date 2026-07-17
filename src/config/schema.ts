@@ -8,6 +8,13 @@ export const WeekConfigSchema = z.object({
   enabled: z.boolean().default(true),
 })
 
+export const RepoOverrideSchema = z.object({
+  repoName: z.string().min(1),
+  week: z.number().int().positive(),
+  class: z.number().int().positive(),
+  teamNumber: z.string().min(1),
+})
+
 export const AppConfigSchema = z
   .object({
     season: z.string().regex(/^\d{4}-(summer|winter)$/),
@@ -15,6 +22,10 @@ export const AppConfigSchema = z
     timezone: z.literal("Asia/Seoul").default("Asia/Seoul"),
     githubOrg: z.string().min(1),
     repoNamePattern: z.string().default("{yy}{semCode}-w{week}-c{class}-{teamNumber}"),
+    // Teams that renamed their repo away from the standard pattern (e.g. week 3's custom names
+    // like "HCIzone", "spk") aren't discoverable by parseRepoName -- list them explicitly here so
+    // discoverTrackedRepos can still attribute them to the right week/class/team.
+    repoOverrides: z.array(RepoOverrideSchema).default([]),
     commitScope: z.enum(["default_branch", "all_branches"]).default("all_branches"),
     classCount: z.number().int().positive(),
     currentWeekOverride: z.number().int().positive().optional(),
@@ -49,6 +60,7 @@ export const AppConfigSchema = z
 
 export type AppConfig = z.infer<typeof AppConfigSchema>
 export type WeekConfig = z.infer<typeof WeekConfigSchema>
+export type RepoOverride = z.infer<typeof RepoOverrideSchema>
 
 export function resolveCurrentWeek(config: AppConfig, now = new Date()): number | null {
   if (config.currentWeekOverride) return config.currentWeekOverride

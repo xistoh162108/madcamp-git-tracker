@@ -1,3 +1,4 @@
+import fs from "node:fs"
 import path from "node:path"
 import Link from "next/link"
 import { notFound } from "next/navigation"
@@ -22,6 +23,26 @@ import buildTimeSnapshot from "@/public/data/snapshots/seed.json"
 import type { AggregatedSnapshot } from "@/src/aggregation/aggregate"
 import { loadConfig } from "@/src/config/load-config"
 import { readSnapshotFallback } from "@/src/snapshot/fallback"
+import { parseParticipantsCsv } from "@/src/participants/parse-participants"
+
+// 분반(class) is a per-participant, camp-wide assignment -- it never changes with a team's repo
+// name. Custom-named repos (week 3's "HCIzone", "spk", ...) don't embed a class number the way
+// "26s-w3-c1-02" does, so class must come from participants.csv, not a regex on repoName.
+function loadParticipantClasses(): Map<string, number> {
+  try {
+    const csv = fs.readFileSync(path.join(process.cwd(), "src", "participants", "participants.csv"), "utf8")
+    const { participants } = parseParticipantsCsv(csv)
+    const map = new Map<string, number>()
+    for (const participant of participants) {
+      if (participant.class === undefined) continue
+      if (participant.githubUsername) map.set(participant.githubUsername, participant.class)
+      map.set(participant.participantId, participant.class)
+    }
+    return map
+  } catch {
+    return new Map()
+  }
+}
 
 export const dynamic = "force-dynamic"
 
@@ -38,10 +59,6 @@ function kstDateTime(iso?: string) {
     hour: "2-digit",
     minute: "2-digit",
   }).format(new Date(iso))
-}
-
-function repoClass(repo?: string) {
-  return repo?.match(/w\d+-c(\d+)-\d+/)?.[1]
 }
 
 // Sourced from entry.weeklyBreakdown (computed server-side from that participant's full commit
@@ -120,27 +137,55 @@ function rankingContext(
 
 export default async function ParticipantDetailPage({ params }: { params: Promise<{ username: string }> }) {
   const { username } = await params
+  // "전체" (all-time) snapshot -- still the source for heatmap/hourlyDistribution/weekHistory,
+  // which are intentionally camp-wide per prior request, and for whether this participant exists
+  // at all (a participant with zero commits this week must not 404).
   const snapshot = readSnapshotFallback<AggregatedSnapshot>(
     path.join(process.cwd(), "public", "data", "snapshots", "latest.json"),
     buildTimeSnapshot as AggregatedSnapshot,
   )
   const config = loadConfig()
-  const p = snapshot.rankings.personal.find((i) => i.meta === username || i.id === username)
-  if (!p) notFound()
+  const pAll = snapshot.rankings.personal.find((i) => i.meta === username || i.id === username)
+  if (!pAll) notFound()
 
   const currentWeek = snapshot.currentWeek ?? 0
-  const activeTeam = repoForEntry(p, currentWeek) ?? snapshot.rankings.teams[0]?.label ?? "-"
+  // Score/rank/"최근 커밋" must reflect the active week, not a lifetime total -- the competition is
+  // scored per week, so a participant's own page showing an all-time score next to "이번 주" framing
+  // was misleading. Heatmap/hourly stay on the all-time snapshot (`snapshot`/`pAll`) by design.
+  const weekSnapshotPath = currentWeek
+    ? path.join(process.cwd(), "public", "data", "snapshots", `${config.season}-w${currentWeek}.json`)
+    : undefined
+  const weekSnapshot = weekSnapshotPath
+    ? readSnapshotFallback<AggregatedSnapshot>(weekSnapshotPath, snapshot)
+    : snapshot
+  const pWeek = weekSnapshot.rankings.personal.find((i) => i.meta === username || i.id === username)
+  const p: AggregatedSnapshot["rankings"]["personal"][number] = pWeek ?? {
+    ...pAll,
+    score: 0,
+    qualifiedCommits: 0,
+    commits: 0,
+    activeDays: 0,
+    lastActivityAt: undefined,
+    recentCommits: [],
+    commitKindBreakdown: [],
+    avgChangedLines: undefined,
+    avgChangedFiles: undefined,
+    messageFormatRate: undefined,
+  }
+
+  const classOf = loadParticipantClasses()
+  const activeTeam = repoForEntry(p, currentWeek) ?? weekSnapshot.rankings.teams[0]?.label ?? "-"
   const activeTeamSlug = shortRepo(activeTeam)
-  const activeClass = repoClass(activeTeam)
-  const teamPeers = snapshot.rankings.personal.filter((entry) => repoForEntry(entry, currentWeek) === activeTeam)
-  const classPeers = snapshot.rankings.personal.filter(
-    (entry) => repoClass(repoForEntry(entry, currentWeek)) === activeClass,
+  const activeClass = classOf.get(username) ?? classOf.get(p.meta ?? p.id)
+  const teamPeers = weekSnapshot.rankings.personal.filter((entry) => repoForEntry(entry, currentWeek) === activeTeam)
+  const classPeers = weekSnapshot.rankings.personal.filter(
+    (entry) => classOf.get(entry.meta ?? entry.id) === activeClass,
   )
   const teamRank = Math.max(1, teamPeers.findIndex((entry) => entry.id === p.id) + 1)
   const classRank = Math.max(1, classPeers.findIndex((entry) => entry.id === p.id) + 1)
-  const position = rankingContext(p, snapshot.rankings.personal)
+  const position = rankingContext(p, weekSnapshot.rankings.personal)
   const weekHistory = config.weeks.map((week) => {
-    const weekData = p.weeklyBreakdown?.find((w) => w.week === week.week)
+    const weekData = pAll.weeklyBreakdown?.find((w) => w.week === week.week)
     const status = week.week < currentWeek ? "ended" : week.week === currentWeek ? "active" : "upcoming"
     return {
       week: `${week.week}주차`,
@@ -162,23 +207,20 @@ export default async function ParticipantDetailPage({ params }: { params: Promis
     asset_only: "에셋",
     rename_only: "이름 변경",
   }
-  // Sourced from p.commitKindBreakdown / p.heatmap (computed server-side from this participant's
-  // full commit list), not participantFeed -- participantFeed is filtered from the global
-  // activityFeed, which is capped at 200 most-recent commits camp-wide and would silently drop
-  // this participant's older commits/days as total commit volume grows past that cap.
+  // commitKindBreakdown reflects the active week (part of the week-scoped stats block); heatmap and
+  // hourlyDistribution stay on the all-time entry (pAll) since those two charts are intentionally
+  // camp-wide regardless of week selection. Neither is sourced from participantFeed -- that's
+  // filtered from the global activityFeed, which is capped at 200 most-recent commits camp-wide and
+  // would silently drop this participant's older commits/days/hours as commit volume grows.
   const commitKindBreakdown = (p.commitKindBreakdown ?? [])
     .slice(0, 5)
     .map(({ kind, count }) => [kind, count] as [string, number])
-  const participantHeatmap = p.heatmap ?? []
+  const participantHeatmap = pAll.heatmap ?? []
   const trend = participantHeatmap
     .slice(-7)
     .map((day) => ({ date: day.date.slice(5).replace("-", "."), commits: day.count }))
-  // Sourced from p.hourlyDistribution (computed server-side from this participant's full commit
-  // list), not participantFeed -- participantFeed is filtered from the global activityFeed, which
-  // is capped at 200 most-recent commits and would silently drop this participant's older hours
-  // as total commit volume grows past that cap.
   const hourly =
-    p.hourlyDistribution ??
+    pAll.hourlyDistribution ??
     Array.from({ length: 24 }, (_, hour) => ({
       hour: String(hour).padStart(2, "0"),
       commits: 0,
@@ -189,7 +231,8 @@ export default async function ParticipantDetailPage({ params }: { params: Promis
     (best, item) => (item.commits > best.commits ? item : best),
     hourly[0] ?? { hour: "-", commits: 0 },
   )
-  const showHourlyChart = p.commits >= 10
+  // Gated on pAll.commits, not p.commits -- the hourly chart itself renders pAll (all-time) data.
+  const showHourlyChart = pAll.commits >= 10
 
   return (
     <div className="min-h-screen">
@@ -212,7 +255,7 @@ export default async function ParticipantDetailPage({ params }: { params: Promis
                 <div className="flex min-w-0 flex-wrap items-center gap-2">
                   <h1 className="min-w-0 truncate text-xl font-bold tracking-tight">{p.label}</h1>
                   <span className="rounded-md border border-gold/40 bg-gold/15 px-1.5 py-0.5 text-[11px] font-bold text-gold">
-                    전체 {position.rankLabel}
+                    {currentWeek ? `${currentWeek}주차` : "전체"} {position.rankLabel}
                   </span>
                 </div>
                 <p className="mt-0.5 truncate font-mono text-xs text-muted-foreground">@{p.meta ?? p.id}</p>
@@ -250,7 +293,7 @@ export default async function ParticipantDetailPage({ params }: { params: Promis
 
           <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
             <Stat icon={Sparkles} label="점수" value={(p.score ?? 0).toFixed(1)} accent="text-gold" />
-            <Stat icon={CalendarClock} label="활동일" value={`${p.activeDays}일`} />
+            <Stat icon={CalendarClock} label="이번 주 활동일" value={`${p.activeDays}일`} />
             <Stat icon={GitCommitHorizontal} label="최근 커밋" value={kstDateTime(p.lastActivityAt)} />
             <Stat icon={Hash} label="팀 내 순위" value={`${teamRank}위 / ${Math.max(1, teamPeers.length)}명`} />
           </div>
@@ -302,11 +345,11 @@ export default async function ParticipantDetailPage({ params }: { params: Promis
             />
           </div>
 
-          {p.honorTitles?.length ? (
+          {pAll.honorTitles?.length ? (
             <div className="mt-4 border-t border-border/60 pt-4">
               <h2 className="text-sm font-semibold">칭호</h2>
               <div className="mt-2 flex flex-wrap gap-1.5">
-                {p.honorTitles.map((title) => (
+                {pAll.honorTitles.map((title) => (
                   <HonorTitleChip key={title.id} label={title.label} desc={title.desc} />
                 ))}
               </div>

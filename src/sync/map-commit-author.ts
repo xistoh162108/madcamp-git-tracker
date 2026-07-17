@@ -51,6 +51,10 @@ const botPatterns = [
   // Camp-ops service account that creates/scaffolds each team's repo -- not a participant, its
   // setup commits shouldn't count as anyone's (or any team's) activity.
   /^madcamp-staff$/i,
+  // Tracker maintainer's own account (repo setup/testing pushes) -- not a camp participant, must
+  // not appear in rankings/feed. Unlike madcamp-staff this account's real name + email are usually
+  // also present in the joined login+name+email text, so match as a substring, not full equality.
+  /\bxistoh162108\b/i,
 ]
 
 export function parseCoAuthors(message: string | null | undefined): Array<{ name: string; email: string }> {
