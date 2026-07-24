@@ -272,7 +272,10 @@ export function LiveDashboard({ initialSnapshot, displayName, weeks, currentWeek
   // Live "1위 교체" / "점수 상승" / "새 활동 반영" notifications must always reflect the current camp
   // week's own score movement, never whichever tab happens to be selected -- switching to the "전체"
   // tab must not start comparing all-time cumulative totals as if they were this week's deltas.
-  const notifySnapshotRef = useRef(initialSnapshot)
+  // Starts null (not `initialSnapshot`, which is the all-time snapshot) -- diffing the week snapshot
+  // against the all-time one on the very first fetch produced bogus deltas (e.g. this week's leader
+  // showing a large negative "점수 상승" from all-time score minus week-only score).
+  const notifySnapshotRef = useRef<AggregatedSnapshot | null>(null)
   const loadingRef = useRef(false)
   const loadingAllRef = useRef(false)
   const loadingNotifyRef = useRef(false)
@@ -359,9 +362,9 @@ export function LiveDashboard({ initialSnapshot, displayName, weeks, currentWeek
       const response = await fetch(`/api/snapshots/week/${currentWeek}?ts=${Date.now()}`, { cache: "no-store" })
       if (!response.ok) return
       const next = (await response.json()) as AggregatedSnapshot
-      if (next.generatedAt === previous.generatedAt) return
+      if (previous && next.generatedAt === previous.generatedAt) return
       notifySnapshotRef.current = next
-      pushEvents(detectLiveEvents(previous, next))
+      if (previous) pushEvents(detectLiveEvents(previous, next))
     } finally {
       loadingNotifyRef.current = false
     }
