@@ -62,7 +62,10 @@ export interface PaginatedResult<T> {
   pagesFetched: number
 }
 
-const REQUEST_PACING_MS = 1000
+// Skipped under the test runner: unit tests spin up a real local HTTP server and exercise many
+// sequential requests per test against it, not GitHub itself, so pacing only adds wall-clock time
+// (and pushes tests past their timeout) with no rate-limit benefit.
+const REQUEST_PACING_MS = process.env.VITEST ? 0 : 1000
 const MAX_RATE_LIMIT_RETRIES = 3
 
 function sleep(ms: number): Promise<void> {
