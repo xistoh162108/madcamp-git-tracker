@@ -1,4 +1,3 @@
-import path from "node:path"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import {
@@ -12,19 +11,22 @@ import {
   MessageSquareText,
 } from "lucide-react"
 import { TopNav } from "@/components/top-nav"
-import { AutoRefresh } from "@/components/auto-refresh"
 import { InitialsAvatar } from "@/components/initials-avatar"
 import { HonorTitleChip } from "@/components/badge-chip"
 import { Notice } from "@/components/notice"
 import { DailyLineChart, HourlyBarChart, SprintBoard } from "@/components/detail-charts"
 import { contributionNoticeText } from "@/lib/data"
-import buildTimeSnapshot from "@/public/data/snapshots/seed.json"
 import type { AggregatedSnapshot } from "@/src/aggregation/aggregate"
 import { loadConfig } from "@/src/config/load-config"
-import { readSnapshotFallback } from "@/src/snapshot/fallback"
+import { frozenSnapshotForWeek, frozenLatestSnapshot } from "@/src/snapshot/frozen"
 import { loadParticipantClasses } from "@/src/participants/load-participant-classes"
 
-export const dynamic = "force-dynamic"
+// Frozen static export: every /participant/[username] page must be enumerable at build time.
+// The all-time snapshot is the union of every week, so it already covers every participant who
+// ever committed anything across the whole camp.
+export function generateStaticParams() {
+  return frozenLatestSnapshot.rankings.personal.map((entry) => ({ username: entry.meta ?? entry.id }))
+}
 
 function shortRepo(repo: string) {
   return repo.replace(/^.*?(w\d+-c\d+-\d+)$/, "$1")
@@ -120,10 +122,7 @@ export default async function ParticipantDetailPage({ params }: { params: Promis
   // "전체" (all-time) snapshot -- still the source for heatmap/hourlyDistribution/weekHistory,
   // which are intentionally camp-wide per prior request, and for whether this participant exists
   // at all (a participant with zero commits this week must not 404).
-  const snapshot = readSnapshotFallback<AggregatedSnapshot>(
-    path.join(process.cwd(), "public", "data", "snapshots", "latest.json"),
-    buildTimeSnapshot as AggregatedSnapshot,
-  )
+  const snapshot: AggregatedSnapshot = frozenLatestSnapshot
   const config = loadConfig()
   const pAll = snapshot.rankings.personal.find((i) => i.meta === username || i.id === username)
   if (!pAll) notFound()
@@ -132,12 +131,7 @@ export default async function ParticipantDetailPage({ params }: { params: Promis
   // Score/rank/"최근 커밋" must reflect the active week, not a lifetime total -- the competition is
   // scored per week, so a participant's own page showing an all-time score next to "이번 주" framing
   // was misleading. Heatmap/hourly stay on the all-time snapshot (`snapshot`/`pAll`) by design.
-  const weekSnapshotPath = currentWeek
-    ? path.join(process.cwd(), "public", "data", "snapshots", `${config.season}-w${currentWeek}.json`)
-    : undefined
-  const weekSnapshot = weekSnapshotPath
-    ? readSnapshotFallback<AggregatedSnapshot>(weekSnapshotPath, snapshot)
-    : snapshot
+  const weekSnapshot = currentWeek ? frozenSnapshotForWeek(currentWeek) : snapshot
   const pWeek = weekSnapshot.rankings.personal.find((i) => i.meta === username || i.id === username)
   const p: AggregatedSnapshot["rankings"]["personal"][number] = pWeek ?? {
     ...pAll,
@@ -217,7 +211,6 @@ export default async function ParticipantDetailPage({ params }: { params: Promis
 
   return (
     <div className="min-h-screen">
-      <AutoRefresh />
       <TopNav />
       <main className="mx-auto w-full max-w-[1280px] overflow-x-hidden px-3 py-4 sm:px-6 sm:py-6">
         <Link

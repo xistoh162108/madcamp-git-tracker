@@ -62,6 +62,13 @@ export interface PaginatedResult<T> {
   pagesFetched: number
 }
 
+const REQUEST_PACING_MS = 1000
+const MAX_RATE_LIMIT_RETRIES = 3
+
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
 export class GitHubClient {
   private rateLimit: GitHubRateLimit = {}
 
@@ -164,11 +171,18 @@ export class GitHubClient {
   private async requestJson(
     pathname: string,
     query: Record<string, string | undefined> = {},
+    attempt = 0,
   ): Promise<{ json: unknown; nextPage?: number }> {
     const url = new URL(pathname, this.options.apiBaseUrl ?? "https://api.github.com")
     for (const [key, value] of Object.entries(query)) {
       if (value) url.searchParams.set(key, value)
     }
+    // A full sync fires hundreds of sequential requests (commitScope=all_branches x every branch of
+    // every tracked repo); firing them back-to-back with no pacing at all reliably trips GitHub's
+    // secondary/abuse rate limiter (a short-lived block distinct from -- and much easier to hit than
+    // -- the 5000/hour primary quota). A small fixed delay between requests keeps us comfortably
+    // under that burst threshold.
+    await sleep(REQUEST_PACING_MS)
     const response = await fetch(url, {
       headers: {
         Accept: "application/vnd.github+json",
@@ -185,6 +199,17 @@ export class GitHubClient {
     }
     if (!response.ok) {
       const body = await response.text()
+      // Secondary rate limit ("abuse detection") is short-lived (typically well under a minute) and
+      // distinct from the primary quota (which the caller can already see via getRateLimit() and
+      // wasn't actually exhausted when this fires) -- back off and retry a few times instead of
+      // aborting the whole multi-hundred-request sync run over one transient block.
+      const isSecondaryRateLimit = response.status === 403 && /rate limit exceeded/i.test(body)
+      if (isSecondaryRateLimit && attempt < MAX_RATE_LIMIT_RETRIES) {
+        const retryAfterHeader = Number(response.headers.get("retry-after"))
+        const backoffMs = Number.isFinite(retryAfterHeader) && retryAfterHeader > 0 ? retryAfterHeader * 1000 : 60_000 * (attempt + 1)
+        await sleep(backoffMs)
+        return this.requestJson(pathname, query, attempt + 1)
+      }
       throw new Error(`GitHub API ${response.status} ${response.statusText}: ${body.slice(0, 300)}`)
     }
     return { json: await response.json(), nextPage: nextPageFromLink(response.headers.get("link")) }

@@ -16,6 +16,9 @@ export interface RankingMiniCardProps {
   activeParticipants: number
   updatedAtKst: string
   className?: string
+  // Defaults to true (existing behavior). The frozen post-camp embed passes `live={false}` so the
+  // badge stops claiming to be a live feed once there's nothing left to update.
+  live?: boolean
 }
 
 function RankIcon({ rank }: { rank: number }) {
@@ -33,6 +36,7 @@ export function RankingMiniCard({
   activeParticipants,
   updatedAtKst,
   className,
+  live = true,
 }: RankingMiniCardProps) {
   return (
     <section className={cn("rounded-2xl border border-border/70 bg-card/70 p-4", className)}>
@@ -47,10 +51,16 @@ export function RankingMiniCard({
             커밋 리그보드
           </h2>
         </div>
-        <span className="inline-flex shrink-0 items-center gap-1 rounded-full border border-positive/25 bg-positive/10 px-2 py-0.5 text-[10px] font-medium text-positive">
-          <span className="h-1.5 w-1.5 rounded-full bg-positive" />
-          LIVE
-        </span>
+        {live ? (
+          <span className="inline-flex shrink-0 items-center gap-1 rounded-full border border-positive/25 bg-positive/10 px-2 py-0.5 text-[10px] font-medium text-positive">
+            <span className="h-1.5 w-1.5 rounded-full bg-positive" />
+            LIVE
+          </span>
+        ) : (
+          <span className="inline-flex shrink-0 items-center gap-1 rounded-full border border-border/60 bg-muted/30 px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
+            최종
+          </span>
+        )}
       </div>
 
       <ol className="space-y-1.5">

@@ -22,6 +22,10 @@ interface LiveDashboardProps {
   displayName: string
   weeks: WeekConfig[]
   currentWeek: number | null
+  // Defaults to true (existing dynamic-mode behavior, unattended for next camp). The frozen
+  // post-camp static build passes `live={false}` -- there is no `/api/snapshots/*` route left to
+  // poll once the site is a static export, and the data can never change anyway.
+  live?: boolean
 }
 
 interface LiveEvent {
@@ -258,7 +262,13 @@ function LiveEventStack({ events }: { events: LiveEvent[] }) {
   )
 }
 
-export function LiveDashboard({ initialSnapshot, displayName, weeks, currentWeek }: LiveDashboardProps) {
+export function LiveDashboard({
+  initialSnapshot,
+  displayName,
+  weeks,
+  currentWeek,
+  live = true,
+}: LiveDashboardProps) {
   const [mounted, setMounted] = useState(false)
   const [snapshot, setSnapshot] = useState(initialSnapshot)
   // Trend charts (일별 커밋 추이 / 스프린트 보드 / 시간대별 분포) intentionally always show the full-camp,
@@ -383,7 +393,7 @@ export function LiveDashboard({ initialSnapshot, displayName, weeks, currentWeek
   }, [])
 
   useEffect(() => {
-    if (!mounted) return
+    if (!mounted || !live) return
     void refreshSnapshot()
     void refreshAllSnapshot()
     void refreshWeekNotifications()
@@ -404,7 +414,7 @@ export function LiveDashboard({ initialSnapshot, displayName, weeks, currentWeek
       window.clearInterval(interval)
       document.removeEventListener("visibilitychange", onVisibilityChange)
     }
-  }, [mounted, refreshSnapshot, refreshAllSnapshot, refreshWeekNotifications])
+  }, [mounted, live, refreshSnapshot, refreshAllSnapshot, refreshWeekNotifications])
 
   if (!mounted) {
     return (
@@ -433,16 +443,18 @@ export function LiveDashboard({ initialSnapshot, displayName, weeks, currentWeek
               <div className="mt-3 flex flex-wrap gap-2">
                 <span className="inline-flex items-center gap-1 rounded-full border border-positive/25 bg-positive/10 px-2.5 py-1 text-[11px] font-medium text-positive">
                   <Activity className="h-3.5 w-3.5" />
-                  실시간 집계
+                  {live ? "실시간 집계" : "캠프 종료 · 최종 결과"}
                 </span>
                 <span className="inline-flex items-center gap-1 rounded-full border border-gold/25 bg-gold/10 px-2.5 py-1 text-[11px] font-medium text-gold">
                   <Trophy className="h-3.5 w-3.5" />
                   주간 리그
                 </span>
-                <span className="inline-flex items-center gap-1 rounded-full border border-primary/25 bg-primary/10 px-2.5 py-1 text-[11px] font-medium text-primary">
-                  <Flame className="h-3.5 w-3.5" />
-                  1분마다 업데이트
-                </span>
+                {live ? (
+                  <span className="inline-flex items-center gap-1 rounded-full border border-primary/25 bg-primary/10 px-2.5 py-1 text-[11px] font-medium text-primary">
+                    <Flame className="h-3.5 w-3.5" />
+                    1분마다 업데이트
+                  </span>
+                ) : null}
               </div>
             </div>
             <div className="text-left text-xs text-muted-foreground sm:text-right">

@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "build": "next build",
+    "build:static": "bash scripts/export-static-site.sh",
     "dev": "next dev",
     "format": "prettier --write .",
     "format:check": "prettier --check .",

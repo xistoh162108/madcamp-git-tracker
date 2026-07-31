@@ -1,19 +1,13 @@
-import path from "node:path"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import { ArrowLeft, Github, GitCommitHorizontal, Users, Clock, CalendarClock, Sparkles } from "lucide-react"
 import { TopNav } from "@/components/top-nav"
-import { AutoRefresh } from "@/components/auto-refresh"
 import { InitialsAvatar } from "@/components/initials-avatar"
 import { Notice } from "@/components/notice"
 import { DailyLineChart, MemberBarChart } from "@/components/detail-charts"
 import { repoNoticeText } from "@/lib/data"
-import buildTimeSnapshot from "@/public/data/snapshots/seed.json"
-import type { AggregatedSnapshot } from "@/src/aggregation/aggregate"
 import { loadConfig } from "@/src/config/load-config"
-import { readSnapshotFallback } from "@/src/snapshot/fallback"
-
-export const dynamic = "force-dynamic"
+import { frozenWeekSnapshots, frozenLatestSnapshot } from "@/src/snapshot/frozen"
 
 function fmtRepoShort(repo: string) {
   return repo.replace(/^.*?(w\d+-c\d+-\d+)$/, "$1")
@@ -23,22 +17,26 @@ function dateKey(date: Date) {
   return new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Seoul" }).format(date)
 }
 
+// Frozen static export: every /team/[repo] page that will ever be requested must be enumerable at
+// build time. A team's short id is week-scoped by construction (`w4-c2-07`), so params are
+// collected from each of the 4 weekly snapshots individually, not just the all-time union.
+export function generateStaticParams() {
+  const repos = new Set<string>()
+  for (const weekSnapshot of Object.values(frozenWeekSnapshots)) {
+    for (const team of weekSnapshot.rankings.teams) {
+      repos.add(fmtRepoShort(team.label))
+    }
+  }
+  return [...repos].map((repo) => ({ repo }))
+}
+
 export default async function TeamDetailPage({ params }: { params: Promise<{ repo: string }> }) {
   const { repo } = await params
   const config = loadConfig()
   const weekNumber = Number(repo.match(/^w(\d+)-/)?.[1])
   const weekConfig = config.weeks.find((week) => week.week === weekNumber)
 
-  const snapshotPath = weekConfig
-    ? path.join(process.cwd(), "public", "data", "snapshots", `${config.season}-w${weekNumber}.json`)
-    : path.join(process.cwd(), "public", "data", "snapshots", "latest.json")
-  const snapshot = readSnapshotFallback<AggregatedSnapshot>(
-    snapshotPath,
-    readSnapshotFallback<AggregatedSnapshot>(
-      path.join(process.cwd(), "public", "data", "snapshots", "latest.json"),
-      buildTimeSnapshot as AggregatedSnapshot,
-    ),
-  )
+  const snapshot = weekConfig ? (frozenWeekSnapshots[weekNumber] ?? frozenLatestSnapshot) : frozenLatestSnapshot
   const team = snapshot.rankings.teams.find((t) => fmtRepoShort(t.label) === repo || t.label === repo)
   if (!team) notFound()
 
@@ -72,7 +70,6 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ rep
 
   return (
     <div className="min-h-screen">
-      <AutoRefresh />
       <TopNav />
       <main className="mx-auto max-w-[1100px] px-4 py-5 sm:px-6 sm:py-6">
         <Link
