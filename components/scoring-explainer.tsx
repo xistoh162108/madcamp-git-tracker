@@ -79,8 +79,8 @@ export function ScoringExplainerDialog({ trigger }: { trigger?: React.ReactNode 
             <h3 className="text-xs font-semibold text-foreground">하루 활동량은 총합으로 압축돼요</h3>
             <p className="mt-1.5 text-[13px] text-muted-foreground">
               커밋 하나하나는 순서와 상관없이 똑같이 좋은 커밋으로 인정돼요. 다만 하루 전체 점수 합이 일정 수준을
-              넘어가면 그 이후분은 조금씩 낮은 비율로 반영돼요 — 같은 작업을 억지로 잘게 쪼개서 커밋 수만 늘리는
-              것보다, 적당한 단위로 나눠 꾸준히 커밋하는 쪽이 유리해요.
+              넘어가면 그 이후분은 조금씩 낮은 비율로 반영돼요 — 같은 작업을 억지로 잘게 쪼개서 커밋 수만 늘리는 것보다,
+              적당한 단위로 나눠 꾸준히 커밋하는 쪽이 유리해요.
             </p>
           </section>
 
@@ -99,9 +99,9 @@ export function ScoringExplainerDialog({ trigger }: { trigger?: React.ReactNode 
             결국 이 점수가 보고 싶은 건 딱 하나예요 — 커밋 개수가 아니라, 좋은 개발 리듬으로 즐겁게 만들었는지예요.
           </p>
           <p className="text-[11px] text-muted-foreground/80">
-            점수 계산법 v1.1 (07.18) — 스쿼시 병합 별도 분류, 지나치게 크거나 잘게 쪼갠 커밋 감점 완화, 하루 활동량
-            압축 방식 변경. 재미로 보는 참고 지표라 계산법은 계속 다듬어질 수 있고, 그때마다 과거 커밋 점수도 새
-            기준으로 다시 계산돼요.
+            점수 계산법 v1.1 (07.18) — 스쿼시 병합 별도 분류, 지나치게 크거나 잘게 쪼갠 커밋 감점 완화, 하루 활동량 압축
+            방식 변경. 재미로 보는 참고 지표라 계산법은 계속 다듬어질 수 있고, 그때마다 과거 커밋 점수도 새 기준으로
+            다시 계산돼요.
           </p>
         </div>
       </DialogContent>

@@ -8,7 +8,13 @@ import {
   sizeScore,
   typeFactor,
 } from "../../src/scoring/commit-score"
-import { compressDailyRaw, dailyScore, fragmentationPenalty, teamScore, weeklyScore } from "../../src/scoring/period-score"
+import {
+  compressDailyRaw,
+  dailyScore,
+  fragmentationPenalty,
+  teamScore,
+  weeklyScore,
+} from "../../src/scoring/period-score"
 import type { CommitRecord } from "../../src/aggregation/types"
 import { aggregateSnapshot } from "../../src/aggregation/aggregate"
 import { parseParticipantsCsv } from "../../src/participants/parse-participants"
@@ -454,7 +460,15 @@ describe("fragmentationPenalty", () => {
   // explicit length, a commit falls back to length 0, which is itself "short" (<=0.5, already
   // low-quality) and would silently trigger the vague/repeat warning in tests that don't want it.
   const tiny = (sha: string, at: string) =>
-    commit({ sha, committedAt: at, additions: 1, deletions: 0, changedFiles: 1, commitKind: "normal", messageLength: 20 })
+    commit({
+      sha,
+      committedAt: at,
+      additions: 1,
+      deletions: 0,
+      changedFiles: 1,
+      commitKind: "normal",
+      messageLength: 20,
+    })
   const normalCommit = (sha: string, at: string) =>
     commit({
       sha,
@@ -556,7 +570,10 @@ describe("dailyScore / weeklyScore / teamScore", () => {
   })
 
   it("exposes effectiveMultiplier so a per-commit display can reconstruct the exact compressed/penalized score", () => {
-    const commits = [qualifiedCommit("q1", "2026-07-02T09:00:00+09:00"), qualifiedCommit("q2", "2026-07-02T15:00:00+09:00")]
+    const commits = [
+      qualifiedCommit("q1", "2026-07-02T09:00:00+09:00"),
+      qualifiedCommit("q2", "2026-07-02T15:00:00+09:00"),
+    ]
     const result = dailyScore(commits)
     const rawSum = commits.reduce((sum, c) => sum + commitScore(c), 0)
     expect(result.effectiveMultiplier).toBeCloseTo(result.score / rawSum, 5)

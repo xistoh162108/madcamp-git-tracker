@@ -262,13 +262,7 @@ function LiveEventStack({ events }: { events: LiveEvent[] }) {
   )
 }
 
-export function LiveDashboard({
-  initialSnapshot,
-  displayName,
-  weeks,
-  currentWeek,
-  live = true,
-}: LiveDashboardProps) {
+export function LiveDashboard({ initialSnapshot, displayName, weeks, currentWeek, live = true }: LiveDashboardProps) {
   const [mounted, setMounted] = useState(false)
   const [snapshot, setSnapshot] = useState(initialSnapshot)
   // Trend charts (일별 커밋 추이 / 스프린트 보드 / 시간대별 분포) intentionally always show the full-camp,

@@ -338,8 +338,8 @@ export default async function ParticipantDetailPage({ params }: { params: Promis
               KST 기준 · 원본 커밋 메시지 · 점수는 페널티/물량 반영된 실질 점수
             </p>
             <p className="mt-1 text-[11px] text-muted-foreground">
-              이 목록의 커밋 점수 합계 {commitScoreSum.toFixed(1)}점 = 총점 {(p.score ?? 0).toFixed(1)}점 (별도 보너스 없음,
-              커밋 점수만으로 계산됨)
+              이 목록의 커밋 점수 합계 {commitScoreSum.toFixed(1)}점 = 총점 {(p.score ?? 0).toFixed(1)}점 (별도 보너스
+              없음, 커밋 점수만으로 계산됨)
             </p>
             <ul className="mt-3 max-h-[480px] space-y-2 overflow-y-auto pr-1">
               {(p.recentCommits ?? []).map((item) => {

@@ -238,10 +238,7 @@ export async function runGithubSync(options: SyncRunnerOptions = {}): Promise<Sy
     })
   }
 
-  const allCommits = dedupeCommits([
-    ...loadAllLedgerCommits(path.dirname(ledgerPath), config.season),
-    ...uniqueCommits,
-  ])
+  const allCommits = dedupeCommits([...loadAllLedgerCommits(path.dirname(ledgerPath), config.season), ...uniqueCommits])
   const overallSnapshot = aggregateSnapshot({
     season: config.season,
     currentWeek,

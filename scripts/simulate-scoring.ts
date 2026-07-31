@@ -77,16 +77,15 @@ const scenarios: Array<{ name: string; commits: CommitRecord[] }> = [
   },
   {
     name: "squash merge (1x, 500줄/15파일)",
-    commits: buildScenario(1, makeCommit({ linesEach: 500, filesEach: 15, minutesApart: 0, commitKind: "squash_merge" })),
+    commits: buildScenario(
+      1,
+      makeCommit({ linesEach: 500, filesEach: 15, minutesApart: 0, commitKind: "squash_merge" }),
+    ),
   },
 ]
 
 console.log("시나리오별 하루 점수 비교 (동일/유사 총 변경량, 다른 커밋 방식)\n")
-console.log(
-  ["시나리오", "커밋수", "총변경줄", "day.score", "qualified"]
-    .map((h) => h.padEnd(28))
-    .join(""),
-)
+console.log(["시나리오", "커밋수", "총변경줄", "day.score", "qualified"].map((h) => h.padEnd(28)).join(""))
 console.log("-".repeat(120))
 
 for (const scenario of scenarios) {

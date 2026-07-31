@@ -206,7 +206,8 @@ export class GitHubClient {
       const isSecondaryRateLimit = response.status === 403 && /rate limit exceeded/i.test(body)
       if (isSecondaryRateLimit && attempt < MAX_RATE_LIMIT_RETRIES) {
         const retryAfterHeader = Number(response.headers.get("retry-after"))
-        const backoffMs = Number.isFinite(retryAfterHeader) && retryAfterHeader > 0 ? retryAfterHeader * 1000 : 60_000 * (attempt + 1)
+        const backoffMs =
+          Number.isFinite(retryAfterHeader) && retryAfterHeader > 0 ? retryAfterHeader * 1000 : 60_000 * (attempt + 1)
         await sleep(backoffMs)
         return this.requestJson(pathname, query, attempt + 1)
       }

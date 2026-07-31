@@ -21,7 +21,12 @@ interface EmbedRankingClientProps {
 // Static export has no server left to parse `?class=`/`?limit=` per request, so an already-frozen
 // full ranking list is shipped to the client and filtered here instead -- keeps existing embeds
 // (pasted into slides/sites with a `?class=` query string) working unchanged.
-export function EmbedRankingClient({ entries, totalCommits, activeParticipants, updatedAtKst }: EmbedRankingClientProps) {
+export function EmbedRankingClient({
+  entries,
+  totalCommits,
+  activeParticipants,
+  updatedAtKst,
+}: EmbedRankingClientProps) {
   const searchParams = useSearchParams()
   const classParam = searchParams.get("class")
   const limitNumber = Math.min(20, Math.max(1, Number(searchParams.get("limit")) || 5))

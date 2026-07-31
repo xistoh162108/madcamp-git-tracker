@@ -70,7 +70,8 @@ export function fragmentationPenalty(dayCommitsChronological: CommitRecord[]): F
 
   const gapsMinutes: number[] = []
   for (let i = 1; i < dayCommitsChronological.length; i += 1) {
-    const gapMs = Date.parse(dayCommitsChronological[i]!.committedAt) - Date.parse(dayCommitsChronological[i - 1]!.committedAt)
+    const gapMs =
+      Date.parse(dayCommitsChronological[i]!.committedAt) - Date.parse(dayCommitsChronological[i - 1]!.committedAt)
     gapsMinutes.push(gapMs / 60000)
   }
   const medianGap = median(gapsMinutes)
