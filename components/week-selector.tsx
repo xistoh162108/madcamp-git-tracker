@@ -35,10 +35,10 @@ export function WeekSelector({
       status:
         activeCurrentWeek === week.week
           ? ("active" as const)
-          // No active week (activeCurrentWeek null) only ever means "camp over" for real callers
-          // of this component (a not-yet-started camp wouldn't render a leaderboard at all) --
-          // every configured week is therefore "ended", not "upcoming", so its tab stays visible.
-          : !activeCurrentWeek || week.week < activeCurrentWeek
+          : // No active week (activeCurrentWeek null) only ever means "camp over" for real callers
+            // of this component (a not-yet-started camp wouldn't render a leaderboard at all) --
+            // every configured week is therefore "ended", not "upcoming", so its tab stays visible.
+            !activeCurrentWeek || week.week < activeCurrentWeek
             ? ("ended" as const)
             : ("upcoming" as const),
     })) ?? weeks
