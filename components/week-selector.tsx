@@ -22,7 +22,12 @@ export function WeekSelector({
   selectedKey?: string
   onSelect?: (key: string) => void
 }) {
-  const activeCurrentWeek = currentWeek ?? config.currentWeek
+  // `currentWeek` is `null` whenever the real app has no active week (camp over, or not yet
+  // started) -- that's a deliberate value and must NOT fall back to the lib/data mock default,
+  // or every real week would wrongly compute as "upcoming" (since the mock's currentWeek is some
+  // small fixed number) and get filtered out of the tab list entirely. Only fall back when the
+  // prop is genuinely omitted (undefined), e.g. a standalone/demo usage of this component.
+  const activeCurrentWeek = currentWeek === undefined ? config.currentWeek : currentWeek
   const selected = selectedKey ?? (activeCurrentWeek ? `w${activeCurrentWeek}` : "all")
   const sourceWeeks =
     configuredWeeks?.map((week) => ({
@@ -30,7 +35,10 @@ export function WeekSelector({
       status:
         activeCurrentWeek === week.week
           ? ("active" as const)
-          : activeCurrentWeek && week.week < activeCurrentWeek
+          // No active week (activeCurrentWeek null) only ever means "camp over" for real callers
+          // of this component (a not-yet-started camp wouldn't render a leaderboard at all) --
+          // every configured week is therefore "ended", not "upcoming", so its tab stays visible.
+          : !activeCurrentWeek || week.week < activeCurrentWeek
             ? ("ended" as const)
             : ("upcoming" as const),
     })) ?? weeks

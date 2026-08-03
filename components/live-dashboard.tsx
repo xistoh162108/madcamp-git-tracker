@@ -26,6 +26,11 @@ interface LiveDashboardProps {
   // post-camp static build passes `live={false}` -- there is no `/api/snapshots/*` route left to
   // poll once the site is a static export, and the data can never change anyway.
   live?: boolean
+  // Required when `live` is false: every per-week (and "all") snapshot, keyed the same way as
+  // `selectedWeekKey` ("all" | "w1" | "w2" | ...), so the week tabs can switch data synchronously
+  // from already-bundled JSON instead of fetching a `/api/snapshots/*` route that doesn't exist in
+  // the static export.
+  weekSnapshots?: Record<string, AggregatedSnapshot>
 }
 
 interface LiveEvent {
@@ -262,7 +267,14 @@ function LiveEventStack({ events }: { events: LiveEvent[] }) {
   )
 }
 
-export function LiveDashboard({ initialSnapshot, displayName, weeks, currentWeek, live = true }: LiveDashboardProps) {
+export function LiveDashboard({
+  initialSnapshot,
+  displayName,
+  weeks,
+  currentWeek,
+  live = true,
+  weekSnapshots,
+}: LiveDashboardProps) {
   const [mounted, setMounted] = useState(false)
   const [snapshot, setSnapshot] = useState(initialSnapshot)
   // Trend charts (일별 커밋 추이 / 스프린트 보드 / 시간대별 분포) intentionally always show the full-camp,
@@ -312,26 +324,38 @@ export function LiveDashboard({ initialSnapshot, displayName, weeks, currentWeek
     }, 8200)
   }, [])
 
-  const loadSnapshot = useCallback(async (key: string) => {
-    // Guard against overlapping fetches (e.g. the 1-min interval firing while a
-    // visibilitychange-triggered refresh is still in flight) racing on snapshotRef.
-    if (loadingRef.current) return
-    loadingRef.current = true
-    try {
-      const endpoint =
-        key === "all"
-          ? `/api/snapshots/latest?ts=${Date.now()}`
-          : `/api/snapshots/week/${key.slice(1)}?ts=${Date.now()}`
-      const response = await fetch(endpoint, { cache: "no-store" })
-      if (!response.ok) return
-      const next = (await response.json()) as AggregatedSnapshot
-      if (next.generatedAt === snapshotRef.current.generatedAt) return
-      snapshotRef.current = next
-      setSnapshot(next)
-    } finally {
-      loadingRef.current = false
-    }
-  }, [])
+  const loadSnapshot = useCallback(
+    async (key: string) => {
+      // Frozen static build: switch synchronously from the already-bundled per-week snapshots,
+      // no network round trip (and no `/api/snapshots/*` route exists to fetch from anyway).
+      if (!live) {
+        const next = weekSnapshots?.[key]
+        if (!next || next.generatedAt === snapshotRef.current.generatedAt) return
+        snapshotRef.current = next
+        setSnapshot(next)
+        return
+      }
+      // Guard against overlapping fetches (e.g. the 1-min interval firing while a
+      // visibilitychange-triggered refresh is still in flight) racing on snapshotRef.
+      if (loadingRef.current) return
+      loadingRef.current = true
+      try {
+        const endpoint =
+          key === "all"
+            ? `/api/snapshots/latest?ts=${Date.now()}`
+            : `/api/snapshots/week/${key.slice(1)}?ts=${Date.now()}`
+        const response = await fetch(endpoint, { cache: "no-store" })
+        if (!response.ok) return
+        const next = (await response.json()) as AggregatedSnapshot
+        if (next.generatedAt === snapshotRef.current.generatedAt) return
+        snapshotRef.current = next
+        setSnapshot(next)
+      } finally {
+        loadingRef.current = false
+      }
+    },
+    [live, weekSnapshots],
+  )
 
   const refreshSnapshot = useCallback(async () => {
     await loadSnapshot(selectedWeekKey)
